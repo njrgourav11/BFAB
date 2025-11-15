@@ -25,11 +25,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-gray-950 dark:via-blue-900 dark:to-gray-900 flex items-center justify-center px-4 transition-colors duration-300">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 dark:bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse transition-colors duration-300"></div>
+        <div className="absolute bottom-20 right-10 w-72 h-72 bg-indigo-400 dark:bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse transition-colors duration-300" style={{ animationDelay: '2s' }}></div>
       </div>
 
       <motion.div
@@ -49,7 +49,7 @@ const LoginPage = () => {
             🐾
           </motion.div>
           <h1 className="text-4xl font-bold text-white mb-2">Welcome Back!</h1>
-          <p className="text-blue-100">Sign in to your BFAB account</p>
+          <p className="text-blue-100 dark:text-blue-200">Sign in to your BFAB account</p>
         </div>
 
         {/* Main Card */}
@@ -57,11 +57,11 @@ const LoginPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20"
+          className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl shadow-2xl dark:shadow-2xl dark:shadow-black/50 p-8 border border-white/20 dark:border-gray-700/20 transition-colors duration-300"
         >
           {/* Social Login Options */}
           <div className="mb-6">
-            <p className="text-center text-gray-600 text-sm font-semibold mb-4">Or continue with</p>
+            <p className="text-center text-gray-600 dark:text-gray-400 text-sm font-semibold mb-4 transition-colors duration-300">Or continue with</p>
             <div className="grid grid-cols-3 gap-3">
               {[
                 { label: 'Google', icon: '🔍' },
@@ -73,7 +73,7 @@ const LoginPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleSocialLogin(provider.label)}
-                  className="flex items-center justify-center py-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-2xl"
+                  className="flex items-center justify-center py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition text-2xl transition-colors duration-300"
                   type="button"
                 >
                   {provider.icon}
@@ -85,10 +85,10 @@ const LoginPage = () => {
           {/* Divider */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
+              <div className="w-full border-t border-gray-300 dark:border-gray-600 transition-colors duration-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-3 bg-white text-gray-500 font-semibold">OR</span>
+              <span className="px-3 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-semibold transition-colors duration-300">OR</span>
             </div>
           </div>
 
@@ -100,15 +100,15 @@ const LoginPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.4 }}
             >
-              <label className="block text-gray-700 font-semibold mb-2">Email Address</label>
+              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2 transition-colors duration-300">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3.5 text-gray-400" size={20} />
+                <Mail className="absolute left-3 top-3.5 text-gray-400 dark:text-gray-500" size={20} />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition text-gray-700 placeholder-gray-400"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-colors duration-300"
                   placeholder="your@email.com"
                 />
               </div>
@@ -120,21 +120,21 @@ const LoginPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.5 }}
             >
-              <label className="block text-gray-700 font-semibold mb-2">Password</label>
+              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2 transition-colors duration-300">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3.5 text-gray-400" size={20} />
+                <Lock className="absolute left-3 top-3.5 text-gray-400 dark:text-gray-500" size={20} />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-10 pr-12 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition text-gray-700 placeholder-gray-400"
+                  className="w-full pl-10 pr-12 py-3 border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-colors duration-300"
                   placeholder="Enter your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600 transition"
+                  className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition transition-colors duration-300"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -153,11 +153,11 @@ const LoginPage = () => {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 accent-blue-600 cursor-pointer"
+                  className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 accent-blue-600 cursor-pointer transition-colors duration-300"
                 />
-                <span className="text-sm text-gray-600 font-medium">Remember me</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400 font-medium transition-colors duration-300">Remember me</span>
               </label>
-              <Link href="#" className="text-sm font-semibold text-blue-600 hover:text-blue-700 transition">
+              <Link href="#" className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition transition-colors duration-300">
                 Forgot password?
               </Link>
             </motion.div>
@@ -171,7 +171,7 @@ const LoginPage = () => {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-75"
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-blue-700 dark:to-indigo-700 dark:hover:from-blue-800 dark:hover:to-indigo-800 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-75 transition-colors duration-300"
             >
               {loading ? (
                 <>
@@ -189,10 +189,10 @@ const LoginPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.8 }}
-            className="text-center mt-6 text-gray-700"
+            className="text-center mt-6 text-gray-700 dark:text-gray-300 transition-colors duration-300"
           >
             Don't have an account?{' '}
-            <Link href="/register" className="font-bold text-blue-600 hover:text-blue-700 transition">
+            <Link href="/register" className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition transition-colors duration-300">
               Sign up here
             </Link>
           </motion.p>
@@ -203,10 +203,10 @@ const LoginPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.9 }}
-          className="mt-6 text-center text-blue-100 text-sm"
+          className="mt-6 text-center text-blue-100 dark:text-blue-200 text-sm transition-colors duration-300"
         >
           <p>🔒 Your account is secure and encrypted</p>
-          <p className="mt-2">Need help? <Link href="/contact-us" className="underline hover:text-white transition">Contact support</Link></p>
+          <p className="mt-2">Need help? <Link href="/contact-us" className="underline hover:text-white dark:hover:text-blue-100 transition transition-colors duration-300">Contact support</Link></p>
         </motion.div>
       </motion.div>
     </div>

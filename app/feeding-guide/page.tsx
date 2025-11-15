@@ -44,7 +44,7 @@ const FeedingGuidePage = () => {
     const data = activeTab === 'dog' ? dogFeedingData : catFeedingData;
     
     let result = null;
-    for (let entry of data) {
+    for (const entry of data) {
       const [min, max] = entry.weight.split('-').map(w => parseFloat(w));
       if (weight >= min && weight <= max) {
         result = entry.amount;
@@ -55,9 +55,9 @@ const FeedingGuidePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-green-50">
+    <div className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 via-green-600 to-emerald-600 text-white py-16">
+      <section className="bg-gradient-to-r from-blue-600 via-green-600 to-emerald-600 dark:from-blue-800 dark:via-green-800 dark:to-emerald-800 text-white py-16 transition-colors duration-300">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -66,13 +66,13 @@ const FeedingGuidePage = () => {
             className="text-center"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-4">🥗 Feeding Guide</h1>
-            <p className="text-xl text-green-100">Proper nutrition for every life stage</p>
+            <p className="text-xl text-green-100 dark:text-green-200">Proper nutrition for every life stage</p>
           </motion.div>
         </div>
       </section>
 
       {/* Tab Navigation */}
-      <section className="py-8 bg-white border-b sticky top-0 z-20">
+      <section className="py-8 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-20 transition-colors duration-300">
         <div className="container mx-auto px-4">
           <div className="flex gap-4 justify-center">
             {[
@@ -88,10 +88,10 @@ const FeedingGuidePage = () => {
                   setCalculatedAmount(null);
                   setPetWeight('');
                 }}
-                className={`flex items-center gap-2 px-8 py-3 rounded-full font-semibold transition text-lg ${
+                className={`flex items-center gap-2 px-8 py-3 rounded-full font-semibold transition-all duration-300 text-lg ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-blue-600 to-green-600 text-white shadow-lg'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    ? 'bg-gradient-to-r from-blue-600 to-green-600 dark:from-blue-700 dark:to-green-700 text-white shadow-lg'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
                 {tab.icon}
@@ -103,19 +103,19 @@ const FeedingGuidePage = () => {
       </section>
 
       {/* Main Content */}
-      <section className="py-16">
+      <section className="py-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         <div className="container mx-auto px-4">
           {/* Interactive Calculator */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-gradient-to-r from-blue-100 to-green-100 rounded-lg p-8 mb-12"
+            className="bg-gradient-to-r from-blue-100 dark:from-blue-900/30 to-green-100 dark:to-green-900/30 rounded-lg p-8 mb-12 border border-green-200 dark:border-green-800 transition-colors duration-300"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">📊 Portion Calculator</h2>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6 transition-colors duration-300">📊 Portion Calculator</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">
+                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2 transition-colors duration-300">
                   Pet Weight (lbs):
                 </label>
                 <input
@@ -123,12 +123,12 @@ const FeedingGuidePage = () => {
                   value={petWeight}
                   onChange={(e) => setPetWeight(e.target.value)}
                   placeholder="Enter weight..."
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-300 placeholder-gray-400 dark:placeholder-gray-600"
                 />
               </div>
               <button
                 onClick={handleCalculate}
-                className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-bold py-2 px-6 rounded-lg transition shadow-lg"
+                className="bg-gradient-to-r from-blue-600 to-green-600 dark:from-blue-700 dark:to-green-700 hover:from-blue-700 hover:to-green-700 dark:hover:from-blue-800 dark:hover:to-green-800 text-white font-bold py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Calculate
               </button>
@@ -136,10 +136,10 @@ const FeedingGuidePage = () => {
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="bg-white border-2 border-green-500 rounded-lg p-4"
+                  className="bg-white dark:bg-gray-800 border-2 border-green-500 dark:border-green-600 rounded-lg p-4 transition-colors duration-300"
                 >
-                  <p className="text-gray-700 font-semibold">Daily Portions:</p>
-                  <p className="text-2xl font-bold text-green-600">{calculatedAmount} cups</p>
+                  <p className="text-gray-700 dark:text-gray-300 font-semibold transition-colors duration-300">Daily Portions:</p>
+                  <p className="text-2xl font-bold text-green-600 dark:text-green-400 transition-colors duration-300">{calculatedAmount} cups</p>
                 </motion.div>
               )}
             </div>
@@ -151,7 +151,7 @@ const FeedingGuidePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-8">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8 transition-colors duration-300">
               {activeTab === 'dog' ? '🐕 Dog Feeding Guide' : '🐱 Cat Feeding Guide'}
             </h2>
 
@@ -164,19 +164,19 @@ const FeedingGuidePage = () => {
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-gradient-to-b from-blue-500 to-green-500 hover:shadow-2xl transition"
+                    className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-lg dark:shadow-black/30 p-6 border-l-4 border-blue-500 dark:border-blue-600 hover:shadow-2xl dark:hover:shadow-2xl dark:hover:shadow-black/50 transition-all duration-300"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <span className="text-4xl">{row.icon}</span>
-                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold transition-colors duration-300">
                         {row.lifeStage}
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-2">Weight Range</h3>
-                    <p className="text-gray-600 mb-4">{row.weight}</p>
-                    <div className="pt-4 border-t">
-                      <p className="text-gray-700 font-semibold mb-2">Daily Portions:</p>
-                      <p className="text-2xl font-bold text-green-600">{row.amount} cups</p>
+                    <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2 transition-colors duration-300">Weight Range</h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4 transition-colors duration-300">{row.weight}</p>
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                      <p className="text-gray-700 dark:text-gray-300 font-semibold mb-2 transition-colors duration-300">Daily Portions:</p>
+                      <p className="text-2xl font-bold text-green-600 dark:text-green-400 transition-colors duration-300">{row.amount} cups</p>
                     </div>
                   </motion.div>
                 ))}
@@ -190,9 +190,9 @@ const FeedingGuidePage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="mt-16 pt-16 border-t-2"
+            className="mt-16 pt-16 border-t-2 border-gray-200 dark:border-gray-700 transition-colors duration-300"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-10 text-center">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-10 text-center transition-colors duration-300">
               💡 Feeding Tips for {activeTab === 'dog' ? 'Dogs' : 'Cats'}
             </h2>
 
@@ -204,12 +204,12 @@ const FeedingGuidePage = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-white rounded-lg shadow-lg p-6 flex gap-4 border-l-4 border-gradient-to-b from-yellow-500 to-orange-500 hover:shadow-2xl transition"
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-lg dark:shadow-black/30 p-6 flex gap-4 border-l-4 border-yellow-500 dark:border-yellow-600 hover:shadow-2xl dark:hover:shadow-2xl dark:hover:shadow-black/50 transition-all duration-300"
                 >
                   <div className="flex-shrink-0">{tip.icon}</div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-2">{tip.title}</h3>
-                    <p className="text-gray-600">{tip.description}</p>
+                    <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2 transition-colors duration-300">{tip.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">{tip.description}</p>
                   </div>
                 </motion.div>
               ))}
@@ -222,16 +222,16 @@ const FeedingGuidePage = () => {
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="mt-16 bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg"
+            className="mt-16 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 dark:border-yellow-600 p-6 rounded-lg transition-colors duration-300"
           >
             <div className="flex gap-4">
-              <AlertCircle size={28} className="text-yellow-600 flex-shrink-0 mt-1" />
+              <AlertCircle size={28} className="text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-1 transition-colors duration-300" />
               <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-2">⚠️ Important Notice</h3>
-                <p className="text-gray-700 mb-2">
+                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2 transition-colors duration-300">⚠️ Important Notice</h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
                   These guidelines are general recommendations. Every pet is unique with individual dietary needs.
                 </p>
-                <ul className="text-gray-700 list-disc list-inside space-y-1">
+                <ul className="text-gray-700 dark:text-gray-400 list-disc list-inside space-y-1 transition-colors duration-300">
                   <li>Consult your veterinarian before making dietary changes</li>
                   <li>Consider your pet's activity level and metabolism</li>
                   <li>Transition to new food gradually over 7-10 days</li>
@@ -247,9 +247,9 @@ const FeedingGuidePage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="mt-16 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-8"
+            className="mt-16 bg-gradient-to-r from-green-50 dark:from-green-900/20 to-emerald-50 dark:to-emerald-900/20 rounded-lg p-8 border border-green-200 dark:border-green-800 transition-colors duration-300"
           >
-            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">🌿 Key Nutritional Elements</h3>
+            <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center transition-colors duration-300">🌿 Key Nutritional Elements</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 { title: 'Protein', desc: 'Essential for muscle development' },
@@ -263,10 +263,10 @@ const FeedingGuidePage = () => {
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-white rounded-lg p-4 text-center shadow-md"
+                  className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center shadow-md dark:shadow-lg dark:shadow-black/30 transition-all duration-300"
                 >
-                  <p className="font-bold text-gray-800 mb-2">{nutrient.title}</p>
-                  <p className="text-sm text-gray-600">{nutrient.desc}</p>
+                  <p className="font-bold text-gray-800 dark:text-white mb-2 transition-colors duration-300">{nutrient.title}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">{nutrient.desc}</p>
                 </motion.div>
               ))}
             </div>

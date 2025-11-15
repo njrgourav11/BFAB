@@ -86,11 +86,11 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-600 via-emerald-700 to-teal-800 flex items-center justify-center px-3 sm:px-4 py-8 sm:py-12">
+    <div className="min-h-screen bg-gradient-to-br from-green-600 via-emerald-700 to-teal-800 dark:from-gray-950 dark:via-green-900 dark:to-gray-900 flex items-center justify-center px-3 sm:px-4 py-8 sm:py-12 transition-colors duration-300">
       {/* Animated Background Elements - Optimized for Mobile */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-green-400 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse"></div>
-        <div className="hidden sm:block absolute bottom-20 right-10 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-teal-400 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-20 left-10 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-green-400 dark:bg-green-600 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse transition-colors duration-300"></div>
+        <div className="hidden sm:block absolute bottom-20 right-10 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-teal-400 dark:bg-teal-600 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse transition-colors duration-300" style={{ animationDelay: '2s' }}></div>
       </div>
 
       <motion.div
@@ -110,7 +110,7 @@ const RegisterPage = () => {
             🐾
           </motion.div>
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Join the Pack!</h1>
-          <p className="text-sm sm:text-base text-emerald-100">Create your BFAB account today</p>
+          <p className="text-sm sm:text-base text-emerald-100 dark:text-emerald-200">Create your BFAB account today</p>
         </div>
 
         {/* Main Card */}
@@ -118,11 +118,11 @@ const RegisterPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 sm:p-8 border border-white/20"
+          className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl shadow-2xl dark:shadow-2xl dark:shadow-black/50 p-6 sm:p-8 border border-white/20 dark:border-gray-700/20 transition-colors duration-300"
         >
           {/* Social Signup Options */}
           <div className="mb-4 sm:mb-6">
-            <p className="text-center text-gray-600 text-xs sm:text-sm font-semibold mb-3 sm:mb-4">Quick sign up with</p>
+            <p className="text-center text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-semibold mb-3 sm:mb-4 transition-colors duration-300">Quick sign up with</p>
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {[
                 { label: 'Google', icon: '🔍' },
@@ -134,7 +134,7 @@ const RegisterPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleSocialSignup(provider.label)}
-                  className="flex items-center justify-center py-2.5 sm:py-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-xl sm:text-2xl"
+                  className="flex items-center justify-center py-2.5 sm:py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition text-xl sm:text-2xl transition-colors duration-300"
                   type="button"
                 >
                   {provider.icon}
@@ -146,10 +146,10 @@ const RegisterPage = () => {
           {/* Divider */}
           <div className="relative mb-4 sm:mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
+              <div className="w-full border-t border-gray-300 dark:border-gray-600 transition-colors duration-300"></div>
             </div>
             <div className="relative flex justify-center text-xs sm:text-sm">
-              <span className="px-3 bg-white text-gray-500 font-semibold">OR</span>
+              <span className="px-3 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-semibold transition-colors duration-300">OR</span>
             </div>
           </div>
 
@@ -161,21 +161,21 @@ const RegisterPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.4 }}
             >
-              <label className="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">Full Name</label>
+              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2 text-sm sm:text-base transition-colors duration-300">Full Name</label>
               <div className="relative">
-                <User className="absolute left-3 top-3 sm:top-3.5 text-gray-400" size={18} />
+                <User className="absolute left-3 top-3 sm:top-3.5 text-gray-400 dark:text-gray-500" size={18} />
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-2 sm:py-3 border-2 rounded-lg focus:outline-none transition text-gray-700 placeholder-gray-400 text-sm sm:text-base ${
-                    errors.name ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-green-500'
+                  className={`w-full pl-10 pr-4 py-2 sm:py-3 border-2 rounded-lg focus:outline-none transition text-gray-700 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 text-sm sm:text-base transition-colors duration-300 ${
+                    errors.name ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-green-500 dark:focus:border-green-400'
                   }`}
                   placeholder="John Doe"
                 />
               </div>
-              {errors.name && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.name}</p>}
+              {errors.name && <p className="text-red-500 dark:text-red-400 text-xs sm:text-sm mt-1 transition-colors duration-300">{errors.name}</p>}
             </motion.div>
 
             {/* Email */}
@@ -184,21 +184,21 @@ const RegisterPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.5 }}
             >
-              <label className="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">Email Address</label>
+              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2 text-sm sm:text-base transition-colors duration-300">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 sm:top-3.5 text-gray-400" size={18} />
+                <Mail className="absolute left-3 top-3 sm:top-3.5 text-gray-400 dark:text-gray-500" size={18} />
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-2 sm:py-3 border-2 rounded-lg focus:outline-none transition text-gray-700 placeholder-gray-400 text-sm sm:text-base ${
-                    errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-green-500'
+                  className={`w-full pl-10 pr-4 py-2 sm:py-3 border-2 rounded-lg focus:outline-none transition text-gray-700 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 text-sm sm:text-base transition-colors duration-300 ${
+                    errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-green-500 dark:focus:border-green-400'
                   }`}
                   placeholder="your@email.com"
                 />
               </div>
-              {errors.email && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.email}</p>}
+              {errors.email && <p className="text-red-500 dark:text-red-400 text-xs sm:text-sm mt-1 transition-colors duration-300">{errors.email}</p>}
             </motion.div>
 
             {/* Password */}
@@ -207,23 +207,23 @@ const RegisterPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.6 }}
             >
-              <label className="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">Password</label>
+              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2 text-sm sm:text-base transition-colors duration-300">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 sm:top-3.5 text-gray-400" size={18} />
+                <Lock className="absolute left-3 top-3 sm:top-3.5 text-gray-400 dark:text-gray-500" size={18} />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-12 py-2 sm:py-3 border-2 rounded-lg focus:outline-none transition text-gray-700 placeholder-gray-400 text-sm sm:text-base ${
-                    errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-green-500'
+                  className={`w-full pl-10 pr-12 py-2 sm:py-3 border-2 rounded-lg focus:outline-none transition text-gray-700 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 text-sm sm:text-base transition-colors duration-300 ${
+                    errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-green-500 dark:focus:border-green-400'
                   }`}
                   placeholder="Create a strong password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 sm:top-3.5 text-gray-400 hover:text-gray-600 transition"
+                  className="absolute right-3 top-3 sm:top-3.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition transition-colors duration-300"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -237,25 +237,25 @@ const RegisterPage = () => {
                   className="mt-2"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${(passwordStrength.strength / 5) * 100}%` }}
                         className={`h-full transition-all duration-300 ${passwordStrength.color}`}
                       />
                     </div>
-                    <span className={`text-xs font-bold whitespace-nowrap ${
-                      passwordStrength.strength <= 2 ? 'text-red-600' :
-                      passwordStrength.strength <= 3 ? 'text-yellow-600' :
-                      passwordStrength.strength <= 4 ? 'text-blue-600' :
-                      'text-green-600'
+                    <span className={`text-xs font-bold whitespace-nowrap transition-colors duration-300 ${
+                      passwordStrength.strength <= 2 ? 'text-red-600 dark:text-red-400' :
+                      passwordStrength.strength <= 3 ? 'text-yellow-600 dark:text-yellow-400' :
+                      passwordStrength.strength <= 4 ? 'text-blue-600 dark:text-blue-400' :
+                      'text-green-600 dark:text-green-400'
                     }`}>
                       {passwordStrength.label}
                     </span>
                   </div>
 
                   {/* Requirements Checklist */}
-                  <div className="bg-gray-50 rounded p-2 sm:p-3 space-y-1 text-xs">
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded p-2 sm:p-3 space-y-1 text-xs transition-colors duration-300">
                     {Object.entries({
                       'Lowercase letters': passwordStrength.checks?.hasLower,
                       'Uppercase letters': passwordStrength.checks?.hasUpper,
@@ -265,17 +265,17 @@ const RegisterPage = () => {
                     }).map(([label, isValid]) => (
                       <div key={label} className="flex items-center gap-2">
                         {isValid ? (
-                          <Check size={14} className="text-green-600 flex-shrink-0" />
+                          <Check size={14} className="text-green-600 dark:text-green-400 flex-shrink-0 transition-colors duration-300" />
                         ) : (
-                          <X size={14} className="text-gray-400 flex-shrink-0" />
+                          <X size={14} className="text-gray-400 dark:text-gray-500 flex-shrink-0 transition-colors duration-300" />
                         )}
-                        <span className={isValid ? 'text-green-600' : 'text-gray-600'}>{label}</span>
+                        <span className={`transition-colors duration-300 ${isValid ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>{label}</span>
                       </div>
                     ))}
                   </div>
                 </motion.div>
               )}
-              {errors.password && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.password}</p>}
+              {errors.password && <p className="text-red-500 dark:text-red-400 text-xs sm:text-sm mt-1 transition-colors duration-300">{errors.password}</p>}
             </motion.div>
 
             {/* Confirm Password */}
@@ -284,28 +284,28 @@ const RegisterPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.7 }}
             >
-              <label className="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">Confirm Password</label>
+              <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2 text-sm sm:text-base transition-colors duration-300">Confirm Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 sm:top-3.5 text-gray-400" size={18} />
+                <Lock className="absolute left-3 top-3 sm:top-3.5 text-gray-400 dark:text-gray-500" size={18} />
                 <input
                   type={showConfirm ? 'text' : 'password'}
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-12 py-2 sm:py-3 border-2 rounded-lg focus:outline-none transition text-gray-700 placeholder-gray-400 text-sm sm:text-base ${
-                    errors.confirmPassword ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-green-500'
+                  className={`w-full pl-10 pr-12 py-2 sm:py-3 border-2 rounded-lg focus:outline-none transition text-gray-700 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 text-sm sm:text-base transition-colors duration-300 ${
+                    errors.confirmPassword ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-green-500 dark:focus:border-green-400'
                   }`}
                   placeholder="Confirm your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirm(!showConfirm)}
-                  className="absolute right-3 top-3 sm:top-3.5 text-gray-400 hover:text-gray-600 transition"
+                  className="absolute right-3 top-3 sm:top-3.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition transition-colors duration-300"
                 >
                   {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-              {errors.confirmPassword && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && <p className="text-red-500 dark:text-red-400 text-xs sm:text-sm mt-1 transition-colors duration-300">{errors.confirmPassword}</p>}
             </motion.div>
 
             {/* Terms Checkbox */}
@@ -320,20 +320,20 @@ const RegisterPage = () => {
                 id="terms"
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
-                className="w-4 h-4 mt-1 rounded border-gray-300 accent-green-600 cursor-pointer flex-shrink-0"
+                className="w-4 h-4 mt-1 rounded border-gray-300 dark:border-gray-600 accent-green-600 cursor-pointer flex-shrink-0 transition-colors duration-300"
               />
-              <label htmlFor="terms" className="text-xs sm:text-sm text-gray-600 cursor-pointer">
+              <label htmlFor="terms" className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 cursor-pointer transition-colors duration-300">
                 I agree to the{' '}
-                <Link href="#" className="font-bold text-green-600 hover:text-green-700">
+                <Link href="#" className="font-bold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition transition-colors duration-300">
                   Terms & Conditions
                 </Link>{' '}
                 and{' '}
-                <Link href="#" className="font-bold text-green-600 hover:text-green-700">
+                <Link href="#" className="font-bold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition transition-colors duration-300">
                   Privacy Policy
                 </Link>
               </label>
             </motion.div>
-            {errors.terms && <p className="text-red-500 text-xs sm:text-sm">{errors.terms}</p>}
+            {errors.terms && <p className="text-red-500 dark:text-red-400 text-xs sm:text-sm transition-colors duration-300">{errors.terms}</p>}
 
             {/* Sign Up Button */}
             <motion.button
@@ -344,7 +344,7 @@ const RegisterPage = () => {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading || !agreedToTerms}
-              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-2.5 sm:py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-75 text-sm sm:text-base"
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 dark:from-green-700 dark:to-emerald-700 dark:hover:from-green-800 dark:hover:to-emerald-800 text-white font-bold py-2.5 sm:py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-75 text-sm sm:text-base transition-colors duration-300"
             >
               {loading ? (
                 <>
@@ -362,10 +362,10 @@ const RegisterPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 1 }}
-            className="text-center mt-4 sm:mt-6 text-gray-700 text-xs sm:text-sm"
+            className="text-center mt-4 sm:mt-6 text-gray-700 dark:text-gray-300 text-xs sm:text-sm transition-colors duration-300"
           >
             Already have an account?{' '}
-            <Link href="/login" className="font-bold text-green-600 hover:text-green-700 transition">
+            <Link href="/login" className="font-bold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition transition-colors duration-300">
               Sign in here
             </Link>
           </motion.p>
@@ -376,10 +376,10 @@ const RegisterPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 1.1 }}
-          className="mt-6 text-center text-emerald-100 text-sm"
+          className="mt-6 text-center text-emerald-100 dark:text-emerald-200 text-sm transition-colors duration-300"
         >
           <p>🔒 Your data is safe and secure</p>
-          <p className="mt-2">Questions? <Link href="/contact-us" className="underline hover:text-white transition">Get in touch</Link></p>
+          <p className="mt-2">Questions? <Link href="/contact-us" className="underline hover:text-white dark:hover:text-emerald-100 transition transition-colors duration-300">Get in touch</Link></p>
         </motion.div>
       </motion.div>
     </div>

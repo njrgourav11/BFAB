@@ -22,15 +22,6 @@ export default function RootLayout({
 }>) {
   const [isDark, setIsDark] = React.useState(false);
 
-  React.useEffect(() => {
-    // Check system preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const stored = localStorage.getItem('theme');
-    const shouldBeDark = stored ? stored === 'dark' : prefersDark;
-    setIsDark(shouldBeDark);
-    updateTheme(shouldBeDark);
-  }, []);
-
   const updateTheme = (dark: boolean) => {
     const html = document.documentElement;
     if (dark) {
@@ -41,6 +32,14 @@ export default function RootLayout({
       localStorage.setItem('theme', 'light');
     }
   };
+
+  React.useEffect(() => {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const stored = localStorage.getItem('theme');
+    const shouldBeDark = stored ? stored === 'dark' : prefersDark;
+    setIsDark(shouldBeDark);
+    updateTheme(shouldBeDark);
+  }, []);
 
   const toggleTheme = () => {
     const newDark = !isDark;

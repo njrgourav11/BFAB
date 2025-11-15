@@ -20,7 +20,7 @@ const products = [
     id: 1,
     name: 'Premium Dog Food',
     price: '₹59.99',
-    image: '/globe.svg',
+    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
     rating: 4.9,
     reviews: 328,
     category: 'Canine',
@@ -30,7 +30,7 @@ const products = [
     id: 2,
     name: 'Organic Cat Food',
     price: '₹49.99',
-    image: '/globe.svg',
+    image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=300&h=300&fit=crop',
     rating: 4.8,
     reviews: 245,
     category: 'Feline',
@@ -40,7 +40,7 @@ const products = [
     id: 3,
     name: 'Grain-Free Puppy Food',
     price: '₹69.99',
-    image: '/globe.svg',
+    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&h=300&fit=crop',
     rating: 5.0,
     reviews: 512,
     category: 'Canine',
@@ -50,7 +50,7 @@ const products = [
     id: 4,
     name: 'Senior Dog Nutrition',
     price: '₹55.99',
-    image: '/globe.svg',
+    image: 'https://images.unsplash.com/photo-1551717743-49959800b1f6?w=300&h=300&fit=crop',
     rating: 4.7,
     reviews: 189,
     category: 'Canine',
@@ -60,7 +60,7 @@ const products = [
     id: 5,
     name: 'Kitten Growth Formula',
     price: '₹65.99',
-    image: '/globe.svg',
+    image: 'https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=300&h=300&fit=crop',
     rating: 4.9,
     reviews: 276,
     category: 'Feline',
@@ -70,7 +70,7 @@ const products = [
     id: 6,
     name: 'Weight Management Dog Food',
     price: '₹62.99',
-    image: '/globe.svg',
+    image: 'https://images.unsplash.com/photo-1605568427561-40dd23c2acea?w=300&h=300&fit=crop',
     rating: 4.6,
     reviews: 143,
     category: 'Canine',
@@ -80,7 +80,7 @@ const products = [
     id: 7,
     name: 'Fish-Based Cat Formula',
     price: '₹54.99',
-    image: '/globe.svg',
+    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop',
     rating: 4.8,
     reviews: 198,
     category: 'Feline',
@@ -90,7 +90,7 @@ const products = [
     id: 8,
     name: 'Allergy-Free Dog Food',
     price: '₹72.99',
-    image: '/globe.svg',
+    image: 'https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?w=300&h=300&fit=crop',
     rating: 4.9,
     reviews: 421,
     category: 'Canine',
@@ -100,7 +100,7 @@ const products = [
     id: 9,
     name: 'Delicious Dog Treats',
     price: '₹24.99',
-    image: '/globe.svg',
+    image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=300&h=300&fit=crop',
     rating: 4.7,
     reviews: 342,
     category: 'Canine',
@@ -110,7 +110,7 @@ const products = [
     id: 10,
     name: 'Gourmet Cat Treats',
     price: '₹18.99',
-    image: '/globe.svg',
+    image: 'https://images.unsplash.com/photo-1606889464198-fcb18894cf50?w=300&h=300&fit=crop',
     rating: 4.9,
     reviews: 215,
     category: 'Feline',
@@ -140,7 +140,7 @@ const ShopNowPage = () => {
   });
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+    <div className="bg-white dark:bg-black min-h-screen transition-colors duration-300">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-12">
         <div className="container mx-auto px-4 md:px-6">
@@ -184,7 +184,7 @@ const ShopNowPage = () => {
                   onClick={() => setSelectedProductCategory(isSelected ? null : cat.name)}
                   className={`flex flex-col items-center gap-2 p-4 rounded-xl transition duration-300 transform ${
                     isSelected
-                      ? `bg-gradient-to-br ₹{cat.color} text-white shadow-lg scale-105 hover:scale-110`
+                      ? `bg-gradient-to-br ${cat.color} text-white shadow-lg scale-105 hover:scale-110`
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:scale-105'
                   }`}
                 >
@@ -219,7 +219,7 @@ const ShopNowPage = () => {
       </section>
 
       {/* Main Content */}
-      <section className="container mx-auto px-4 md:px-6 py-12">
+      <section className="container mx-auto px-4 md:px-6 py-12 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 min-h-screen">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar - Filters */}
           <motion.div
