@@ -1,0 +1,694 @@
+"use client";
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { Globe, Star, Gift, Beaker, Award, Heart, ShieldCheck, Leaf, Truck, Phone, RotateCcw, CheckCircle } from 'lucide-react';
+import FeatureCard from './components/FeatureCard';
+import ClientCarousel from './components/ClientCarousel';
+
+// Sample data for featured products
+const featuredProducts = [
+  {
+    id: 1,
+    name: 'Premium Dog Food',
+    price: '₹59.99',
+    image: 'https://images.unsplash.com/photo-1600259830519-21a083c2b007?w=300&h=300&fit=crop',
+    rating: 4.9,
+    reviews: 328,
+  },
+  {
+    id: 2,
+    name: 'Organic Cat Food',
+    price: '₹49.99',
+    image: 'https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=300&h=300&fit=crop',
+    rating: 4.8,
+    reviews: 245,
+  },
+  {
+    id: 3,
+    name: 'Grain-Free Puppy Food',
+    price: '₹69.99',
+    image: 'https://images.unsplash.com/photo-1585110396000-c9ffd4d4b3f0?w=300&h=300&fit=crop',
+    rating: 5.0,
+    reviews: 512,
+  },
+];
+
+// Featured Pets Gallery
+const featuredPets = [
+  {
+    id: 1,
+    name: 'Max',
+    breed: 'Golden Retriever',
+    image: 'https://images.unsplash.com/photo-1633722715463-d30628519b81?w=300&h=300&fit=crop',
+    testimonial: 'Thriving on Premium Dog Food',
+  },
+  {
+    id: 2,
+    name: 'Luna',
+    breed: 'Persian Cat',
+    image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=300&h=300&fit=crop',
+    testimonial: 'Loves the Organic Cat Food',
+  },
+  {
+    id: 3,
+    name: 'Charlie',
+    breed: 'Labrador Puppy',
+    image: 'https://images.unsplash.com/photo-1576723626811-a3f4a1cf9ff9?w=300&h=300&fit=crop',
+    testimonial: 'Growing Strong & Healthy',
+  },
+  {
+    id: 4,
+    name: 'Bella',
+    breed: 'Siamese Cat',
+    image: 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=300&h=300&fit=crop',
+    testimonial: 'Happy & Full of Energy',
+  },
+];
+
+// Sample data for testimonials/reviews
+const testimonials = [
+  {
+    id: 1,
+    name: 'Jane Doe',
+    comment: 'My dog loves this food! His coat has never been shinier. He has so much more energy now!',
+    avatar: '/vercel.svg',
+    pet: 'Golden Retriever',
+    rating: 5,
+    verified: true,
+  },
+  {
+    id: 2,
+    name: 'John Smith',
+    comment: 'Finally, a cat food that my picky eater enjoys. Thank you, BFAB! Worth every penny.',
+    avatar: '/vercel.svg',
+    pet: 'Persian Cat',
+    rating: 5,
+    verified: true,
+  },
+  {
+    id: 3,
+    name: 'Sarah Johnson',
+    comment: 'My senior dog\'s joints have improved significantly. She\'s more active than before!',
+    avatar: '/vercel.svg',
+    pet: 'Labrador Retriever',
+    rating: 5,
+    verified: true,
+  },
+  {
+    id: 4,
+    name: 'Michael Brown',
+    comment: 'Excellent quality and great customer service. My kitties are thriving!',
+    avatar: '/vercel.svg',
+    pet: 'British Shorthair',
+    rating: 4,
+    verified: true,
+  },
+];
+
+// Hero features
+const heroFeatures = [
+  {
+    icon: <Globe size={28} />,
+    title: 'Globally Sourced',
+    description: 'Premium ingredients from trusted suppliers worldwide',
+  },
+  {
+    icon: <Star size={28} />,
+    title: '3100+ 5-Star Reviews',
+    description: 'Loved by pet owners everywhere',
+  },
+  {
+    icon: <Gift size={28} />,
+    title: 'Subscribe & Save',
+    description: 'Get 15% off on recurring orders',
+  },
+  {
+    icon: <Beaker size={28} />,
+    title: 'Formulated by Pet Scientists',
+    description: 'Researched and tested for optimal nutrition',
+  },
+];
+
+export default function Home() {
+  return (
+    <div>
+      {/* Hero Section */}
+      <section className="relative min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 dark:from-blue-950 dark:via-blue-900 dark:to-slate-900 flex items-center justify-center text-white overflow-hidden">
+        {/* Animated Background Elements - Optimized for Mobile */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-10 left-10 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse dark:opacity-10"></div>
+          <div className="absolute top-20 right-10 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse dark:opacity-10" style={{ animationDelay: '2s' }}></div>
+          <div className="hidden sm:block absolute bottom-10 left-40 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse dark:opacity-10" style={{ animationDelay: '4s' }}></div>
+        </div>
+
+        <div className="relative z-10 container mx-auto px-4 md:px-6 py-12 sm:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="mb-6"
+              >
+                <span className="inline-block bg-yellow-300 dark:bg-yellow-400 text-blue-700 dark:text-blue-900 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                  🐾 Premium Pet Nutrition
+                </span>
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-white"
+              >
+                Nourish Your Pets, Inside and Out
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-base sm:text-lg md:text-xl text-blue-100 dark:text-blue-200 mb-8 leading-relaxed"
+              >
+                Discover the best premium pet food formulated by scientists and loved by thousands of pet owners worldwide.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+              >
+                <Link
+                  href="/shop-now"
+                  className="bg-white text-blue-600 hover:bg-blue-50 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full transition duration-300 text-center shadow-lg hover:shadow-xl text-sm sm:text-base"
+                >
+                  Shop Now
+                </Link>
+                <Link
+                  href="/about-us"
+                  className="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full transition duration-300 text-center text-sm sm:text-base"
+                >
+                  Learn More
+                </Link>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Visual */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="hidden lg:flex justify-center"
+            >
+              <motion.div
+                animate={{ y: [0, 20, 0] }}
+                transition={{ duration: 4, repeat: Infinity }}
+              >
+                <Image
+                  src="/next.svg"
+                  alt="Premium Pet Food"
+                  width={400}
+                  height={400}
+                  className="drop-shadow-2xl"
+                />
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Hero Features Section */}
+      <section className="py-16 bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {heroFeatures.map((feature, index) => (
+              <FeatureCard
+                key={index}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                delay={index * 0.1}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products Section */}
+      <section className="py-20 bg-white dark:bg-slate-950 transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">Featured Products</h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Our bestsellers loved by pet owners everywhere</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            {featuredProducts.map((product, index) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                viewport={{ once: true }}
+                className="group"
+              >
+                <div className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 sm:p-6 text-center shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-slate-900 h-full flex flex-col hover:scale-105">
+                  <div className="relative mb-4 overflow-hidden rounded-lg bg-gray-100 dark:bg-slate-800 h-32 sm:h-40 flex items-center justify-center">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      width={150}
+                      height={150}
+                      className="group-hover:scale-110 transition duration-300"
+                    />
+                  </div>
+                  <h3 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{product.name}</h3>
+
+                  {/* Rating */}
+                  <div className="flex items-center justify-center mb-3">
+                    <div className="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} size={16} fill="currentColor" />
+                      ))}
+                    </div>
+                    <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                      {product.rating} ({product.reviews} reviews)
+                    </span>
+                  </div>
+
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-4">{product.price}</p>
+                  <Link
+                    href="/products"
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 text-white py-3 px-6 rounded-full mt-auto hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 transition duration-300 font-semibold"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Link
+              href="/shop-now"
+              className="bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 text-white py-3 px-8 rounded-full font-semibold transition duration-300 inline-block"
+            >
+              View All Products
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Featured Pets Section */}
+      <section className="py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">🐾 Meet Our Featured Pets</h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Happy, healthy pets thriving on our nutrition</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            {featuredPets.map((pet, index) => (
+              <motion.div
+                key={pet.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="group"
+              >
+                <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                  <div className="relative h-48 sm:h-56 overflow-hidden bg-gray-100 dark:bg-slate-700">
+                    <Image
+                      src={pet.image}
+                      alt={pet.name}
+                      width={250}
+                      height={250}
+                      className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                  </div>
+                  <div className="p-4 sm:p-6">
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{pet.name}</h3>
+                    <p className="text-sm sm:text-base text-blue-600 dark:text-blue-400 font-semibold mb-3">{pet.breed}</p>
+                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 italic mb-4">"{pet.testimonial}"</p>
+                    <div className="flex items-center justify-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} size={16} className="text-yellow-400" fill="currentColor" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Ultimate Saver Packs Section */}
+      <section className="py-20 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 dark:from-slate-800 dark:via-slate-900 dark:to-slate-900 text-white transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              whileInView={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="inline-block mb-4"
+            >
+              <span className="bg-yellow-300 dark:bg-yellow-400 text-purple-800 dark:text-gray-900 px-6 py-2 rounded-full text-sm font-bold shadow-lg">💰 SAVE UP TO 30%</span>
+            </motion.div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white">Ultimate Saver Packs</h2>
+            <p className="text-base sm:text-lg md:text-xl text-purple-100 dark:text-purple-200 mb-8">Get everything your pet needs at unbeatable prices</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-12">
+            {[
+              { name: 'Dog Bundle', value: '₹99.99', savings: 'Save ₹25', items: ['Premium Dog Food', 'Dog Treats', 'Toy', 'Food Bowl'] },
+              { name: 'Cat Bundle', value: '₹89.99', savings: 'Save ₹20', items: ['Organic Cat Food', 'Cat Treats', 'Toy', 'Litter'] },
+              { name: 'Multi-Pet Bundle', value: '₹149.99', savings: 'Save ₹40', items: ['Dog & Cat Food', 'Mixed Treats', 'Toys', 'Accessories'] },
+            ].map((pack, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-white/10 dark:bg-gray-800/50 backdrop-blur-md rounded-xl p-4 sm:p-6 md:p-8 border border-white/20 dark:border-gray-700/50 hover:bg-white/20 dark:hover:bg-gray-700/50 transition duration-300 transform hover:scale-105"
+              >
+                <div className="bg-yellow-300 dark:bg-yellow-400 text-purple-800 dark:text-gray-900 inline-block px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold mb-4 shadow-md">
+                  {pack.savings}
+                </div>
+                <h3 className="text-lg sm:text-2xl font-bold mb-4 text-white">{pack.name}</h3>
+                <ul className="space-y-2 mb-6 text-purple-100 dark:text-purple-200">
+                  {pack.items.map((item, i) => (
+                    <li key={i} className="flex items-center gap-2">
+                      <CheckCircle size={18} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-3xl font-bold mb-4 text-yellow-300 dark:text-yellow-400">{pack.value}</p>
+                <button className="w-full bg-yellow-300 dark:bg-yellow-400 text-purple-800 dark:text-gray-900 hover:bg-yellow-400 dark:hover:bg-yellow-300 font-bold py-3 px-6 rounded-full transition duration-300 shadow-lg hover:shadow-xl">
+                  Add to Cart
+                </button>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* View All Packs Button */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <Link
+              href="/ultimate-saver-packs"
+              className="inline-block bg-white dark:bg-yellow-400 text-purple-700 dark:text-gray-900 hover:bg-gray-100 dark:hover:bg-yellow-300 font-bold py-3 px-10 rounded-full transition duration-300 shadow-lg hover:shadow-xl"
+            >
+              Explore All Saver Packs →
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Vet Reviewed Section */}
+      <section className="py-16 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-slate-900 dark:to-slate-900 border-y-2 border-green-200 dark:border-green-900 transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="bg-green-600 dark:bg-green-700 text-white rounded-full p-8 flex-shrink-0"
+            >
+              <ShieldCheck size={48} />
+            </motion.div>
+            <div>
+              <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-3">✅ Vet Approved & Reviewed</h3>
+              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                Every formula in our collection has been carefully reviewed and approved by licensed veterinarians and animal nutritionists. 
+                We stand behind our quality with a 100% satisfaction guarantee. Your pet's health is our top priority.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Client Carousel Section */}
+      <section className="py-20 bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <ClientCarousel />
+        </div>
+      </section>
+
+      {/* Testimonials Section - Enhanced Reviews */}
+      <section className="py-20 bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">⭐ Verified Customer Reviews</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400">Join thousands of happy pet parents</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={testimonial.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden border border-yellow-100 dark:border-slate-700"
+              >
+                <div className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-slate-700 dark:to-slate-800 p-6 border-b border-yellow-100 dark:border-slate-700">
+                  {/* Stars and Verified Badge */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex gap-1">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} size={18} fill="#fbbf24" stroke="#fbbf24" />
+                      ))}
+                      {[...Array(5 - testimonial.rating)].map((_, i) => (
+                        <Star key={i + testimonial.rating} size={18} stroke="#d1d5db" />
+                      ))}
+                    </div>
+                    {testimonial.verified && (
+                      <div className="flex items-center gap-1 bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full">
+                        <CheckCircle size={14} className="text-green-600 dark:text-green-400" />
+                        <span className="text-xs font-semibold text-green-600 dark:text-green-400">Verified</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* User Info */}
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                      width={50}
+                      height={50}
+                      className="rounded-full border-2 border-yellow-300"
+                    />
+                    <div>
+                      <p className="font-bold text-gray-800 dark:text-gray-100">{testimonial.name}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                        🐾 {testimonial.pet}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Review Comment */}
+                <div className="p-6">
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed italic">"{testimonial.comment}"</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* View All Reviews Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Link
+              href="#"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white py-3 px-10 rounded-full font-semibold transition duration-300 inline-block shadow-lg hover:shadow-xl"
+            >
+              View All Reviews (3,100+)
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Trust Guarantees Section */}
+      <section className="py-20 bg-white dark:bg-slate-950 transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">Why Shop With Confidence</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400">We've got you covered every step of the way</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Truck,
+                title: '🚚 Free Shipping',
+                description: 'Free delivery on all orders over ₹50. Fast and secure shipping to your doorstep.',
+                color: 'from-blue-500 to-blue-600',
+              },
+              {
+                icon: Phone,
+                title: '📞 24/7 Customer Support',
+                description: 'Our dedicated team is here to help. Get expert advice and quick responses anytime.',
+                color: 'from-green-500 to-green-600',
+              },
+              {
+                icon: RotateCcw,
+                title: '✅ 90-Day Money Back Guarantee',
+                description: 'Not satisfied? Get a full refund within 90 days. We want you and your pet 100% happy.',
+                color: 'from-purple-500 to-purple-600',
+              },
+            ].map((guarantee, index) => {
+              const IconComponent = guarantee.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="text-center p-8 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-800 dark:to-slate-900 border border-gray-200 dark:border-slate-700 hover:shadow-lg transition duration-300"
+                >
+                  <div className={`bg-gradient-to-br ₹{guarantee.color} text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                    <IconComponent size={32} />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">{guarantee.title}</h3>
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{guarantee.description}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-950 dark:to-slate-900 text-white transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose BFAB?</h2>
+            <p className="text-xl text-blue-100 dark:text-blue-200">The trusted choice for discerning pet parents</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { icon: <Award size={32} />, title: 'Premium Quality', description: 'Best ingredients sourced globally' },
+              { icon: <ShieldCheck size={32} />, title: 'Vet Approved', description: 'Formulated by veterinary experts' },
+              { icon: <Leaf size={32} />, title: 'Natural & Organic', description: 'No artificial additives or fillers' },
+              { icon: <Heart size={32} />, title: 'Health Guarantee', description: 'Healthier pets or your money back' },
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="text-center"
+              >
+                <div className="w-16 h-16 mx-auto mb-4 bg-white bg-opacity-20 dark:bg-blue-900 dark:bg-opacity-40 rounded-full flex items-center justify-center">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-bold mb-2 text-white">{feature.title}</h3>
+                <p className="text-blue-100 dark:text-blue-200">{feature.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="py-20 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-6">Ready to Transform Your Pet's Health?</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+              Join thousands of happy pet owners who have already made the switch to premium nutrition.
+            </p>
+            <Link
+              href="/shop-now"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg transition duration-300 inline-block shadow-lg hover:shadow-xl"
+            >
+              Start Shopping Now
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+    </div>
+  );
+}

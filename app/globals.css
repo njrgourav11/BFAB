@@ -1,0 +1,292 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* Dark mode explicit support */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark :root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Button hover effects */
+.btn-primary {
+  @apply bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition duration-300 hover:bg-blue-700 hover:shadow-lg;
+}
+
+.btn-outline {
+  @apply border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-semibold transition duration-300 hover:bg-blue-600 hover:text-white;
+}
+
+/* Card hover effects */
+.card {
+  @apply rounded-lg shadow-md transition duration-300 hover:shadow-lg;
+}
+
+.card-hover {
+  @apply rounded-lg shadow-md transition duration-300 hover:shadow-lg hover:scale-105;
+}
+
+/* Text gradient */
+.text-gradient {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Responsive container */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+}
+
+/* Reduced motion support for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile-first responsive utilities */
+@media (max-width: 640px) {
+  /* Reduce animation complexity on mobile */
+  @keyframes fadeInUpMobile {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUpMobile 0.4s ease-out;
+  }
+
+  /* Smoother animations for mobile */
+  body {
+    --animation-duration: 0.4s;
+  }
+
+  /* Ensure touch targets are at least 44x44px */
+  button, a, input[type="checkbox"], input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better spacing for mobile forms */
+  input, textarea, select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  /* Reduce blur effects on mobile for better performance */
+  .backdrop-blur-md {
+    backdrop-filter: blur(2px);
+  }
+
+  /* Mobile-optimized text sizes */
+  h1 {
+    @apply text-3xl;
+  }
+
+  h2 {
+    @apply text-2xl;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+}
+
+/* Tablet and up optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Balanced animations for tablets */
+  body {
+    --animation-duration: 0.5s;
+  }
+}
+
+/* Desktop optimizations */
+@media (min-width: 1025px) {
+  /* Full animations on desktop */
+  body {
+    --animation-duration: 0.6s;
+  }
+}
+
+/* Performance optimizations */
+@supports (transform: translateZ(0)) {
+  * {
+    will-change: auto;
+  }
+
+  .animate-pulse,
+  .animate-fadeInUp,
+  .animate-slideInRight,
+  .animate-slideInLeft {
+    will-change: transform, opacity;
+  }
+}
+
+/* Improved touch responsiveness */
+@media (hover: none) and (pointer: coarse) {
+  button:active,
+  a:active {
+    transform: scale(0.98);
+  }
+
+  .hover\:scale-105:hover {
+    transform: scale(1.02) !important;
+  }
+
+  .hover\:scale-110:hover {
+    transform: scale(1.05) !important;
+  }
+}
+
+/* Dark mode utilities */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  @apply bg-gray-950 text-gray-100;
+}
+
+.dark .bg-white {
+  @apply bg-gray-900;
+}
+
+.dark .bg-gray-50 {
+  @apply bg-gray-900/50;
+}
+
+.dark .text-gray-800 {
+  @apply text-gray-100;
+}
+
+.dark .text-gray-600 {
+  @apply text-gray-400;
+}
+
+.dark .border-gray-200 {
+  @apply border-gray-700;
+}
+
+.dark .shadow-lg {
+  @apply shadow-2xl shadow-black/50;
+}
+
+.dark .bg-gray-100 {
+  @apply bg-gray-800;
+}
