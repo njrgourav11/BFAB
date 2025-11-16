@@ -144,7 +144,8 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center text-white overflow-hidden" style={{backgroundImage: 'url("/images/Untitled design (24).png")', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}>
+      <section className="relative h-screen flex items-center justify-center text-white overflow-hidden bg-cover bg-center bg-no-repeat" style={{backgroundImage: 'url("/images/Untitled design (12).png")'}}>
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block" style={{backgroundImage: 'url("/images/Untitled design (24).png")'}}></div>
         {/* Overlay for better text readability */}
 
         {/* Animated Background Elements - Optimized for Mobile */}
@@ -156,7 +157,7 @@ export default function Home() {
       </section>
 
       {/* Hero Features Section */}
-      <section className="py-16 bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+      <section className="py-16 bg-[#fef6eb] dark:bg-slate-900 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {heroFeatures.map((feature, index) => (
@@ -173,7 +174,7 @@ export default function Home() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-20 bg-white dark:bg-slate-950 transition-colors duration-300">
+      <section className="py-20 bg-[#fef6e] dark:bg-slate-950 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -199,26 +200,12 @@ export default function Home() {
                 <Link href={`/products/${product.id}`} className="block h-full">
                   <div className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 sm:p-6 text-center shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-slate-900 h-full flex flex-col hover:scale-105 cursor-pointer">
                     <div className="relative mb-4 overflow-hidden rounded-lg bg-gray-100 dark:bg-slate-800 h-32 sm:h-40">
-                      <Swiper
-                        spaceBetween={10}
-                        slidesPerView={1}
-                        autoplay={{ delay: 3000 }}
-                        loop={true}
-                        modules={[Autoplay]}
-                        className="h-full"
-                      >
-                        {product.images.map((img, idx) => (
-                          <SwiperSlide key={idx} className="flex items-center justify-center">
-                            <Image
-                              src={img}
-                              alt={`${product.name} ${idx + 1}`}
-                              width={150}
-                              height={150}
-                              className="group-hover:scale-110 transition duration-300"
-                            />
-                          </SwiperSlide>
-                        ))}
-                      </Swiper>
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        className="object-cover group-hover:scale-110 transition duration-300"
+                      />
                     </div>
                     <h3 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{product.name}</h3>
 
@@ -424,14 +411,14 @@ export default function Home() {
       </section>
 
       {/* Client Carousel Section */}
-      <section className="py-20 bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+      <section className="py-20 dark:bg-slate-900 transition-colors duration-300" style={{backgroundColor: '#fef6eb'}}>
         <div className="container mx-auto px-4 md:px-6">
           <ClientCarousel />
         </div>
       </section>
 
       {/* Testimonials Section - Enhanced Reviews */}
-      <section className="py-20 bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+      <section className="py-20 bg-[#fef6eb] dark:bg-slate-900 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -518,7 +505,7 @@ export default function Home() {
       </section>
 
       {/* Trust Guarantees Section */}
-      <section className="py-20 bg-white dark:bg-slate-950 transition-colors duration-300">
+      <section className="py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -615,7 +602,7 @@ export default function Home() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="py-20 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+      <section className="py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

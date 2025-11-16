@@ -371,14 +371,16 @@ const CartPage = () => {
                 </div>
 
                 {/* Checkout Button */}
-                <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 dark:from-blue-700 dark:to-cyan-700 dark:hover:from-blue-800 dark:hover:to-cyan-800 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl dark:shadow-blue-900/50 text-sm sm:text-base"
-                >
-                  Proceed to Checkout
-                  <ArrowRight size={18} className="sm:w-5 sm:h-5" />
-                </motion.button>
+                <Link href="/checkout" className="block">
+                  <motion.button
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 dark:from-blue-700 dark:to-cyan-700 dark:hover:from-blue-800 dark:hover:to-cyan-800 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl dark:shadow-blue-900/50 text-sm sm:text-base"
+                  >
+                    Proceed to Checkout
+                    <ArrowRight size={18} className="sm:w-5 sm:h-5" />
+                  </motion.button>
+                </Link>
               </motion.div>
 
               {/* Trust Badges */}

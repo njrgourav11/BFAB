@@ -232,7 +232,7 @@ const ContactUsPage = () => {
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
-              <div className="bg-blue-50 dark:bg-gradient-to-br dark:from-blue-900/30 dark:to-purple-900/30 rounded-lg shadow-lg dark:shadow-2xl dark:shadow-black/50 p-8 mb-6 border border-blue-200 dark:border-blue-800 transition-colors duration-300">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-2xl dark:shadow-black/50 p-6 text-center border border-gray-200 dark:border-gray-700 transition-colors duration-300">
                 <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2 transition-colors duration-300">
                   <MapPin size={28} className="text-blue-600 dark:text-blue-400" />
                   Visit Us

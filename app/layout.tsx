@@ -28,9 +28,11 @@ export default function RootLayout({
     if (dark) {
       html.classList.add('dark');
       localStorage.setItem('theme', 'dark');
+      console.log('Dark mode enabled, classes:', html.className);
     } else {
       html.classList.remove('dark');
       localStorage.setItem('theme', 'light');
+      console.log('Light mode enabled, classes:', html.className);
     }
   };
 
@@ -51,7 +53,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-300`}
+        style={{backgroundColor: isDark ? undefined : '#fef6eb'}}
       >
         <CartProvider>
           <Navbar isDark={isDark} toggleTheme={toggleTheme} />

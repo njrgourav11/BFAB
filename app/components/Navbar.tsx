@@ -25,9 +25,9 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
   ];
 
   return (
-    <nav className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-950 dark:to-blue-900 shadow-lg sticky top-0 z-50 transition-colors duration-300 border-b border-blue-800 dark:border-blue-800">
+    <nav className="bg-gradient-to-r from-orange-400 to-orange-500 dark:from-blue-950 dark:to-blue-900 shadow-lg sticky top-0 z-50 transition-colors duration-300 border-b border-orange-600 dark:border-blue-800">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-16">
           
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 hover:opacity-90 transition-opacity duration-200 flex-shrink-0">
