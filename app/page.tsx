@@ -42,16 +42,6 @@ const featuredProducts = [
     reviews: 512,
     description: 'Alphonso Mango & Peanut Butter + Banana | Healthy Dog Treats | No Colour & Flavours | Made with Oat & Coconut Milk',
   },
-  {
-    id: 4,
-    name: 'Ashwagandha + Hemp Protein Supplement for Dogs & Cats',
-    price: '₹799',
-    originalPrice: '₹999',
-    images: ['/products/4/supplement.png'],
-    rating: 4.9,
-    reviews: 156,
-    description: 'Powerful Everyday Wellness Blend | 42% Organic Plant Protein | Boosts Immunity & Reduces Stress | Human-Grade Formula',
-  },
 ];
 
 // Featured Pets Gallery
