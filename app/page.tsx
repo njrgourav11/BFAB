@@ -3,6 +3,9 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
 import { Globe, Star, Gift, Beaker, Award, Heart, ShieldCheck, Leaf, Truck, Phone, RotateCcw, CheckCircle } from 'lucide-react';
 import FeatureCard from './components/FeatureCard';
 import ClientCarousel from './components/ClientCarousel';
@@ -11,27 +14,33 @@ import ClientCarousel from './components/ClientCarousel';
 const featuredProducts = [
   {
     id: 1,
-    name: 'Premium Dog Food',
-    price: '₹59.99',
-    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
+    name: 'BFAB Peanut Butter for Dogs - 500g',
+    price: '₹349',
+    originalPrice: '₹399',
+    images: ['/products/1/20.png', '/products/1/21.png', '/products/1/22.png', '/products/1/23.png', '/products/1/24.png', '/products/1/26.png'],
     rating: 4.9,
     reviews: 328,
+    description: 'All-Natural, xylitol-Free | Protein-Rich Treat with Zero preservatives | Perfect for Training, Grooming, Rewards & Snacking',
   },
   {
     id: 2,
-    name: 'Organic Cat Food',
-    price: '₹49.99',
-    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
+    name: 'BFAB Oven Baked Kitten Kibble Dry Cat Food - 1Kg',
+    price: '₹599',
+    originalPrice: '₹799',
+    images: ['/products/2/3.png', '/products/2/4.png', '/products/2/5.png', '/products/2/6.png', '/products/2/7.png', '/products/2/8.png'],
     rating: 4.8,
     reviews: 245,
+    description: 'Chicken & Ocean Fish | Promotes Brain & Vision Development | Enhances Immunity | Improves Digestive Health',
   },
   {
     id: 3,
-    name: 'Grain-Free Puppy Food',
-    price: '₹69.99',
-    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&h=300&fit=crop',
+    name: 'BFAB Natural Frozen Dog Treats - 2 x 40gm',
+    price: '₹99',
+    originalPrice: '₹199',
+    images: ['/products/3/12.png', '/products/3/14.png', '/products/3/16.png', '/products/3/18.png', '/products/3/9.png'],
     rating: 5.0,
     reviews: 512,
+    description: 'Alphonso Mango & Peanut Butter + Banana | Healthy Dog Treats | No Colour & Flavours | Made with Oat & Coconut Milk',
   },
 ];
 
@@ -135,93 +144,14 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 dark:from-blue-950 dark:via-blue-900 dark:to-slate-900 flex items-center justify-center text-white overflow-hidden">
+      <section className="relative h-screen flex items-center justify-center text-white overflow-hidden" style={{backgroundImage: 'url("/images/Untitled design (24).png")', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}>
+        {/* Overlay for better text readability */}
+
         {/* Animated Background Elements - Optimized for Mobile */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-10 left-10 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse dark:opacity-10"></div>
           <div className="absolute top-20 right-10 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse dark:opacity-10" style={{ animationDelay: '2s' }}></div>
           <div className="hidden sm:block absolute bottom-10 left-40 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse dark:opacity-10" style={{ animationDelay: '4s' }}></div>
-        </div>
-
-        <div className="relative z-10 container mx-auto px-4 md:px-6 py-12 sm:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="mb-6"
-              >
-                <span className="inline-block bg-yellow-300 dark:bg-yellow-400 text-blue-700 dark:text-blue-900 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                  🐾 Premium Pet Nutrition
-                </span>
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-white"
-              >
-                Nourish Your Pets, Inside and Out
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-base sm:text-lg md:text-xl text-blue-100 dark:text-blue-200 mb-8 leading-relaxed"
-              >
-                Discover the best premium pet food formulated by scientists and loved by thousands of pet owners worldwide.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className="flex flex-col sm:flex-row gap-3 sm:gap-4"
-              >
-                <Link
-                  href="/shop-now"
-                  className="bg-white text-blue-600 hover:bg-blue-50 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full transition duration-300 text-center shadow-lg hover:shadow-xl text-sm sm:text-base"
-                >
-                  Shop Now
-                </Link>
-                <Link
-                  href="/about-us"
-                  className="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full transition duration-300 text-center text-sm sm:text-base"
-                >
-                  Learn More
-                </Link>
-              </motion.div>
-            </motion.div>
-
-            {/* Right Visual */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="hidden lg:flex justify-center"
-            >
-              <motion.div
-                animate={{ y: [0, 20, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-              >
-                <Image
-                  src="/next.svg"
-                  alt="Premium Pet Food"
-                  width={400}
-                  height={400}
-                  className="drop-shadow-2xl"
-                />
-              </motion.div>
-            </motion.div>
-          </div>
         </div>
       </section>
 
@@ -266,38 +196,55 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="group"
               >
-                <div className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 sm:p-6 text-center shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-slate-900 h-full flex flex-col hover:scale-105">
-                  <div className="relative mb-4 overflow-hidden rounded-lg bg-gray-100 dark:bg-slate-800 h-32 sm:h-40 flex items-center justify-center">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      width={150}
-                      height={150}
-                      className="group-hover:scale-110 transition duration-300"
-                    />
-                  </div>
-                  <h3 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{product.name}</h3>
-
-                  {/* Rating */}
-                  <div className="flex items-center justify-center mb-3">
-                    <div className="flex text-yellow-400">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={16} fill="currentColor" />
-                      ))}
+                <Link href={`/products/${product.id}`} className="block h-full">
+                  <div className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 sm:p-6 text-center shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-slate-900 h-full flex flex-col hover:scale-105 cursor-pointer">
+                    <div className="relative mb-4 overflow-hidden rounded-lg bg-gray-100 dark:bg-slate-800 h-32 sm:h-40">
+                      <Swiper
+                        spaceBetween={10}
+                        slidesPerView={1}
+                        autoplay={{ delay: 3000 }}
+                        loop={true}
+                        modules={[Autoplay]}
+                        className="h-full"
+                      >
+                        {product.images.map((img, idx) => (
+                          <SwiperSlide key={idx} className="flex items-center justify-center">
+                            <Image
+                              src={img}
+                              alt={`${product.name} ${idx + 1}`}
+                              width={150}
+                              height={150}
+                              className="group-hover:scale-110 transition duration-300"
+                            />
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
                     </div>
-                    <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
-                      {product.rating} ({product.reviews} reviews)
-                    </span>
-                  </div>
+                    <h3 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{product.name}</h3>
 
-                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-4">{product.price}</p>
-                  <Link
-                    href="/products"
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 text-white py-3 px-6 rounded-full mt-auto hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 transition duration-300 font-semibold"
-                  >
-                    View Details
-                  </Link>
-                </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">{product.description}</p>
+
+                    {/* Rating */}
+                    <div className="flex items-center justify-center mb-3">
+                      <div className="flex text-yellow-400">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} size={16} fill="currentColor" />
+                        ))}
+                      </div>
+                      <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                        {product.rating} ({product.reviews} reviews)
+                      </span>
+                    </div>
+
+                    <div className="mb-4">
+                      <p className="text-sm text-gray-500 dark:text-gray-500 line-through">MRP: {product.originalPrice}</p>
+                      <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{product.price}</p>
+                    </div>
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 text-white py-3 px-6 rounded-full mt-auto hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 transition duration-300 font-semibold">
+                      View Details
+                    </div>
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </div>

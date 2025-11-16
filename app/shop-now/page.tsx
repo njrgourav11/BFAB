@@ -4,131 +4,33 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Star, Filter, Grid3x3, LayoutList, Smile, Pill, Sparkles, Activity, Cookie, Dog, Cat } from 'lucide-react';
+import { products } from '../data/products';
+import ProductsCarousel from '../components/ProductsCarousel';
+import ProductImageCarousel from '../components/ProductImageCarousel';
+import { useCart } from '../components/CartContext';
 
 const shopCategories = [
-  { id: 1, name: 'Dental Health', icon: Smile, color: 'from-blue-400 to-blue-600' },
-  { id: 2, name: 'Gut Health', icon: Pill, color: 'from-green-400 to-green-600' },
-  { id: 3, name: 'Skin & Coat Health', icon: Sparkles, color: 'from-pink-400 to-pink-600' },
-  { id: 4, name: 'Hip & Joint Health', icon: Activity, color: 'from-yellow-400 to-yellow-600' },
-  { id: 5, name: 'Treats', icon: Cookie, color: 'from-orange-400 to-orange-600' },
-  { id: 6, name: 'Canine', icon: Dog, color: 'from-amber-400 to-amber-600' },
-  { id: 7, name: 'Feline', icon: Cat, color: 'from-purple-400 to-purple-600' },
+  { id: 1, name: 'Treats', icon: Cookie, color: 'from-orange-400 to-orange-600' },
+  { id: 2, name: 'Cat Food', icon: Cat, color: 'from-purple-400 to-purple-600' },
+  { id: 3, name: 'Supplements', icon: Pill, color: 'from-green-400 to-green-600' },
+  { id: 4, name: 'Canine', icon: Dog, color: 'from-amber-400 to-amber-600' },
+  { id: 5, name: 'Feline', icon: Cat, color: 'from-purple-400 to-purple-600' },
 ];
 
-const products = [
-  {
-    id: 1,
-    name: 'Premium Dog Food',
-    price: '₹59.99',
-    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop',
-    rating: 4.9,
-    reviews: 328,
-    category: 'Canine',
-    productCategory: 'Dental Health',
-  },
-  {
-    id: 2,
-    name: 'Organic Cat Food',
-    price: '₹49.99',
-    image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=300&h=300&fit=crop',
-    rating: 4.8,
-    reviews: 245,
-    category: 'Feline',
-    productCategory: 'Gut Health',
-  },
-  {
-    id: 3,
-    name: 'Grain-Free Puppy Food',
-    price: '₹69.99',
-    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&h=300&fit=crop',
-    rating: 5.0,
-    reviews: 512,
-    category: 'Canine',
-    productCategory: 'Skin & Coat Health',
-  },
-  {
-    id: 4,
-    name: 'Senior Dog Nutrition',
-    price: '₹55.99',
-    image: 'https://images.unsplash.com/photo-1551717743-49959800b1f6?w=300&h=300&fit=crop',
-    rating: 4.7,
-    reviews: 189,
-    category: 'Canine',
-    productCategory: 'Hip & Joint Health',
-  },
-  {
-    id: 5,
-    name: 'Kitten Growth Formula',
-    price: '₹65.99',
-    image: 'https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=300&h=300&fit=crop',
-    rating: 4.9,
-    reviews: 276,
-    category: 'Feline',
-    productCategory: 'Gut Health',
-  },
-  {
-    id: 6,
-    name: 'Weight Management Dog Food',
-    price: '₹62.99',
-    image: 'https://images.unsplash.com/photo-1605568427561-40dd23c2acea?w=300&h=300&fit=crop',
-    rating: 4.6,
-    reviews: 143,
-    category: 'Canine',
-    productCategory: 'Hip & Joint Health',
-  },
-  {
-    id: 7,
-    name: 'Fish-Based Cat Formula',
-    price: '₹54.99',
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop',
-    rating: 4.8,
-    reviews: 198,
-    category: 'Feline',
-    productCategory: 'Dental Health',
-  },
-  {
-    id: 8,
-    name: 'Allergy-Free Dog Food',
-    price: '₹72.99',
-    image: 'https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?w=300&h=300&fit=crop',
-    rating: 4.9,
-    reviews: 421,
-    category: 'Canine',
-    productCategory: 'Skin & Coat Health',
-  },
-  {
-    id: 9,
-    name: 'Delicious Dog Treats',
-    price: '₹24.99',
-    image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=300&h=300&fit=crop',
-    rating: 4.7,
-    reviews: 342,
-    category: 'Canine',
-    productCategory: 'Treats',
-  },
-  {
-    id: 10,
-    name: 'Gourmet Cat Treats',
-    price: '₹18.99',
-    image: 'https://images.unsplash.com/photo-1606889464198-fcb18894cf50?w=300&h=300&fit=crop',
-    rating: 4.9,
-    reviews: 215,
-    category: 'Feline',
-    productCategory: 'Treats',
-  },
-];
+
 
 const ShopNowPage = () => {
+  const { addToCart } = useCart();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedProductCategory, setSelectedProductCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<string>('popular');
 
-  const categories = ['Canine', 'Feline'];
+  const categories = ['Canine', 'Feline', 'Both'];
 
   const filteredProducts = products.filter((p) => {
     if (selectedProductCategory && p.productCategory !== selectedProductCategory) return false;
-    if (selectedCategory && p.category !== selectedCategory) return false;
+    if (selectedCategory && p.petType !== selectedCategory) return false;
     return true;
   });
 
@@ -155,7 +57,6 @@ const ShopNowPage = () => {
           </motion.div>
         </div>
       </section>
-
       {/* Shop by Category Section */}
       <section className="bg-white dark:bg-gray-800 py-12 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
@@ -347,7 +248,7 @@ const ShopNowPage = () => {
             <div
               className={
                 viewMode === 'grid'
-                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6'
+                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
                   : 'space-y-4'
               }
             >
@@ -360,70 +261,90 @@ const ShopNowPage = () => {
                   viewport={{ once: true }}
                   className={
                     viewMode === 'grid'
-                      ? 'bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition duration-300 hover:scale-105 overflow-hidden group'
+                      ? 'bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition duration-300 hover:scale-105 overflow-hidden group min-h-[480px] flex flex-col'
                       : 'bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition duration-300 p-6 flex gap-6 items-center'
                   }
                 >
                   {viewMode === 'grid' ? (
                     <>
-                      <div className="relative h-48 bg-gray-100 dark:bg-gray-700 overflow-hidden flex items-center justify-center">
-                        <Image
-                          src={product.image}
+                      <div className="relative h-80 bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                        <ProductImageCarousel
+                          images={product.images}
                           alt={product.name}
-                          width={150}
-                          height={150}
-                          className="group-hover:scale-110 transition duration-300"
+                          className="h-80 bg-gray-100 dark:bg-gray-700"
                         />
                       </div>
-                      <div className="p-6 flex flex-col flex-grow">
-                        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2">{product.name}</h3>
-                        <div className="flex items-center mb-3">
-                          <div className="flex text-yellow-400">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} size={14} fill="currentColor" />
-                            ))}
+                      <Link href={`/products/${product.id}`} className="block flex-1">
+                        <div className="p-4 flex flex-col flex-grow">
+                          <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2">{product.name}</h3>
+                          <div className="flex items-center mb-3">
+                            <div className="flex text-yellow-400">
+                              {[...Array(5)].map((_, i) => (
+                                <Star key={i} size={14} fill="currentColor" />
+                              ))}
+                            </div>
+                            <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                              {product.rating} ({product.reviews})
+                            </span>
                           </div>
-                          <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
-                            {product.rating} ({product.reviews})
-                          </span>
+                          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-4">{product.price}</p>
+                          <button
+                            onClick={() => addToCart({
+                              id: product.id,
+                              name: product.name,
+                              price: product.price,
+                              image: product.images[0],
+                              petType: product.petType,
+                              productCategory: product.productCategory
+                            })}
+                            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2 px-4 rounded-full hover:from-blue-700 hover:to-blue-800 transition duration-300 font-semibold flex items-center justify-center gap-2 mt-auto"
+                          >
+                            <ShoppingCart size={18} />
+                            Add to Cart
+                          </button>
                         </div>
-                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-4">{product.price}</p>
-                        <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2 px-4 rounded-full hover:from-blue-700 hover:to-blue-800 transition duration-300 font-semibold flex items-center justify-center gap-2 mt-auto">
-                          <ShoppingCart size={18} />
-                          Add to Cart
-                        </button>
-                      </div>
+                      </Link>
                     </>
                   ) : (
                     <>
-                      <div className="relative w-32 h-32 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
-                        <Image
-                          src={product.image}
+                      <div className="relative w-24 h-40 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
+                        <ProductImageCarousel
+                          images={product.images}
                           alt={product.name}
-                          width={120}
-                          height={120}
-                          className="object-contain"
+                          className="w-24 h-40 bg-gray-100 dark:bg-gray-700 rounded-lg"
                         />
                       </div>
-                      <div className="flex-grow">
-                        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2">{product.name}</h3>
-                        <div className="flex items-center mb-2">
-                          <div className="flex text-yellow-400">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} size={14} fill="currentColor" />
-                            ))}
+                      <Link href={`/products/${product.id}`} className="flex-grow flex items-center gap-4">
+                        <div className="flex-grow">
+                          <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2">{product.name}</h3>
+                          <div className="flex items-center mb-2">
+                            <div className="flex text-yellow-400">
+                              {[...Array(5)].map((_, i) => (
+                                <Star key={i} size={14} fill="currentColor" />
+                              ))}
+                            </div>
+                            <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                              {product.rating} ({product.reviews})
+                            </span>
                           </div>
-                          <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
-                            {product.rating} ({product.reviews})
-                          </span>
+                          <p className="text-gray-700 dark:text-gray-300 mb-2">{product.petType}</p>
+                          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{product.price}</p>
                         </div>
-                        <p className="text-gray-700 dark:text-gray-300 mb-2">{product.category}</p>
-                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{product.price}</p>
-                      </div>
-                      <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2 px-6 rounded-full hover:from-blue-700 hover:to-blue-800 transition duration-300 font-semibold flex items-center gap-2 whitespace-nowrap">
-                        <ShoppingCart size={18} />
-                        Add
-                      </button>
+                        <button
+                          onClick={() => addToCart({
+                            id: product.id,
+                            name: product.name,
+                            price: product.price,
+                            image: product.images[0],
+                            petType: product.petType,
+                            productCategory: product.productCategory
+                          })}
+                          className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2 px-6 rounded-full hover:from-blue-700 hover:to-blue-800 transition duration-300 font-semibold flex items-center gap-2 whitespace-nowrap"
+                        >
+                          <ShoppingCart size={18} />
+                          Add
+                        </button>
+                      </Link>
                     </>
                   )}
                 </motion.div>

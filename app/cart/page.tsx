@@ -4,51 +4,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trash2, Plus, Minus, ShoppingCart, Truck, Lock, Gift, ArrowRight, Tag, AlertCircle } from 'lucide-react';
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  originalPrice?: number;
-}
+import { useCart, CartItem } from '../components/CartContext';
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: 'Premium Dog Food',
-      price: 59.99,
-      originalPrice: 79.99,
-      quantity: 1,
-      image: '/globe.svg',
-    },
-    {
-      id: 2,
-      name: 'Organic Cat Food',
-      price: 49.99,
-      originalPrice: 64.99,
-      quantity: 2,
-      image: '/globe.svg',
-    },
-    {
-      id: 3,
-      name: 'Pet Training Treats',
-      price: 24.99,
-      quantity: 1,
-      image: '/globe.svg',
-    },
-  ]);
+  const { cartItems, updateQuantity, removeFromCart, getTotalPrice } = useCart();
 
   const [discountCode, setDiscountCode] = useState('');
   const [discountApplied, setDiscountApplied] = useState(false);
   const [shippingOption, setShippingOption] = useState('standard');
 
   // Calculate totals
-  const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  const originalTotal = cartItems.reduce((total, item) => total + (item.originalPrice || item.price) * item.quantity, 0);
-  const savings = originalTotal - subtotal;
+  const subtotal = cartItems.reduce((total, item) => total + parseFloat(item.price.slice(1)) * item.quantity, 0);
+  const originalTotal = subtotal; // For now, no original prices in our cart items
+  const savings = 0;
 
   const shippingCosts: Record<string, number> = {
     standard: 9.99,
@@ -60,22 +28,6 @@ const CartPage = () => {
   const discountAmount = discountApplied ? subtotal * 0.15 : 0; // 15% discount
   const tax = (subtotal - discountAmount) * 0.1;
   const total = subtotal - discountAmount + tax + shipping;
-
-  // Update quantity
-  const updateQuantity = (id: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeItem(id);
-    } else {
-      setCartItems(cartItems.map(item => 
-        item.id === id ? { ...item, quantity } : item
-      ));
-    }
-  };
-
-  // Remove item
-  const removeItem = (id: number) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-  };
 
   // Apply discount code
   const applyDiscount = () => {
@@ -187,12 +139,12 @@ const CartPage = () => {
                         <div className="flex-1 min-w-0">
                           <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-2 truncate transition-colors duration-300">{item.name}</h3>
                           <div className="flex items-baseline gap-2 mb-4">
-                            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400 transition-colors duration-300">${item.price.toFixed(2)}</span>
+                            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400 transition-colors duration-300">${parseFloat(item.price.slice(1)).toFixed(2)}</span>
                             {item.originalPrice && (
                               <>
-                                <span className="text-lg text-gray-400 dark:text-gray-600 line-through transition-colors duration-300">${item.originalPrice.toFixed(2)}</span>
+                                <span className="text-lg text-gray-400 dark:text-gray-600 line-through transition-colors duration-300">${parseFloat(item.originalPrice.slice(1)).toFixed(2)}</span>
                                 <span className="text-sm font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded-full transition-colors duration-300">
-                                  Save {Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}%
+                                  Save {Math.round(((parseFloat(item.originalPrice.slice(1)) - parseFloat(item.price.slice(1))) / parseFloat(item.originalPrice.slice(1))) * 100)}%
                                 </span>
                               </>
                             )}
@@ -226,7 +178,7 @@ const CartPage = () => {
                             <motion.button
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.95 }}
-                              onClick={() => removeItem(item.id)}
+                              onClick={() => removeFromCart(item.id)}
                               className="p-2 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition transition-colors duration-300"
                             >
                               <Trash2 size={18} className="sm:w-5 sm:h-5" />
@@ -238,7 +190,7 @@ const CartPage = () => {
                         <div className="text-right sm:text-right flex-shrink-0">
                           <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 transition-colors duration-300">Subtotal</p>
                           <p className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 transition-colors duration-300">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            ${(parseFloat(item.price.slice(1)) * item.quantity).toFixed(2)}
                           </p>
                         </div>
                       </div>

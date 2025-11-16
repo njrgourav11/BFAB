@@ -34,9 +34,15 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
             <motion.div 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-12 h-12 bg-yellow-300 dark:bg-yellow-400 rounded-full flex items-center justify-center font-bold text-blue-700 dark:text-blue-900 text-2xl shadow-md flex-shrink-0"
+              className="flex-shrink-0"
             >
-              🐾
+              <Image
+                src="/images/BFAB logo concept (1).png"
+                alt="BFAB Logo"
+                width={48}
+                height={48}
+                className="object-contain"
+              />
             </motion.div>
             <span className="text-white dark:text-gray-50 font-bold text-lg hidden sm:inline-block transition-colors duration-200">BFAB</span>
           </Link>
