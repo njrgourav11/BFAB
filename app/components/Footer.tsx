@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -24,10 +25,14 @@ const Footer = () => {
             viewport={{ once: true }}
           >
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-                🐾
-              </div>
-              <h2 className="text-xl font-bold text-white dark:text-gray-100">BFAB Pet Food</h2>
+              <Image
+                src="/bfab icon.png"
+                alt="BFAB Logo"
+                width={32}
+                height={32}
+                className="object-contain"
+              />
+              <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">BFAB Pet Food</h2>
             </div>
             <p className="text-gray-400 dark:text-gray-500 text-sm leading-relaxed">
               Dedicated to providing the best nutrition for your beloved pets. We believe in healthy, happy lives for all animals.

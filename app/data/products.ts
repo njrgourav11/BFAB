@@ -134,5 +134,30 @@ export const products: Product[] = [
     weight: '100g',
     petType: 'Canine',
     productCategory: 'Treats'
+  },
+  {
+    id: 6,
+    name: 'Ashwagandha + Hemp Protein Supplement for Dogs & Cats | Powerful Everyday Wellness Blend',
+    price: '₹799',
+    originalPrice: '₹999',
+    images: ['/products/6/1.png', '/products/6/2.png', '/products/6/3.png', '/products/6/4.png', '/products/6/5.png', '/products/6/6.png', '/products/6/7.png'],
+    rating: 4.9,
+    reviews: 156,
+    description: 'Our Ashwagandha + Hemp Protein Supplement is a scientifically formulated daily nutrition booster designed to support the complete well-being of dogs and cats. Made using 42% organic plant protein, adaptogenic herbs, and essential nutrients.',
+    benefits: [
+      'Boosts Immunity & Overall Health: Strengthens natural defense mechanisms.',
+      'Supports Joint & Muscle Strength: Helps maintain mobility, flexibility, and lean muscles.',
+      'Enhances Skin & Coat Health: Promotes healthier skin, reduced itching, and shinier fur.',
+      'Boosts Heart & Brain Health: Rich in essential fatty acids and amino acids.',
+      'Reduces Stress & Anxiety: Ashwagandha helps calm hyperactive or anxious pets.',
+      'Promotes Energy & Vitality: Sustains daily energy levels and supports active lifestyles.',
+      '100% Human-Grade Ingredients: Vet & Pet Nutritionist Approved.',
+      'Plant-Based Protein with High Absorption: No Preservatives, Fillers, or Artificial Additives.'
+    ],
+    category: 'Pet Supplements',
+    inStock: true,
+    weight: '200g',
+    petType: 'Both',
+    productCategory: 'Supplements'
   }
 ];
