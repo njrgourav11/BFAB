@@ -92,7 +92,7 @@ const testimonials = [
     id: 1,
     name: 'Noah the beagle',
     comment: 'Food with Hemp oil drops, ever since I started using Hemp seed oil of @begginforabite Noah\'s appetite has noticeably increased! She now enjoys her meals with excitement, making mealtime a happy and satisfying moment for both of us. A small addition with big benefits, healthy, happy, and always ready for her next bite! This is not a paid promotion or collaboration just my genuine review after using Hemp seed oil of Beggin For A Bite for Noah. I\'ve noticed a real difference in her appetite, and it\'s been amazing to see her enjoy her meals more.',
-    avatar: '/vercel.svg',
+    avatar: '/review/3.svg',
     pet: 'Beagle',
     rating: 5,
     verified: true,
@@ -101,7 +101,7 @@ const testimonials = [
     id: 2,
     name: 'Binit Soreng',
     comment: "My pup Berry's overall health and skin condition improved drastically after using this supplement for just 5 weeks. Earlier, he struggled with ticks, dry skin, and excessive hair fall. But after starting this Ashwagandha + Hemp Protein supplement, his coat became healthier, his skin improved, and the shedding reduced a lot. This has now become Berry's everyday supplement, and I couldn't be happier with the results! I highly recommend it to all pet parents looking for natural health solutions. Definitely worth giving a try!",
-    avatar: '/vercel.svg',
+    avatar: '/review/golden-retriever.webp',
     pet: 'Dog',
     rating: 5,
     verified: true,
@@ -110,7 +110,7 @@ const testimonials = [
     id: 3,
     name: 'Sudeshna Jena',
     comment: 'I honestly didn\'t expect such a big difference, but these supplements have been a blessing for my pet. What I love the most is how clean and natural the ingredients are, it gives me peace of mind every time I use it. And the best part? My pupper actually enjoys it! No more forcing or mixing tricks… he happily finishes every meal when this is added on top. It\'s super easy to use and fits perfectly into our daily routine. Truly worth it. I\'d happily recommend it to any pet parent who wants real, visible improvements.',
-    avatar: '/vercel.svg',
+    avatar: '/review/2.svg',
     pet: 'Dog',
     rating: 5,
     verified: true,
@@ -145,7 +145,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center text-white overflow-hidden bg-cover bg-center bg-no-repeat" style={{backgroundImage: 'url("/images/Untitled design (12).png")'}}>
+      <section className="relative h-screen flex items-center justify-center text-white overflow-hidden bg-cover bg-center bg-no-repeat" style={{backgroundImage: 'url("/hero.svg")'}}>
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block" style={{backgroundImage: 'url("/images/Untitled design (24).png")'}}></div>
         {/* Overlay for better text readability */}
 
@@ -254,8 +254,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Pets Section */}
-      <section className="py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300">
+      {/* Testimonials Section - Enhanced Reviews */}
+      <section className="py-20 bg-[#fef6eb] dark:bg-slate-900 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -264,47 +264,86 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">🐾 Meet Our Featured Pets</h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Happy, healthy pets thriving on our nutrition</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">⭐ Verified Customer Reviews</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400">Join thousands of happy pet parents</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {featuredPets.map((pet, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {testimonials.slice(0, 3).map((testimonial, index) => (
               <motion.div
-                key={pet.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                key={testimonial.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
                 viewport={{ once: true }}
-                className="group"
+                className="flex flex-col items-center"
               >
-                <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
-                  <div className="relative h-48 sm:h-56 overflow-hidden bg-gray-100 dark:bg-slate-700">
-                    <Image
-                      src={pet.image}
-                      alt={pet.name}
-                      width={250}
-                      height={250}
-                      className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                  </div>
-                  <div className="p-4 sm:p-6">
-                    <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{pet.name}</h3>
-                    <p className="text-sm sm:text-base text-blue-600 dark:text-blue-400 font-semibold mb-3">{pet.breed}</p>
-                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 italic mb-4">"{pet.testimonial}"</p>
+                {/* Review Card */}
+                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden border border-yellow-100 dark:border-slate-700 w-full mb-4 h-[500px] flex flex-col">
+                  {/* Stars in Card */}
+                  <div className="bg-gradient-to-r from-yellow-200 to-amber-50 dark:from-slate-700 dark:to-slate-800 p-4 border-b border-yellow-100 dark:border-slate-700">
                     <div className="flex items-center justify-center gap-1">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={16} className="text-yellow-400" fill="currentColor" />
+                        <Star key={i} size={18} fill="#fbbf24" stroke="#fbbf24" />
                       ))}
                     </div>
+                  </div>
+
+                  {/* Review Comment */}
+                  <div className="p-8 flex-1 flex items-center justify-center">
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed italic text-center">"{testimonial.comment}"</p>
+                  </div>
+                </div>
+
+                {/* Separated Round Avatar Below */}
+                <div className="relative">
+                  {/* Pointer Arrow */}
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-8 border-transparent border-b-yellow-300 dark:border-b-yellow-400"></div>
+
+                  <div className="w-20 h-20 rounded-full border-4 border-yellow-300 dark:border-yellow-400 shadow-lg overflow-hidden bg-white dark:bg-slate-800">
+                    <Image
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-cover scale-150"
+                    />
+                  </div>
+
+                  {/* User Name and Info Below Avatar */}
+                  <div className="text-center mt-3">
+                    <p className="font-bold text-gray-800 dark:text-gray-100 text-sm">{testimonial.name}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center justify-center gap-1 mb-2">
+                    </p>
+                    {testimonial.verified && (
+                      <div className="flex items-center justify-center gap-1 bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full">
+                        <CheckCircle size={12} className="text-green-600 dark:text-green-400" />
+                        <span className="text-xs font-semibold text-green-600 dark:text-green-400">Verified</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>
             ))}
           </div>
+
+          {/* View All Reviews Button */}
+          {/* <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Link
+              href="#"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white py-3 px-10 rounded-full font-semibold transition duration-300 inline-block shadow-lg hover:shadow-xl"
+            >
+              View All Reviews (3,100+)
+            </Link>
+          </motion.div> */}
         </div>
-      </section>
+      </section>   
 
       {/* Ultimate Saver Packs Section */}
       <section className="py-20 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 dark:from-slate-800 dark:via-slate-900 dark:to-slate-900 text-white transition-colors duration-300">
@@ -381,6 +420,58 @@ export default function Home() {
         </div>
       </section>
 
+       {/* Featured Pets Section */}
+      <section className="py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">🐾 Meet Our Featured Pets</h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Happy, healthy pets thriving on our nutrition</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            {featuredPets.map((pet, index) => (
+              <motion.div
+                key={pet.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="group"
+              >
+                <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                  <div className="relative h-48 sm:h-56 overflow-hidden bg-gray-100 dark:bg-slate-700">
+                    <Image
+                      src={pet.image}
+                      alt={pet.name}
+                      width={250}
+                      height={250}
+                      className="w-full h-full object-cover group-hover:scale-130 transition duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                  </div>
+                  <div className="p-4 sm:p-6">
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{pet.name}</h3>
+                    <p className="text-sm sm:text-base text-blue-600 dark:text-blue-400 font-semibold mb-3">{pet.breed}</p>
+                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 italic mb-4">"{pet.testimonial}"</p>
+                    <div className="flex items-center justify-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} size={16} className="text-yellow-400" fill="currentColor" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Vet Reviewed Section */}
       <section className="py-16 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-slate-900 dark:to-slate-900 border-y-2 border-green-200 dark:border-green-900 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
@@ -418,97 +509,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section - Enhanced Reviews */}
-      <section className="py-20 bg-[#fef6eb] dark:bg-slate-900 transition-colors duration-300">
-        <div className="container mx-auto px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">⭐ Verified Customer Reviews</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">Join thousands of happy pet parents</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {testimonials.slice(0, 3).map((testimonial, index) => (
-              <motion.div
-                key={testimonial.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                className="flex flex-col items-center"
-              >
-                {/* Review Card */}
-                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden border border-yellow-100 dark:border-slate-700 w-full mb-4 h-[500px] flex flex-col">
-                  {/* Stars in Card */}
-                  <div className="bg-gradient-to-r from-yellow-200 to-amber-50 dark:from-slate-700 dark:to-slate-800 p-4 border-b border-yellow-100 dark:border-slate-700">
-                    <div className="flex items-center justify-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={18} fill="#fbbf24" stroke="#fbbf24" />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Review Comment */}
-                  <div className="p-8 flex-1 flex items-center justify-center">
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed italic text-center">"{testimonial.comment}"</p>
-                  </div>
-                </div>
-
-                {/* Separated Round Avatar Below */}
-                <div className="relative">
-                  {/* Pointer Arrow */}
-                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-8 border-transparent border-b-yellow-300 dark:border-b-yellow-400"></div>
-
-                  <div className="w-20 h-20 rounded-full border-4 border-yellow-300 dark:border-yellow-400 shadow-lg overflow-hidden bg-white dark:bg-slate-800">
-                    <Image
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      width={80}
-                      height={80}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* User Name and Info Below Avatar */}
-                  <div className="text-center mt-3">
-                    <p className="font-bold text-gray-800 dark:text-gray-100 text-sm">{testimonial.name}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center justify-center gap-1 mb-2">
-                      🐾 {testimonial.pet}
-                    </p>
-                    {testimonial.verified && (
-                      <div className="flex items-center justify-center gap-1 bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full">
-                        <CheckCircle size={12} className="text-green-600 dark:text-green-400" />
-                        <span className="text-xs font-semibold text-green-600 dark:text-green-400">Verified</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* View All Reviews Button */}
-          {/* <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mt-12"
-          >
-            <Link
-              href="#"
-              className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white py-3 px-10 rounded-full font-semibold transition duration-300 inline-block shadow-lg hover:shadow-xl"
-            >
-              View All Reviews (3,100+)
-            </Link>
-          </motion.div> */}
-        </div>
-      </section>
+      
 
       {/* Trust Guarantees Section */}
       <section className="py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
