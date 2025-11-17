@@ -37,7 +37,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
               className="flex-shrink-0"
             >
               <Image
-                src="/bfab icon.png"
+                src="/cat.svg"
                 alt="BFAB Logo"
                 width={48}
                 height={48}

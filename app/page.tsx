@@ -42,6 +42,16 @@ const featuredProducts = [
     reviews: 512,
     description: 'Alphonso Mango & Peanut Butter + Banana | Healthy Dog Treats | No Colour & Flavours | Made with Oat & Coconut Milk',
   },
+  {
+    id: 4,
+    name: 'BFAB Chicken Broth for Cats & Dogs | Zero Preservatives',
+    price: '₹349',
+    originalPrice: '₹399',
+    images: ['/products/4/12.png', '/products/4/13.png', '/products/4/15.png', '/products/4/17.png', '/products/4/19.png'],
+    rating: 4.9,
+    reviews: 187,
+    description: 'Zero Preservatives | Aids Joint Health and Digestion | Collagen Rich | Human Grade, Natural Wet Dog Food | Bone Broth',
+    },
 ];
 
 // Featured Pets Gallery
@@ -80,38 +90,29 @@ const featuredPets = [
 const testimonials = [
   {
     id: 1,
-    name: 'Jane Doe',
-    comment: 'My dog loves this food! His coat has never been shinier. He has so much more energy now!',
+    name: 'Noah the beagle',
+    comment: 'Food with Hemp oil drops, ever since I started using Hemp seed oil of @begginforabite Noah\'s appetite has noticeably increased! She now enjoys her meals with excitement, making mealtime a happy and satisfying moment for both of us. A small addition with big benefits, healthy, happy, and always ready for her next bite! This is not a paid promotion or collaboration just my genuine review after using Hemp seed oil of Beggin For A Bite for Noah. I\'ve noticed a real difference in her appetite, and it\'s been amazing to see her enjoy her meals more.',
     avatar: '/vercel.svg',
-    pet: 'Golden Retriever',
+    pet: 'Beagle',
     rating: 5,
     verified: true,
   },
   {
     id: 2,
-    name: 'John Smith',
-    comment: 'Finally, a cat food that my picky eater enjoys. Thank you, BFAB! Worth every penny.',
+    name: 'Binit Soreng',
+    comment: "My pup Berry's overall health and skin condition improved drastically after using this supplement for just 5 weeks. Earlier, he struggled with ticks, dry skin, and excessive hair fall. But after starting this Ashwagandha + Hemp Protein supplement, his coat became healthier, his skin improved, and the shedding reduced a lot. This has now become Berry's everyday supplement, and I couldn't be happier with the results! I highly recommend it to all pet parents looking for natural health solutions. Definitely worth giving a try!",
     avatar: '/vercel.svg',
-    pet: 'Persian Cat',
+    pet: 'Dog',
     rating: 5,
     verified: true,
   },
   {
     id: 3,
-    name: 'Sarah Johnson',
-    comment: 'My senior dog\'s joints have improved significantly. She\'s more active than before!',
+    name: 'Sudeshna Jena',
+    comment: 'I honestly didn\'t expect such a big difference, but these supplements have been a blessing for my pet. What I love the most is how clean and natural the ingredients are, it gives me peace of mind every time I use it. And the best part? My pupper actually enjoys it! No more forcing or mixing tricks… he happily finishes every meal when this is added on top. It\'s super easy to use and fits perfectly into our daily routine. Truly worth it. I\'d happily recommend it to any pet parent who wants real, visible improvements.',
     avatar: '/vercel.svg',
-    pet: 'Labrador Retriever',
+    pet: 'Dog',
     rating: 5,
-    verified: true,
-  },
-  {
-    id: 4,
-    name: 'Michael Brown',
-    comment: 'Excellent quality and great customer service. My kitties are thriving!',
-    avatar: '/vercel.svg',
-    pet: 'British Shorthair',
-    rating: 4,
     verified: true,
   },
 ];
@@ -187,8 +188,8 @@ export default function Home() {
             <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Our bestsellers loved by pet owners everywhere</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {featuredProducts.map((product, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+            {featuredProducts.slice(0, 4).map((product, index) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 50 }}
@@ -199,7 +200,7 @@ export default function Home() {
               >
                 <Link href={`/products/${product.id}`} className="block h-full">
                   <div className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 sm:p-6 text-center shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-slate-900 h-full flex flex-col hover:scale-105 cursor-pointer">
-                    <div className="relative mb-4 overflow-hidden rounded-lg bg-gray-100 dark:bg-slate-800 h-32 sm:h-40">
+                    <div className="relative mb-4 overflow-hidden rounded-lg bg-gray-100 dark:bg-slate-800 h-48 sm:h-56">
                       <Image
                         src={product.images[0]}
                         alt={product.name}
@@ -431,63 +432,68 @@ export default function Home() {
             <p className="text-xl text-gray-600 dark:text-gray-400">Join thousands of happy pet parents</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {testimonials.map((testimonial, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {testimonials.slice(0, 3).map((testimonial, index) => (
               <motion.div
                 key={testimonial.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
                 viewport={{ once: true }}
-                className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden border border-yellow-100 dark:border-slate-700"
+                className="flex flex-col items-center"
               >
-                <div className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-slate-700 dark:to-slate-800 p-6 border-b border-yellow-100 dark:border-slate-700">
-                  {/* Stars and Verified Badge */}
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex gap-1">
-                      {[...Array(testimonial.rating)].map((_, i) => (
+                {/* Review Card */}
+                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden border border-yellow-100 dark:border-slate-700 w-full mb-4 h-[500px] flex flex-col">
+                  {/* Stars in Card */}
+                  <div className="bg-gradient-to-r from-yellow-200 to-amber-50 dark:from-slate-700 dark:to-slate-800 p-4 border-b border-yellow-100 dark:border-slate-700">
+                    <div className="flex items-center justify-center gap-1">
+                      {[...Array(5)].map((_, i) => (
                         <Star key={i} size={18} fill="#fbbf24" stroke="#fbbf24" />
                       ))}
-                      {[...Array(5 - testimonial.rating)].map((_, i) => (
-                        <Star key={i + testimonial.rating} size={18} stroke="#d1d5db" />
-                      ))}
                     </div>
+                  </div>
+
+                  {/* Review Comment */}
+                  <div className="p-8 flex-1 flex items-center justify-center">
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed italic text-center">"{testimonial.comment}"</p>
+                  </div>
+                </div>
+
+                {/* Separated Round Avatar Below */}
+                <div className="relative">
+                  {/* Pointer Arrow */}
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-8 border-transparent border-b-yellow-300 dark:border-b-yellow-400"></div>
+
+                  <div className="w-20 h-20 rounded-full border-4 border-yellow-300 dark:border-yellow-400 shadow-lg overflow-hidden bg-white dark:bg-slate-800">
+                    <Image
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* User Name and Info Below Avatar */}
+                  <div className="text-center mt-3">
+                    <p className="font-bold text-gray-800 dark:text-gray-100 text-sm">{testimonial.name}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center justify-center gap-1 mb-2">
+                      🐾 {testimonial.pet}
+                    </p>
                     {testimonial.verified && (
-                      <div className="flex items-center gap-1 bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full">
-                        <CheckCircle size={14} className="text-green-600 dark:text-green-400" />
+                      <div className="flex items-center justify-center gap-1 bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full">
+                        <CheckCircle size={12} className="text-green-600 dark:text-green-400" />
                         <span className="text-xs font-semibold text-green-600 dark:text-green-400">Verified</span>
                       </div>
                     )}
                   </div>
-
-                  {/* User Info */}
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      width={50}
-                      height={50}
-                      className="rounded-full border-2 border-yellow-300"
-                    />
-                    <div>
-                      <p className="font-bold text-gray-800 dark:text-gray-100">{testimonial.name}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
-                        🐾 {testimonial.pet}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review Comment */}
-                <div className="p-6">
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed italic">"{testimonial.comment}"</p>
                 </div>
               </motion.div>
             ))}
           </div>
 
           {/* View All Reviews Button */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -500,7 +506,7 @@ export default function Home() {
             >
               View All Reviews (3,100+)
             </Link>
-          </motion.div>
+          </motion.div> */}
         </div>
       </section>
 
