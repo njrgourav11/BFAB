@@ -143,8 +143,8 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center text-white overflow-hidden bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url("/hero.svg")' }}>
-        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block" style={{ backgroundImage: 'url("/images/Untitled design (24).png")' }}></div>
+      <section className="relative h-screen flex items-center justify-center text-white overflow-hidden bg-cover bg-center bg-no-repeat md:bg-none" style={{ backgroundImage: 'url("/images/mobile.png")' }}>
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block" style={{ backgroundImage: 'url("/hero.svg")' }}></div>
         {/* Overlay for better text readability */}
 
         {/* Animated Background Elements - Optimized for Mobile */}
@@ -342,6 +342,9 @@ export default function Home() {
           </motion.div> */}
         </div>
       </section>
+
+      {/* Client Carousel Section */}
+      <ClientCarousel />
 
       {/* Ultimate Saver Packs Section */}
       <section className="py-20 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 dark:from-slate-800 dark:via-slate-900 dark:to-slate-900 text-white transition-colors duration-300">
