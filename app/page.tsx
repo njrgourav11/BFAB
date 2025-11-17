@@ -99,7 +99,7 @@ const testimonials = [
     id: 2,
     name: 'Binit Soreng',
     comment: "My pup Berry's overall health and skin condition improved drastically after using this supplement for just 5 weeks. Earlier, he struggled with ticks, dry skin, and excessive hair fall. But after starting this Ashwagandha + Hemp Protein supplement, his coat became healthier, his skin improved, and the shedding reduced a lot. This has now become Berry's everyday supplement, and I couldn't be happier with the results! I highly recommend it to all pet parents looking for natural health solutions. Definitely worth giving a try!",
-    avatar: '/review/golden-retriever.webp',
+    avatar: '/review/Golden-Retriever.webp',
     pet: 'Dog',
     rating: 5,
     verified: true,
@@ -143,7 +143,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center text-white overflow-hidden bg-cover bg-center bg-no-repeat md:bg-none" style={{ backgroundImage: 'url("/images/mobile.png")' }}>
+      <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden bg-cover bg-center bg-no-repeat md:bg-none" style={{ backgroundImage: 'url("/images/mobile.png")' }}>
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block" style={{ backgroundImage: 'url("/hero.svg")' }}></div>
         {/* Overlay for better text readability */}
 
@@ -173,7 +173,7 @@ export default function Home() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
+      <section className="py-12 sm:py-16 md:py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -253,7 +253,7 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section - Enhanced Reviews */}
-      <section className="py-20 bg-white dark:bg-slate-800 transition-colors duration-300">
+      <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-slate-800 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -262,7 +262,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">⭐ Real Pets, Real Transformations!</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">Real Pets, Real Transformations!</h2>
             <p className="text-xl text-gray-600 dark:text-gray-400">Join thousands of happy pet parents</p>
           </motion.div>
 
@@ -277,7 +277,7 @@ export default function Home() {
                 className="flex flex-col items-center"
               >
                 {/* Review Card */}
-                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden border border-yellow-100 dark:border-slate-700 w-full mb-4 h-[500px] flex flex-col">
+                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden border border-yellow-100 dark:border-slate-700 w-full mb-4 min-h-[300px] sm:min-h-[350px] md:h-[450px] lg:h-[500px] flex flex-col">
                   {/* Stars in Card */}
                   <div className="bg-gradient-to-r from-yellow-200 to-amber-50 dark:from-slate-700 dark:to-slate-800 p-4 border-b border-yellow-100 dark:border-slate-700">
                     <div className="flex items-center justify-center gap-1">
@@ -289,7 +289,7 @@ export default function Home() {
 
                   {/* Review Comment */}
                   <div className="p-8 flex-1 flex items-center justify-center">
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed italic text-center">"{testimonial.comment}"</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed italic text-center">&ldquo;{testimonial.comment}&rdquo;</p>
                   </div>
                 </div>
 
@@ -344,10 +344,12 @@ export default function Home() {
       </section>
 
       {/* Client Carousel Section */}
-      <ClientCarousel />
+      <section className="py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+        <ClientCarousel />
+      </section>
 
       {/* Ultimate Saver Packs Section */}
-      <section className="py-20 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 dark:from-slate-800 dark:via-slate-900 dark:to-slate-900 text-white transition-colors duration-300">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 dark:from-slate-800 dark:via-slate-900 dark:to-slate-900 text-white transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -422,7 +424,7 @@ export default function Home() {
       </section>
 
       {/* Shop by Category Section */}
-      <section className="py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -435,14 +437,14 @@ export default function Home() {
             <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Find the perfect products for your furry friends</p>
           </motion.div>
 
-          <div className="grid grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {[
-              { name: 'Dental Health', image: '/category/10.svg', description: 'Keep teeth clean & breath fresh', href: '/category/dental-health' },
-              { name: 'Gut Health', image: '/category/11.svg', description: 'Support digestive wellness', href: '/category/gut-health' },
-              { name: 'Hip & Joint Health', image: '/category/12.svg', description: 'Strengthen joints & bones', href: '/category/bone-health' },
-              { name: 'Weight Management', image: '/category/13.svg', description: 'Maintain healthy weight', href: '/category/weight-management' },
-              { name: 'Anxiety & Calming', image: '/category/14.svg', description: 'Reduce stress & promote calm', href: '/category/anxiety-calming' },
-              { name: 'Skin & Coat Health', image: '/category/15.svg', description: 'Healthy skin & shiny coat', href: '/category/skin-coat-health' }
+              { name: 'Dental Health', image: '/category/10.svg', description: 'Keep teeth clean & breath fresh', href: '/shop-now' },
+              { name: 'Gut Health', image: '/category/11.svg', description: 'Support digestive wellness', href: '/shop-now' },
+              { name: 'Hip & Joint Health', image: '/category/12.svg', description: 'Strengthen joints & bones', href: '/shop-now' },
+              { name: 'Weight Management', image: '/category/13.svg', description: 'Maintain healthy weight', href: '/shop-now' },
+              { name: 'Anxiety & Calming', image: '/category/14.svg', description: 'Reduce stress & promote calm', href: '/shop-now' },
+              { name: 'Skin & Coat Health', image: '/category/15.svg', description: 'Healthy skin & shiny coat', href: '/shop-now' }
             ].map((category, index) => (
               <motion.div
                 key={index}
@@ -453,7 +455,7 @@ export default function Home() {
                 className="group"
               >
                 <Link href={category.href} className="">
-                  <div className="relative overflow-hidden rounded-full mx-auto mt-6 w-40 h-40">
+                  <div className="relative overflow-hidden rounded-full mx-auto mt-6 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40">
                     <Image
                       src={category.image}
                       alt={category.name}
@@ -472,7 +474,7 @@ export default function Home() {
       </section>
 
       {/* Vet Reviewed Section */}
-      <section className="relative py-28 bg-white dark:bg-slate-900 overflow-hidden">
+      <section className="relative py-16 sm:py-20 md:py-24 lg:py-28 bg-white dark:bg-slate-900 overflow-hidden">
 
         {/* Background Accents */}
         <div className="absolute inset-0 pointer-events-none">
@@ -586,17 +588,8 @@ export default function Home() {
 
 
 
-      {/* Client Carousel Section */}
-      <section className="py-20 dark:bg-slate-900 transition-colors duration-300" style={{ backgroundColor: '#fef6eb' }}>
-        <div className="container mx-auto px-4 md:px-6">
-          <ClientCarousel />
-        </div>
-      </section>
-
-
-
       {/* Trust Guarantees Section */}
-      <section className="py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
+      <section className="py-12 sm:py-16 md:py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -606,7 +599,7 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">Why Shop With Confidence</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">We've got you covered every step of the way</p>
+            <p className="text-xl text-gray-600 dark:text-gray-400">We&apos;ve got you covered every step of the way</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -653,7 +646,7 @@ export default function Home() {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-950 dark:to-slate-900 text-white transition-colors duration-300">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-950 dark:to-slate-900 text-white transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -693,7 +686,7 @@ export default function Home() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
+      <section className="py-12 sm:py-16 md:py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -701,7 +694,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-6">Ready to Transform Your Pet's Health?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-6">Ready to Transform Your Pet&apos;s Health?</h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
               Join thousands of happy pet owners who have already made the switch to premium nutrition.
             </p>
