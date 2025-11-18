@@ -16,9 +16,9 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
   const menuItems = [
     { label: 'Home', href: '/' },
     { label: 'Shop Now', href: '/shop-now' },
-    { label: 'Saver Packs', href: '/ultimate-saver-packs' },
-    { label: 'Feeding Guide', href: '/feeding-guide' },
-    { label: 'BFAB Cares', href: '/bfab-cares' },
+    // { label: 'Saver Packs', href: '/ultimate-saver-packs' },
+    // { label: 'Feeding Guide', href: '/feeding-guide' },
+    // { label: 'BFAB Cares', href: '/bfab-cares' },
     { label: 'Paw Blog', href: '/paw-blog' },
     { label: 'About Us', href: '/about-us' },
     { label: 'Contact Us', href: '/contact-us' },
@@ -44,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
                 className="object-contain"
               />
             </motion.div>
-            <span className="text-white dark:text-gray-50 font-bold text-lg hidden sm:inline-block transition-colors duration-200">BFAB</span>
+            <span className="text-white dark:text-gray-50 font-bold text-lg transition-colors duration-200">BFAB</span>
           </Link>
 
           {/* Desktop Menu */}
@@ -97,12 +97,12 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
           </div>
 
           {/* Mobile Menu Button + Theme Toggle */}
-          <div className="lg:hidden flex items-center space-x-1">
+          <div className="lg:hidden flex items-center space-x-2">
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={toggleTheme}
-              className="md:hidden text-white dark:text-gray-300 p-2 rounded-full hover:bg-blue-500 dark:hover:bg-blue-800 transition duration-200"
+              className="md:hidden text-white dark:text-gray-300 p-2 rounded-full hover:bg-blue-500 dark:hover:bg-blue-800 transition duration-200 flex items-center justify-center"
               aria-label="Toggle dark mode"
             >
               {isDark ? <Sun size={20} className="text-yellow-300" /> : <Moon size={20} />}

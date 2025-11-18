@@ -51,7 +51,7 @@ const Footer = () => {
               <li><Link href="/about-us" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">About Us</Link></li>
               <li><Link href="/contact-us" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">Contact Us</Link></li>
               <li><Link href="/paw-blog" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">Paw Blog</Link></li>
-              <li><Link href="/feeding-guide" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">Feeding Guide</Link></li>
+              {/* <li><Link href="/feeding-guide" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">Feeding Guide</Link></li> */}
             </ul>
           </motion.div>
 
@@ -66,8 +66,8 @@ const Footer = () => {
             <ul className="space-y-2">
               <li><Link href="/products" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">All Products</Link></li>
               <li><Link href="/shop-now" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">Shop Now</Link></li>
-              <li><Link href="/ultimate-saver-packs" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">Saver Packs</Link></li>
-              <li><Link href="/bfab-cares" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">BFAB Cares</Link></li>
+              {/* <li><Link href="/ultimate-saver-packs" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">Saver Packs</Link></li> */}
+              {/* <li><Link href="/bfab-cares" className="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition duration-300">BFAB Cares</Link></li> */}
             </ul>
           </motion.div>
 

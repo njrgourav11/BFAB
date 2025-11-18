@@ -25,7 +25,7 @@ const featuredProducts = [
     name: 'BFAB Oven Baked Kitten Kibble Dry Cat Food - 1Kg',
     price: '₹599',
     originalPrice: '₹799',
-    images: ['/products/2/3.png', '/products/2/4.png', '/products/2/5.png', '/products/2/6.png', '/products/2/7.png', '/products/2/8.png'],
+    images: ['/products/3/12.png', '/products/3/14.png', '/products/3/16.png', '/products/3/18.png', '/products/3/9.png'],
     rating: 4.8,
     reviews: 245,
     description: 'Chicken & Ocean Fish | Promotes Brain & Vision Development | Enhances Immunity | Improves Digestive Health',
@@ -35,7 +35,7 @@ const featuredProducts = [
     name: 'BFAB Natural Frozen Dog Treats - 2 x 40gm',
     price: '₹99',
     originalPrice: '₹199',
-    images: ['/products/3/12.png', '/products/3/14.png', '/products/3/16.png', '/products/3/18.png', '/products/3/9.png'],
+    images: ['/products/2/3.png', '/products/2/4.png', '/products/2/5.png', '/products/2/6.png', '/products/2/7.png', '/products/2/8.png'],
     rating: 5.0,
     reviews: 512,
     description: 'Alphonso Mango & Peanut Butter + Banana | Healthy Dog Treats | No Colour & Flavours | Made with Oat & Coconut Milk',
@@ -143,7 +143,10 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden bg-cover bg-center bg-no-repeat md:bg-none" style={{ backgroundImage: 'url("/images/mobile.png")' }}>
+      <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
+        {/* Mobile Background */}
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat md:hidden" style={{ backgroundImage: 'url("/images/mobile.png")' }}></div>
+        {/* Desktop Background */}
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block" style={{ backgroundImage: 'url("/hero.svg")' }}></div>
         {/* Overlay for better text readability */}
 
@@ -349,79 +352,7 @@ export default function Home() {
       </section>
 
       {/* Ultimate Saver Packs Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 dark:from-slate-800 dark:via-slate-900 dark:to-slate-900 text-white transition-colors duration-300">
-        <div className="container mx-auto px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <motion.div
-              initial={{ scale: 0.8 }}
-              whileInView={{ scale: 1 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="inline-block mb-4"
-            >
-              <span className="bg-yellow-300 dark:bg-yellow-400 text-purple-800 dark:text-gray-900 px-6 py-2 rounded-full text-sm font-bold shadow-lg">💰 SAVE UP TO 30%</span>
-            </motion.div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white">Ultimate Saver Packs</h2>
-            <p className="text-base sm:text-lg md:text-xl text-purple-100 dark:text-purple-200 mb-8">Get everything your pet needs at unbeatable prices</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-12">
-            {[
-              { name: 'Dog Bundle', value: '₹99.99', savings: 'Save ₹25', items: ['Premium Dog Food', 'Dog Treats', 'Toy', 'Food Bowl'] },
-              { name: 'Cat Bundle', value: '₹89.99', savings: 'Save ₹20', items: ['Organic Cat Food', 'Cat Treats', 'Toy', 'Litter'] },
-              { name: 'Multi-Pet Bundle', value: '₹149.99', savings: 'Save ₹40', items: ['Dog & Cat Food', 'Mixed Treats', 'Toys', 'Accessories'] },
-            ].map((pack, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-white/10 dark:bg-gray-800/50 backdrop-blur-md rounded-xl p-4 sm:p-6 md:p-8 border border-white/20 dark:border-gray-700/50 hover:bg-white/20 dark:hover:bg-gray-700/50 transition duration-300 transform hover:scale-105"
-              >
-                <div className="bg-yellow-300 dark:bg-yellow-400 text-purple-800 dark:text-gray-900 inline-block px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold mb-4 shadow-md">
-                  {pack.savings}
-                </div>
-                <h3 className="text-lg sm:text-2xl font-bold mb-4 text-white">{pack.name}</h3>
-                <ul className="space-y-2 mb-6 text-purple-100 dark:text-purple-200">
-                  {pack.items.map((item, i) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <CheckCircle size={18} />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-3xl font-bold mb-4 text-yellow-300 dark:text-yellow-400">{pack.value}</p>
-                <button className="w-full bg-yellow-300 dark:bg-yellow-400 text-purple-800 dark:text-gray-900 hover:bg-yellow-400 dark:hover:bg-yellow-300 font-bold py-3 px-6 rounded-full transition duration-300 shadow-lg hover:shadow-xl">
-                  Add to Cart
-                </button>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* View All Packs Button */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <Link
-              href="/ultimate-saver-packs"
-              className="inline-block bg-white dark:bg-yellow-400 text-purple-700 dark:text-gray-900 hover:bg-gray-100 dark:hover:bg-yellow-300 font-bold py-3 px-10 rounded-full transition duration-300 shadow-lg hover:shadow-xl"
-            >
-              Explore All Saver Packs →
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+      
 
       {/* Shop by Category Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300">
@@ -563,10 +494,8 @@ export default function Home() {
                 <div className="absolute left-0 top-8 w-1 h-24 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full"></div>
 
                 <div className="ml-6">
-                  <p className="text-xl md:text-2xl text-gray-800 dark:text-gray-200 italic leading-relaxed font-medium">
-                    “As a practicing veterinarian, I confidently recommend Beggin For A Bite.
-                    Each formula undergoes thorough evaluation, ensuring pets receive only safe
-                    and superior-quality nutrition.”
+                  <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-800 dark:text-gray-200 italic leading-relaxed font-medium">
+                    “As an experienced veterinarian, I confidently recommend Beggin For A Bite products. Every formula is thoroughly assessed and certified, ensuring only the finest-quality ingredients are used. These supplements provide excellent support for improving and maintaining your dog’s or cat’s health, especially when they begin to show signs of decline.”
                   </p>
 
                   <div className="mt-6 pt-4 border-t border-gray-200/40 dark:border-gray-700/60">
