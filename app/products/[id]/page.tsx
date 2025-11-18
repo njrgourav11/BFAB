@@ -194,26 +194,28 @@ export default function ProductDetail() {
                   <span>Add to Cart</span>
                 </motion.button>
 
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsWishlisted(!isWishlisted)}
-                  className={`p-4 rounded-lg border-2 transition-colors ${
-                    isWishlisted
-                      ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-500'
-                      : 'border-gray-300 dark:border-slate-600 hover:border-red-500 text-gray-600 dark:text-gray-400 hover:text-red-500'
-                  }`}
-                >
-                  <Heart size={20} className={isWishlisted ? 'fill-current' : ''} />
-                </motion.button>
+                <div className="flex gap-4">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsWishlisted(!isWishlisted)}
+                    className={`p-4 rounded-lg border-2 transition-colors ${
+                      isWishlisted
+                        ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-500'
+                        : 'border-gray-300 dark:border-slate-600 hover:border-red-500 text-gray-600 dark:text-gray-400 hover:text-red-500'
+                    }`}
+                  >
+                    <Heart size={20} className={isWishlisted ? 'fill-current' : ''} />
+                  </motion.button>
 
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-4 rounded-lg border-2 border-gray-300 dark:border-slate-600 hover:border-blue-500 text-gray-600 dark:text-gray-400 hover:text-blue-500 transition-colors"
-                >
-                  <Share2 size={20} />
-                </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-4 rounded-lg border-2 border-gray-300 dark:border-slate-600 hover:border-blue-500 text-gray-600 dark:text-gray-400 hover:text-blue-500 transition-colors"
+                  >
+                    <Share2 size={20} />
+                  </motion.button>
+                </div>
               </div>
             </div>
 
