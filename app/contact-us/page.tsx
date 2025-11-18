@@ -27,14 +27,14 @@ const ContactUsPage = () => {
       icon: <Mail size={32} className="text-blue-500" />,
       title: 'Email',
       description: 'We reply within 24 hours',
-      details: 'info@bfab.com',
+      details: 'paw.support@begginforabite.in',
       color: 'blue',
     },
     {
       icon: <Phone size={32} className="text-green-500" />,
       title: 'Phone',
       description: '24/7 Customer Support',
-      details: '+1 (123) 456-7890',
+      details: '+91 8480-320158',
       color: 'green',
     },
     {
@@ -74,7 +74,7 @@ const ContactUsPage = () => {
   ];
 
   const officeInfo = {
-    address: '123 Pet Paradise Way, Denver, CO 80202',
+    address: 'Taksh Apartment, Bhubaneswar, Odisha - 752050',
     hours: {
       'Monday - Friday': '9 AM - 6 PM EST',
       'Saturday': '10 AM - 4 PM EST',
@@ -231,6 +231,7 @@ const ContactUsPage = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
+              className="space-y-6"
             >
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-2xl dark:shadow-black/50 p-6 text-center border border-gray-200 dark:border-gray-700 transition-colors duration-300">
                 <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2 transition-colors duration-300">

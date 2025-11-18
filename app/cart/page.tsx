@@ -139,10 +139,10 @@ const CartPage = () => {
                         <div className="flex-1 min-w-0">
                           <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-white mb-2 truncate transition-colors duration-300">{item.name}</h3>
                           <div className="flex items-baseline gap-2 mb-4">
-                            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400 transition-colors duration-300">${parseFloat(item.price.slice(1)).toFixed(2)}</span>
+                            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400 transition-colors duration-300">₹{parseFloat(item.price.slice(1)).toFixed(2)}</span>
                             {item.originalPrice && (
                               <>
-                                <span className="text-lg text-gray-400 dark:text-gray-600 line-through transition-colors duration-300">${parseFloat(item.originalPrice.slice(1)).toFixed(2)}</span>
+                                <span className="text-lg text-gray-400 dark:text-gray-600 line-through transition-colors duration-300">₹{parseFloat(item.originalPrice.slice(1)).toFixed(2)}</span>
                                 <span className="text-sm font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded-full transition-colors duration-300">
                                   Save {Math.round(((parseFloat(item.originalPrice.slice(1)) - parseFloat(item.price.slice(1))) / parseFloat(item.originalPrice.slice(1))) * 100)}%
                                 </span>
@@ -190,7 +190,7 @@ const CartPage = () => {
                         <div className="text-right sm:text-right flex-shrink-0">
                           <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 transition-colors duration-300">Subtotal</p>
                           <p className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 transition-colors duration-300">
-                            ${(parseFloat(item.price.slice(1)) * item.quantity).toFixed(2)}
+                            ₹{(parseFloat(item.price.slice(1)) * item.quantity).toFixed(2)}
                           </p>
                         </div>
                       </div>
@@ -236,7 +236,7 @@ const CartPage = () => {
                   <div className="flex items-start gap-3">
                     <Tag size={20} className="text-green-600 dark:text-green-400 flex-shrink-0 mt-1 transition-colors duration-300" />
                     <div>
-                      <p className="font-bold text-green-800 dark:text-green-300 text-lg transition-colors duration-300">${savings.toFixed(2)}</p>
+                      <p className="font-bold text-green-800 dark:text-green-300 text-lg transition-colors duration-300">₹{savings.toFixed(2)}</p>
                       <p className="text-sm text-green-700 dark:text-green-400 transition-colors duration-300">You're saving on this order!</p>
                     </div>
                   </div>
@@ -324,7 +324,7 @@ const CartPage = () => {
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-gray-800 dark:text-white text-xs sm:text-sm transition-colors duration-300">{option.label}</p>
                       </div>
-                      <p className="font-bold text-blue-600 dark:text-blue-400 text-xs sm:text-base flex-shrink-0 transition-colors duration-300">${option.price.toFixed(2)}</p>
+                      <p className="font-bold text-blue-600 dark:text-blue-400 text-xs sm:text-base flex-shrink-0 transition-colors duration-300">₹{option.price.toFixed(2)}</p>
                     </motion.label>
                   ))}
                 </div>
@@ -341,21 +341,21 @@ const CartPage = () => {
                 <div className="space-y-2 sm:space-y-3 mb-6 pb-6 border-b border-blue-200 dark:border-blue-800 transition-colors duration-300">
                   <div className="flex justify-between text-gray-700 dark:text-gray-400 text-xs sm:text-sm transition-colors duration-300">
                     <span>Subtotal</span>
-                    <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                    <span className="font-semibold">₹{subtotal.toFixed(2)}</span>
                   </div>
                   {discountApplied && (
                     <div className="flex justify-between text-green-700 dark:text-green-400 text-xs sm:text-sm transition-colors duration-300">
                       <span className="font-semibold">Discount (15%)</span>
-                      <span className="font-bold">-${discountAmount.toFixed(2)}</span>
+                      <span className="font-bold">-₹{discountAmount.toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-gray-700 dark:text-gray-400 text-xs sm:text-sm transition-colors duration-300">
                     <span>Shipping</span>
-                    <span className="font-semibold">${shipping.toFixed(2)}</span>
+                    <span className="font-semibold">₹{shipping.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-gray-700 dark:text-gray-400 text-xs sm:text-sm transition-colors duration-300">
                     <span>Tax (10%)</span>
-                    <span className="font-semibold">${tax.toFixed(2)}</span>
+                    <span className="font-semibold">₹{tax.toFixed(2)}</span>
                   </div>
                 </div>
 
@@ -366,7 +366,7 @@ const CartPage = () => {
                     animate={{ scale: 1 }}
                     className="text-3xl font-bold text-blue-600 dark:text-blue-400 transition-colors duration-300"
                   >
-                    ${total.toFixed(2)}
+                    ₹{total.toFixed(2)}
                   </motion.span>
                 </div>
 

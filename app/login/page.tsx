@@ -4,11 +4,14 @@ import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { CheckCircle } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -16,7 +19,10 @@ export default function Login() {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/');
+      setShowToast(true);
+      setTimeout(() => {
+        router.push('/shop-now');
+      }, 2000);
     } catch (error) {
       console.error('Login error:', error);
     }
@@ -26,14 +32,31 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-      router.push('/');
+      setShowToast(true);
+      setTimeout(() => {
+        router.push('/shop-now');
+      }, 2000);
     } catch (error) {
       console.error('Google login error:', error);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 relative">
+      {/* Toast Notification */}
+      {showToast && (
+        <motion.div
+          initial={{ opacity: 0, y: -100 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3"
+        >
+          <CheckCircle size={24} />
+          <div>
+            <p className="font-semibold">Login Successful!</p>
+            <p className="text-sm opacity-90">Redirecting to shop...</p>
+          </div>
+        </motion.div>
+      )}
       <div className="max-w-md w-full space-y-8 p-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Sign In</h2>

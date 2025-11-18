@@ -39,7 +39,7 @@ const CheckoutPage = () => {
     name: ''
   });
 
-  const [orderPlaced, setOrderPlaced] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   // Calculate totals
   const subtotal = getTotalPrice();
@@ -60,33 +60,11 @@ const CheckoutPage = () => {
   };
 
   const handlePlaceOrder = () => {
-    // Here you would typically send the order to your backend
-    setOrderPlaced(true);
+    setShowToast(true);
+    setTimeout(() => {
+      window.location.href = '/shop-now';
+    }, 2000);
   };
-
-  if (orderPlaced) {
-    return (
-      <div className="min-h-screen bg-[#fff4e8] dark:bg-slate-950 flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-white dark:bg-slate-900 rounded-2xl p-8 text-center max-w-md w-full shadow-xl"
-        >
-          <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle size={32} className="text-green-600 dark:text-green-400" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Order Placed Successfully!</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">Thank you for your purchase. We'll send you a confirmation email shortly.</p>
-          <Link
-            href="/"
-            className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors inline-block"
-          >
-            Continue Shopping
-          </Link>
-        </motion.div>
-      </div>
-    );
-  }
 
   if (cartItems.length === 0) {
     return (
@@ -105,7 +83,21 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#fff4e8] dark:bg-slate-950">
+    <div className="min-h-screen bg-[#fff4e8] dark:bg-slate-950 relative">
+      {/* Toast Notification */}
+      {showToast && (
+        <motion.div
+          initial={{ opacity: 0, y: -100 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3"
+        >
+          <CheckCircle size={24} />
+          <div>
+            <p className="font-semibold">Order Successful!</p>
+            <p className="text-sm opacity-90">Redirecting to shop...</p>
+          </div>
+        </motion.div>
+      )}
       {/* Header */}
       <div className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700">
         <div className="container mx-auto px-4 py-4">
@@ -480,7 +472,7 @@ const CheckoutPage = () => {
                       <p className="text-sm text-gray-600 dark:text-gray-400">Qty: {item.quantity}</p>
                     </div>
                     <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                      ${(parseFloat(item.price.slice(1)) * item.quantity).toFixed(2)}
+                      ₹{(parseFloat(item.price.slice(1)) * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 ))}
@@ -489,19 +481,19 @@ const CheckoutPage = () => {
               <div className="border-t border-gray-200 dark:border-slate-700 pt-4 space-y-2">
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                   <span>Shipping</span>
-                  <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                  <span>{shipping === 0 ? 'Free' : `₹${shipping.toFixed(2)}`}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                   <span>Tax (18% GST)</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>₹{tax.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-gray-100 pt-2 border-t border-gray-200 dark:border-slate-700">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>₹{total.toFixed(2)}</span>
                 </div>
               </div>
 

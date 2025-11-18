@@ -96,7 +96,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
             </motion.div>
           </div>
 
-          {/* Mobile Menu Button + Theme Toggle */}
+          {/* Mobile Menu Button + Theme Toggle + Cart */}
           <div className="lg:hidden flex items-center space-x-2">
             <motion.button 
               whileHover={{ scale: 1.05 }}
@@ -107,6 +107,9 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
             >
               {isDark ? <Sun size={20} className="text-yellow-300" /> : <Moon size={20} />}
             </motion.button>
+            <Link href="/cart" className="md:hidden text-white dark:text-gray-300 p-2 rounded-full hover:bg-blue-500 dark:hover:bg-blue-800 transition duration-200 flex items-center justify-center">
+              <ShoppingCart size={20} />
+            </Link>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
