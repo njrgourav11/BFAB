@@ -9,21 +9,21 @@ const teamMembers = [
     id: 1,
     name: 'John Doe',
     role: 'Founder & CEO',
-    avatar: '/vercel.svg',
+    avatar: '/vet.png',
     bio: 'Passionate about pet nutrition with 15+ years of industry experience',
   },
   {
     id: 2,
     name: 'Jane Smith',
     role: 'Head of Nutrition',
-    avatar: '/vercel.svg',
+    avatar: '/review/Golden-Retriever.webp',
     bio: 'Certified animal nutritionist with multiple published research papers',
   },
   {
     id: 3,
     name: 'Peter Jones',
     role: 'Lead Veterinarian',
-    avatar: '/vercel.svg',
+    avatar: '/cat.svg',
     bio: 'DVM with specialization in nutritional medicine for companion animals',
   },
 ];
@@ -77,7 +77,7 @@ const AboutUsPage = () => {
               className="relative h-96 rounded-xl overflow-hidden shadow-xl"
             >
               <Image
-                src="/globe.svg"
+                src="/dog.svg"
                 alt="Our Story"
                 fill
                 className="object-cover"
@@ -167,7 +167,7 @@ const AboutUsPage = () => {
               className="relative h-96 rounded-xl overflow-hidden shadow-xl"
             >
               <Image
-                src="/window.svg"
+                src="/collage.svg"
                 alt="Philanthropy"
                 fill
                 className="object-cover"
