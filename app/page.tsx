@@ -116,28 +116,28 @@ const testimonials = [
 ];
 
 // Hero features
-const heroFeatures = [
-  {
-    icon: <Globe size={28} />,
-    title: 'Globally Sourced',
-    description: 'Premium ingredients from trusted suppliers worldwide',
-  },
-  {
-    icon: <Star size={28} />,
-    title: '3100+ 5-Star Reviews',
-    description: 'Loved by pet owners everywhere',
-  },
-  {
-    icon: <Gift size={28} />,
-    title: 'Subscribe & Save',
-    description: 'Get 15% off on recurring orders',
-  },
-  {
-    icon: <Beaker size={28} />,
-    title: 'Formulated by Pet Scientists',
-    description: 'Researched and tested for optimal nutrition',
-  },
-];
+// const heroFeatures = [
+//   {
+//     icon: <Globe size={28} />,
+//     title: 'Globally Sourced',
+//     description: 'Premium ingredients from trusted suppliers worldwide',
+//   },
+//   {
+//     icon: <Star size={28} />,
+//     title: '3100+ 5-Star Reviews',
+//     description: 'Loved by pet owners everywhere',
+//   },
+//   {
+//     icon: <Gift size={28} />,
+//     title: 'Subscribe & Save',
+//     description: 'Get 15% off on recurring orders',
+//   },
+//   {
+//     icon: <Beaker size={28} />,
+//     title: 'Formulated by Pet Scientists',
+//     description: 'Researched and tested for optimal nutrition',
+//   },
+// ];
 
 export default function Home() {
   return (
@@ -158,104 +158,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Hero Features Section */}
-      <section className="py-16 bg-[#fef6eb] dark:bg-slate-900 transition-colors duration-300">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {heroFeatures.map((feature, index) => (
-              <FeatureCard
-                key={index}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-                delay={index * 0.1}
-              />
-            ))}
-          </div>
-        </div>
+      <section className="py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+        <ClientCarousel />
       </section>
 
-      {/* Featured Products Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
-        <div className="container mx-auto px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">Featured Products</h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Our bestsellers loved by pet owners everywhere</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-            {featuredProducts.slice(0, 4).map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.15 }}
-                viewport={{ once: true }}
-                className="group"
-              >
-                <Link href={`/products/${product.id}`} className="block h-full">
-                  <div className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 sm:p-6 text-center shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-slate-900 h-full flex flex-col hover:scale-105 cursor-pointer">
-                    <div className="relative mb-4 overflow-hidden rounded-lg bg-gray-100 dark:bg-slate-800 h-48 sm:h-56">
-                      <Image
-                        src={product.images[0]}
-                        alt={product.name}
-                        fill
-                        className="object-cover group-hover:scale-110 transition duration-300"
-                      />
-                    </div>
-                    <h3 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{product.name}</h3>
-
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">{product.description}</p>
-
-                    {/* Rating */}
-                    <div className="flex items-center justify-center mb-3">
-                      <div className="flex text-yellow-400">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} size={16} fill="currentColor" />
-                        ))}
-                      </div>
-                      <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
-                        {product.rating} ({product.reviews} reviews)
-                      </span>
-                    </div>
-
-                    <div className="mb-4">
-                      <p className="text-sm text-gray-500 dark:text-gray-500 line-through">MRP: {product.originalPrice}</p>
-                      <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{product.price}</p>
-                    </div>
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 text-white py-3 px-6 rounded-full mt-auto hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 transition duration-300 font-semibold">
-                      View Details
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mt-12"
-          >
-            <Link
-              href="/shop-now"
-              className="bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 text-white py-3 px-8 rounded-full font-semibold transition duration-300 inline-block"
-            >
-              View All Products
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Testimonials Section - Enhanced Reviews */}
       <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-slate-800 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
@@ -346,13 +252,372 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Client Carousel Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
-        <ClientCarousel />
+      <section className="relative py-24 bg-gradient-to-b from-orange-50 via-yellow-50 to-orange-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 overflow-hidden">
+
+        {/* Floating Paws */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]">
+          <div className="absolute top-20 left-20 text-7xl animate-[float_6s_infinite_ease-in-out]">🐾</div>
+          <div className="absolute bottom-10 right-32 text-7xl animate-[float_7s_infinite_ease-in-out]">🦴</div>
+        </div>
+
+        <div className="container mx-auto px-6 relative">
+
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center max-w-4xl mx-auto px-4"
+          >
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-800 dark:text-gray-100 leading-tight">
+              Why <span className="text-green-600">BFAB</span> is the Best Choice for Your Pet 🐶✨
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 mt-3 sm:mt-4 leading-relaxed">
+              A clean, science-backed and pet-approved supplement vs mass-market shortcuts.
+            </p>
+          </motion.div>
+
+
+          {/* Split Cards */}
+          <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
+
+            {/* BFAB Block */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/30 dark:to-blue-900/20 rounded-2xl sm:rounded-3xl shadow-xl border-2 sm:border-4 border-green-300 dark:border-green-700"
+            >
+              <div className="absolute -top-3 sm:-top-4 lg:-top-6 left-4 sm:left-6 bg-green-500 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm shadow">
+                🏆 BFAB Advantage
+              </div>
+
+              <div className="text-center mb-4 sm:mb-6 mt-4 sm:mt-6">
+                {/* Responsive Image */}
+                <div className="mx-auto rounded-xl sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-xl border-2 border-green-400 bg-white dark:bg-slate-800 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-52 xl:h-52 transition-all duration-300 hover:scale-105">
+                  <Image
+                    src="/other/2.png"
+                    alt="BFAB Product"
+                    width={500}
+                    height={500}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+
+                <p className="mt-2 sm:mt-3 text-sm sm:text-base text-green-700 font-semibold dark:text-green-300">
+                  Premium Pet Nutrition
+                </p>
+              </div>
+
+            </motion.div>
+
+            {/* Other Brand Block */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/20 rounded-2xl sm:rounded-3xl shadow-xl border-2 sm:border-4 border-red-300 dark:border-red-700"
+            >
+              <div className="absolute -top-3 sm:-top-4 lg:-top-6 right-4 sm:right-6 bg-red-500 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm shadow">
+                ⚠️ Common Issues
+              </div>
+
+              <div className="text-center mb-4 sm:mb-6 mt-4 sm:mt-6">
+                {/* Responsive Image */}
+                <div className="mx-auto rounded-xl sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-xl border-2 border-red-400 bg-white dark:bg-slate-800 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-52 xl:h-52 opacity-95 transition-all duration-300 hover:scale-105">
+                  <Image
+                    src="/other/1.png"
+                    alt="Other Brand Product"
+                    width={500}
+                    height={500}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+
+                <p className="mt-2 sm:mt-3 text-sm sm:text-base text-red-600 font-semibold dark:text-red-400">
+                  Mass Market Brands
+                </p>
+              </div>
+
+            </motion.div>
+
+          </div>
+
+
+
+          {/* Responsive Comparison Table */}
+          <div className="mt-16 sm:mt-20 md:mt-24 bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-yellow-200 dark:border-slate-700">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[500px] text-left">
+                <thead>
+                  <tr className="bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-slate-700 dark:to-slate-600">
+                    <th className="py-3 sm:py-4 lg:py-6 px-2 sm:px-4 lg:px-6 text-left font-bold text-gray-800 dark:text-gray-100 text-xs sm:text-sm lg:text-base">Features</th>
+                    <th className="py-3 sm:py-4 lg:py-6 px-2 sm:px-4 lg:px-6 text-center font-bold text-green-700 dark:text-green-300 text-xs sm:text-sm lg:text-base">BFAB 🐾</th>
+                    <th className="py-3 sm:py-4 lg:py-6 px-2 sm:px-4 lg:px-6 text-center font-bold text-red-600 dark:text-red-400 text-xs sm:text-sm lg:text-base">Others ❌</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
+                  {[
+                    { label: "Human-Grade, Natural Ingredients", bfab: "✔️", other: "✗" },
+                    { label: "Vet-Approved & Certified (HACCP, ISO, GMP)", bfab: "✔️", other: "✗" },
+                    { label: "Zero Fillers or Artificial Additives", bfab: "✔️", other: "✗" },
+                    { label: "High-Potency Functional Blends", bfab: "✔️", other: "⚠️ Inconsistent" },
+                    { label: "Targeted Relief for Real Conditions", bfab: "✔️", other: "⚠️ Symptom-Based Only" },
+                    { label: "Backed by Research & Evidence", bfab: "✔️", other: "✗ Outdated Formulas" }
+                  ].map((row, i) => (
+                    <tr key={i} className="text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+                      <td className="py-3 sm:py-4 lg:py-6 px-2 sm:px-4 lg:px-6 font-medium text-xs sm:text-sm lg:text-base">{row.label}</td>
+                      <td className="py-3 sm:py-4 lg:py-6 px-2 sm:px-4 lg:px-6 text-center text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-400">{row.bfab}</td>
+                      <td className="py-3 sm:py-4 lg:py-6 px-2 sm:px-4 lg:px-6 text-center text-xs sm:text-sm lg:text-lg font-bold text-red-600 dark:text-red-400">{row.other}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="mt-12 sm:mt-16 lg:mt-20 text-center px-4"
+          >
+            <Link
+              href="/shop-now"
+              className="inline-block bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-bold text-sm sm:text-base lg:text-lg py-3 sm:py-4 px-6 sm:px-8 lg:px-10 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+            >
+              🛒 Shop BFAB Now – Give Your Pet the Best!
+            </Link>
+          </motion.div>
+
+        </div>
       </section>
 
+      {/* Want to Get Featured Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 text-4xl animate-pulse">📸</div>
+          <div className="absolute top-20 right-20 text-5xl animate-bounce">✨</div>
+          <div className="absolute bottom-20 left-20 text-4xl animate-pulse">🐶</div>
+          <div className="absolute bottom-10 right-10 text-5xl animate-bounce">🐱</div>
+        </div>
+
+        <div className="container mx-auto px-4 md:px-6 relative">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+              🌟 Want to Get Featured? 🌟
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Share your pet's BFAB journey and get featured on our page! Follow these amazing pets already loving BFAB 🐾
+            </p>
+          </motion.div>
+
+          {/* Scrollable Pet Gallery */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="overflow-x-auto pb-4">
+              <div className="flex gap-4 sm:gap-6 w-max">
+                {[
+                  { name: "Buddy", instagram: "@buddy_the_golden", breed: "Golden Retriever" },
+                  { name: "Luna", instagram: "@luna_loves_bfab", breed: "Husky" },
+                  { name: "Max", instagram: "@max_the_beagle", breed: "Beagle" },
+                  { name: "Bella", instagram: "@bella_bfab_fan", breed: "Labrador" },
+                  { name: "Charlie", instagram: "@charlie_healthy_pup", breed: "Poodle" },
+                  { name: "Daisy", instagram: "@daisy_nutrition", breed: "Border Collie" },
+                  { name: "Rocky", instagram: "@rocky_strong_dog", breed: "German Shepherd" },
+                  { name: "Milo", instagram: "@milo_bfab_journey", breed: "French Bulldog" }
+                ].map((pet, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="flex-shrink-0 group cursor-pointer"
+                  >
+                    <a
+                      href={`https://instagram.com/${pet.instagram.replace('@', '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block"
+                    >
+                      <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-4 border-2 border-transparent hover:border-pink-300 dark:hover:border-pink-600 group-hover:scale-105">
+                        {/* Pet Image */}
+                        <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-xl overflow-hidden bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30">
+                          <div className="w-full h-full bg-gradient-to-br from-pink-200 to-purple-200 dark:from-pink-800 dark:to-purple-800 flex items-center justify-center text-4xl sm:text-5xl md:text-6xl">
+                            🐶
+                          </div>
+                          {/* Instagram Icon Overlay */}
+                          <div className="absolute top-2 right-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
+                          </div>
+                        </div>
+
+                        {/* Pet Info */}
+                        <div className="mt-3 text-center">
+                          <h3 className="font-bold text-gray-800 dark:text-gray-100 text-sm sm:text-base">{pet.name}</h3>
+                          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">{pet.breed}</p>
+                          <p className="text-xs sm:text-sm font-semibold text-pink-600 dark:text-pink-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                            {pet.instagram}
+                          </p>
+                        </div>
+
+                        {/* Hover Effect */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                      </div>
+                    </a>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Scroll Indicators */}
+            <div className="flex justify-center mt-6 gap-2">
+              <div className="text-gray-400 dark:text-gray-600 text-sm flex items-center gap-2">
+                <span>←</span>
+                <span>Scroll to see more pets</span>
+                <span>→</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Call to Action */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <div className="bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto border-2 border-pink-200 dark:border-pink-700">
+              <div className="text-4xl mb-4">📸✨</div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3">
+                Share Your Pet's BFAB Story!
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm sm:text-base">
+                Tag us @bfab_official and use #BFABTransformation to get featured!
+              </p>
+              <a
+                href="https://instagram.com/bfab_official"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-3 px-6 rounded-full font-semibold transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+                Follow @bfab_official
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Featured Products Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">Featured Products</h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Our bestsellers loved by pet owners everywhere</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+            {featuredProducts.slice(0, 4).map((product, index) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                viewport={{ once: true }}
+                className="group"
+              >
+                <Link href={`/products/${product.id}`} className="block h-full">
+                  <div className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 sm:p-6 text-center shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-slate-900 h-full flex flex-col hover:scale-105 cursor-pointer">
+                    <div className="relative mb-4 overflow-hidden rounded-lg bg-gray-100 dark:bg-slate-800 h-48 sm:h-56">
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        className="object-cover group-hover:scale-110 transition duration-300"
+                      />
+                    </div>
+                    <h3 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{product.name}</h3>
+
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">{product.description}</p>
+
+                    {/* Rating */}
+                    <div className="flex items-center justify-center mb-3">
+                      <div className="flex text-yellow-400">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} size={16} fill="currentColor" />
+                        ))}
+                      </div>
+                      <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                        {product.rating} ({product.reviews} reviews)
+                      </span>
+                    </div>
+
+                    <div className="mb-4">
+                      <p className="text-sm text-gray-500 dark:text-gray-500 line-through">MRP: {product.originalPrice}</p>
+                      <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{product.price}</p>
+                    </div>
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 text-white py-3 px-6 rounded-full mt-auto hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 transition duration-300 font-semibold">
+                      View Details
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Link
+              href="/shop-now"
+              className="bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 text-white py-3 px-8 rounded-full font-semibold transition duration-300 inline-block"
+            >
+              View All Products
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials Section - Enhanced Reviews */}
+
+
+      {/* Client Carousel Section */}
+
+
       {/* Ultimate Saver Packs Section */}
-      
+
 
       {/* Shop by Category Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300">
@@ -536,7 +801,7 @@ export default function Home() {
               {
                 icon: Truck,
                 title: '🚚 Free Shipping',
-                description: 'Free delivery on all orders over ₹50. Fast and secure shipping to your doorstep.',
+                description: 'Free delivery on all orders over ₹999. Fast and secure shipping to your doorstep.',
                 color: 'from-blue-500 to-blue-600',
               },
               {
@@ -574,43 +839,137 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-950 dark:to-slate-900 text-white transition-colors duration-300">
-        <div className="container mx-auto px-4 md:px-6">
+      {/* Want to Get Featured Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 text-4xl animate-pulse">📸</div>
+          <div className="absolute top-20 right-20 text-5xl animate-bounce">✨</div>
+          <div className="absolute bottom-20 left-20 text-4xl animate-pulse">🐶</div>
+          <div className="absolute bottom-10 right-10 text-5xl animate-bounce">🐱</div>
+        </div>
+
+        <div className="container mx-auto px-4 md:px-6 relative">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose BFAB?</h2>
-            <p className="text-xl text-blue-100 dark:text-blue-200">The trusted choice for discerning pet parents</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+              🌟 Want to Get Featured? 🌟
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Share your pet's BFAB journey and get featured on our page! Follow these amazing pets already loving BFAB 🐾
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { icon: <Award size={32} />, title: 'Premium Quality', description: 'Best ingredients sourced globally' },
-              { icon: <ShieldCheck size={32} />, title: 'Vet Approved', description: 'Formulated by veterinary experts' },
-              { icon: <Leaf size={32} />, title: 'Natural & Organic', description: 'No artificial additives or fillers' },
-              { icon: <Heart size={32} />, title: 'Health Guarantee', description: 'Healthier pets or your money back' },
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
+          {/* Scrollable Pet Gallery */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="overflow-x-auto pb-4">
+              <div className="flex gap-4 sm:gap-6 w-max">
+                {[
+                  { name: "Buddy", instagram: "@buddy_the_golden", breed: "Golden Retriever" },
+                  { name: "Luna", instagram: "@luna_loves_bfab", breed: "Husky" },
+                  { name: "Max", instagram: "@max_the_beagle", breed: "Beagle" },
+                  { name: "Bella", instagram: "@bella_bfab_fan", breed: "Labrador" },
+                  { name: "Charlie", instagram: "@charlie_healthy_pup", breed: "Poodle" },
+                  { name: "Daisy", instagram: "@daisy_nutrition", breed: "Border Collie" },
+                  { name: "Rocky", instagram: "@rocky_strong_dog", breed: "German Shepherd" },
+                  { name: "Milo", instagram: "@milo_bfab_journey", breed: "French Bulldog" }
+                ].map((pet, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="flex-shrink-0 group cursor-pointer"
+                  >
+                    <a
+                      href={`https://instagram.com/${pet.instagram.replace('@', '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block"
+                    >
+                      <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-4 border-2 border-transparent hover:border-pink-300 dark:hover:border-pink-600 group-hover:scale-105">
+                        {/* Pet Image */}
+                        <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-xl overflow-hidden bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30">
+                          <div className="w-full h-full bg-gradient-to-br from-pink-200 to-purple-200 dark:from-pink-800 dark:to-purple-800 flex items-center justify-center text-4xl sm:text-5xl md:text-6xl">
+                            🐶
+                          </div>
+                          {/* Instagram Icon Overlay */}
+                          <div className="absolute top-2 right-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
+                          </div>
+                        </div>
+
+                        {/* Pet Info */}
+                        <div className="mt-3 text-center">
+                          <h3 className="font-bold text-gray-800 dark:text-gray-100 text-sm sm:text-base">{pet.name}</h3>
+                          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">{pet.breed}</p>
+                          <p className="text-xs sm:text-sm font-semibold text-pink-600 dark:text-pink-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                            {pet.instagram}
+                          </p>
+                        </div>
+
+                        {/* Hover Effect */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                      </div>
+                    </a>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Scroll Indicators */}
+            <div className="flex justify-center mt-6 gap-2">
+              <div className="text-gray-400 dark:text-gray-600 text-sm flex items-center gap-2">
+                <span>←</span>
+                <span>Scroll to see more pets</span>
+                <span>→</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Call to Action */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <div className="bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto border-2 border-pink-200 dark:border-pink-700">
+              <div className="text-4xl mb-4">📸✨</div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3">
+                Share Your Pet's BFAB Story!
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm sm:text-base">
+                Tag us @bfab_official and use #BFABTransformation to get featured!
+              </p>
+              <a
+                href="https://instagram.com/bfab_official"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-3 px-6 rounded-full font-semibold transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                <div className="w-16 h-16 mx-auto mb-4 bg-white bg-opacity-20 dark:bg-blue-900 dark:bg-opacity-40 rounded-full flex items-center justify-center">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-bold mb-2 text-white">{feature.title}</h3>
-                <p className="text-blue-100 dark:text-blue-200">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+                Follow @bfab_official
+              </a>
+            </div>
+          </motion.div>
         </div>
       </section>
 
