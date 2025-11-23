@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Search, Heart, MessageCircle, Share2, Dog, Cat, Pill, Sparkles, Clock, User } from 'lucide-react';
+import { Search, Heart, MessageCircle, Share2, Dog, Cat, Pill, Sparkles, Clock, User, ArrowRight, Tag } from 'lucide-react';
 
 const blogPosts = [
   {
@@ -115,143 +115,107 @@ const PawBlogPage = () => {
   const featuredPosts = blogPosts.filter(post => post.featured);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 font-sans">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 dark:from-amber-700 dark:via-orange-700 dark:to-red-700 text-white py-16 transition-colors duration-300">
-        <div className="container mx-auto px-4">
+      <section className="bg-slate-900 text-white py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center"
+            className="text-center max-w-3xl mx-auto"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-4">🐾 Paw Blog</h1>
-            <p className="text-xl text-orange-100 dark:text-orange-200">Expert tips and guides for happy, healthy pets</p>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">Paw Blog</h1>
+            <p className="text-xl text-gray-400 leading-relaxed">
+              Expert advice, nutrition tips, and health guides to help you give your pet the best life possible.
+            </p>
           </motion.div>
         </div>
       </section>
 
       {/* Search Section */}
-      <section className="py-8 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
+      <section className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-800 py-6">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="relative mb-8">
-              <Search className="absolute left-4 top-3.5 text-gray-400 dark:text-gray-600 transition-colors duration-300" size={20} />
-              <input
-                type="text"
-                placeholder="Search articles, tags..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-full focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 transition-colors duration-300 placeholder-gray-400 dark:placeholder-gray-600"
-              />
-            </div>
-
+          <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
             {/* Category Filters */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex overflow-x-auto pb-2 md:pb-0 gap-2 w-full md:w-auto no-scrollbar">
               {categories.map((category) => (
-                <motion.button
+                <button
                   key={category}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
-                    selectedCategory === category
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                  }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all duration-300 ${selectedCategory === category
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                      : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-slate-700'
+                    }`}
                 >
                   {category}
-                </motion.button>
+                </button>
               ))}
             </div>
-          </motion.div>
+
+            {/* Search Bar */}
+            <div className="relative w-full md:w-80">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+              <input
+                type="text"
+                placeholder="Search articles..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-11 pr-4 py-2.5 bg-gray-100 dark:bg-slate-800 border-none rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Featured Posts Section */}
-      {filteredPosts.length > 0 && (
-        <section className="py-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      {filteredPosts.length > 0 && selectedCategory === 'All' && !searchTerm && (
+        <section className="py-16 border-b border-gray-200 dark:border-slate-800">
           <div className="container mx-auto px-4">
-            <motion.h2
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="text-4xl font-bold mb-12 text-gray-800 dark:text-white transition-colors duration-300"
-            >
-              ⭐ Featured Articles
-            </motion.h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-              {featuredPosts.filter(post => 
-                filteredPosts.some(fp => fp.id === post.id)
-              ).map((post, index) => (
+            <div className="flex items-center gap-3 mb-10">
+              <Sparkles className="text-yellow-500" size={24} />
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Featured Stories</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredPosts.map((post, index) => (
                 <motion.div
                   key={post.id}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="group bg-gradient-to-br from-amber-50 dark:from-amber-900/20 to-orange-50 dark:to-orange-900/20 rounded-lg overflow-hidden shadow-lg dark:shadow-lg dark:shadow-black/30 hover:shadow-2xl dark:hover:shadow-2xl dark:hover:shadow-black/50 transition-all duration-300 border border-amber-200 dark:border-amber-800 relative"
+                  className="group cursor-pointer"
                 >
-                  {/* Featured Badge */}
-                  <div className="absolute top-4 right-4 bg-gradient-to-r from-amber-400 to-orange-400 dark:from-amber-500 dark:to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold z-10 transition-colors duration-300">
-                    ⭐ Featured
-                  </div>
-
-                  {/* Image */}
-                  <div className="relative h-48 overflow-hidden bg-gray-200 dark:bg-gray-700 transition-colors duration-300">
+                  <div className="relative h-64 rounded-2xl overflow-hidden mb-6">
                     <Image
                       src={post.image}
                       alt={post.title}
-                      width={400}
-                      height={200}
-                      className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
+                    <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+                      {post.category}
+                    </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="inline-block bg-gradient-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600 text-white px-3 py-1 rounded-full text-xs font-semibold transition-colors duration-300">
-                        {post.category}
-                      </span>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="flex items-center gap-1"><Clock size={14} /> {post.readTime}</span>
+                      <span className="flex items-center gap-1"><User size={14} /> {post.author}</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3 line-clamp-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors duration-300">
+
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {post.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2 transition-colors duration-300">{post.excerpt}</p>
 
-                    {/* Meta Info */}
-                    <div className="flex flex-wrap gap-4 text-xs text-gray-600 dark:text-gray-400 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
-                      <div className="flex items-center gap-1">
-                        <User size={14} />
-                        {post.author}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock size={14} />
-                        {post.readTime}
-                      </div>
-                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 line-clamp-2">
+                      {post.excerpt}
+                    </p>
 
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {post.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded transition-colors duration-300">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Read More Link */}
-                    <Link
-                      href={`/paw-blog/${post.slug}`}
-                      className="inline-block bg-gradient-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600 text-white px-4 py-2 rounded-full font-semibold hover:shadow-lg dark:hover:shadow-lg dark:hover:shadow-amber-900/50 transition-all duration-300"
-                    >
-                      Read Article →
+                    <Link href={`/paw-blog/${post.slug}`} className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold hover:gap-3 transition-all">
+                      Read Article <ArrowRight size={16} />
                     </Link>
                   </div>
                 </motion.div>
@@ -262,26 +226,26 @@ const PawBlogPage = () => {
       )}
 
       {/* All Posts Grid */}
-      <section className="py-16 bg-white dark:bg-black transition-colors duration-300">
+      <section className="py-16">
         <div className="container mx-auto px-4">
-          <motion.h2
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="text-4xl font-bold mb-12 text-gray-800 dark:text-white transition-colors duration-300"
-          >
-            {selectedCategory === 'All' ? 'All Articles' : `${selectedCategory} Articles`}
-          </motion.h2>
+          <h2 className="text-3xl font-bold mb-10 text-gray-900 dark:text-white">
+            {selectedCategory === 'All' ? 'Latest Articles' : `${selectedCategory} Articles`}
+          </h2>
 
           {filteredPosts.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <p className="text-xl text-gray-600 dark:text-gray-400 transition-colors duration-300">No articles found. Try a different search or category.</p>
-            </motion.div>
+            <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800">
+              <div className="inline-flex p-4 bg-gray-100 dark:bg-slate-800 rounded-full mb-4">
+                <Search size={32} className="text-gray-400" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No articles found</h3>
+              <p className="text-gray-500 dark:text-gray-400">Try adjusting your search or filter to find what you're looking for.</p>
+              <button
+                onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }}
+                className="mt-6 text-blue-600 dark:text-blue-400 font-semibold hover:underline"
+              >
+                Clear all filters
+              </button>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPosts.map((post, index) => (
@@ -291,75 +255,46 @@ const PawBlogPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="group bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-lg dark:shadow-lg dark:shadow-black/30 hover:shadow-2xl dark:hover:shadow-2xl dark:hover:shadow-black/50 transition-all duration-300 transform hover:scale-105 border border-gray-200 dark:border-gray-700"
+                  className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md transition-all group flex flex-col h-full"
                 >
-                  {/* Image */}
-                  <div className="relative h-48 overflow-hidden bg-gray-200 dark:bg-gray-700 transition-colors duration-300">
+                  <div className="relative h-48 overflow-hidden bg-gray-100 dark:bg-slate-800">
                     <Image
                       src={post.image}
                       alt={post.title}
-                      width={400}
-                      height={200}
-                      className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
 
-                  {/* Content */}
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-semibold transition-colors duration-300">
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-full">
                         {post.category}
                       </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-300">{post.date}</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{post.date}</span>
                     </div>
 
-                    <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {post.title}
                     </h3>
 
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2 transition-colors duration-300">{post.excerpt}</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 line-clamp-3 flex-grow">
+                      {post.excerpt}
+                    </p>
 
-                    {/* Meta Info */}
-                    <div className="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-400 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
-                      <div className="flex items-center gap-1">
-                        <User size={14} />
-                        {post.author}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock size={14} />
-                        {post.readTime}
-                      </div>
-                    </div>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {post.tags.map((tag) => (
-                        <span key={tag} className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded transition-colors duration-300">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Engagement & CTA */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex gap-4 text-gray-600 dark:text-gray-400 transition-colors duration-300">
-                        <button className="flex items-center gap-1 hover:text-red-500 dark:hover:text-red-400 transition transition-colors duration-300">
+                    <div className="pt-6 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between mt-auto">
+                      <div className="flex items-center gap-4 text-gray-500 dark:text-gray-400 text-sm">
+                        <button className="flex items-center gap-1.5 hover:text-red-500 transition-colors">
                           <Heart size={16} />
-                          <span className="text-xs">{post.likes}</span>
+                          <span>{post.likes}</span>
                         </button>
-                        <button className="flex items-center gap-1 hover:text-blue-500 dark:hover:text-blue-400 transition transition-colors duration-300">
+                        <button className="flex items-center gap-1.5 hover:text-blue-500 transition-colors">
                           <MessageCircle size={16} />
-                          <span className="text-xs">{post.comments}</span>
-                        </button>
-                        <button className="flex items-center gap-1 hover:text-green-500 dark:hover:text-green-400 transition transition-colors duration-300">
-                          <Share2 size={16} />
+                          <span>{post.comments}</span>
                         </button>
                       </div>
-                      <Link
-                        href={`/paw-blog/${post.slug}`}
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold text-sm transition-colors duration-300"
-                      >
-                        Read →
+                      <Link href={`/paw-blog/${post.slug}`} className="text-slate-900 dark:text-white font-semibold text-sm hover:underline">
+                        Read More
                       </Link>
                     </div>
                   </div>

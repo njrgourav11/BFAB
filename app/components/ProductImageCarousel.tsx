@@ -8,9 +8,10 @@ interface ProductImageCarouselProps {
   images?: string[];
   alt: string;
   className?: string;
+  imageClassName?: string;
 }
 
-export default function ProductImageCarousel({ images, alt, className = "" }: ProductImageCarouselProps) {
+export default function ProductImageCarousel({ images, alt, className = "", imageClassName = "object-cover" }: ProductImageCarouselProps) {
   const [current, setCurrent] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
 
@@ -47,7 +48,7 @@ export default function ProductImageCarousel({ images, alt, className = "" }: Pr
           src={images[current]}
           alt={`${alt} - Image ${current + 1}`}
           fill
-          className="object-cover"
+          className={imageClassName}
           unoptimized
           onError={(e) => {
             console.error('Image failed to load:', images[current]);
@@ -81,9 +82,8 @@ export default function ProductImageCarousel({ images, alt, className = "" }: Pr
             <button
               key={index}
               onClick={() => setCurrent(index)}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                index === current ? 'bg-white' : 'bg-white/50'
-              }`}
+              className={`w-2 h-2 rounded-full transition-colors ${index === current ? 'bg-white' : 'bg-white/50'
+                }`}
             />
           ))}
         </div>

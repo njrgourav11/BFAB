@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Dog, Cat, Heart, AlertCircle, Droplet, Zap, Activity, Apple } from 'lucide-react';
+import { Dog, Cat, Heart, AlertCircle, Droplet, Zap, Activity, Apple, Scale, ChevronRight } from 'lucide-react';
 
 const FeedingGuidePage = () => {
   const [activeTab, setActiveTab] = useState('dog');
   const [petWeight, setPetWeight] = useState('');
-  const [calculatedAmount, setCalculatedAmount] = useState(null);
+  const [calculatedAmount, setCalculatedAmount] = useState<string | null>(null);
 
   const dogFeedingData = [
     { lifeStage: 'Puppy', weight: '5-10 lbs', amount: '1 - 1.5', icon: '🐶' },
@@ -42,7 +42,7 @@ const FeedingGuidePage = () => {
     if (!petWeight) return;
     const weight = parseFloat(petWeight);
     const data = activeTab === 'dog' ? dogFeedingData : catFeedingData;
-    
+
     let result = null;
     for (const entry of data) {
       const [min, max] = entry.weight.split('-').map(w => parseFloat(w));
@@ -55,222 +55,223 @@ const FeedingGuidePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 font-sans">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 via-green-600 to-emerald-600 dark:from-blue-800 dark:via-green-800 dark:to-emerald-800 text-white py-16 transition-colors duration-300">
-        <div className="container mx-auto px-4">
+      <section className="bg-slate-900 text-white py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center"
+            className="text-center max-w-3xl mx-auto"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-4">🥗 Feeding Guide</h1>
-            <p className="text-xl text-green-100 dark:text-green-200">Proper nutrition for every life stage</p>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">Feeding Guide</h1>
+            <p className="text-xl text-gray-400 leading-relaxed">
+              Ensure your furry friend gets the perfect nutrition at every stage of their life.
+              Our expert-backed guide helps you make informed decisions.
+            </p>
           </motion.div>
         </div>
       </section>
 
       {/* Tab Navigation */}
-      <section className="py-8 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-20 transition-colors duration-300">
+      <section className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-800">
         <div className="container mx-auto px-4">
-          <div className="flex gap-4 justify-center">
-            {[
-              { id: 'dog', label: 'Dog Feeding Guide', icon: <Dog size={24} /> },
-              { id: 'cat', label: 'Cat Feeding Guide', icon: <Cat size={24} /> },
-            ].map((tab) => (
-              <motion.button
-                key={tab.id}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  setActiveTab(tab.id);
-                  setCalculatedAmount(null);
-                  setPetWeight('');
-                }}
-                className={`flex items-center gap-2 px-8 py-3 rounded-full font-semibold transition-all duration-300 text-lg ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-blue-600 to-green-600 dark:from-blue-700 dark:to-green-700 text-white shadow-lg'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
-              >
-                {tab.icon}
-                {tab.label}
-              </motion.button>
-            ))}
+          <div className="flex justify-center">
+            <div className="flex p-1 bg-gray-100 dark:bg-slate-800 rounded-xl my-4">
+              {[
+                { id: 'dog', label: 'Dog Guide', icon: <Dog size={20} /> },
+                { id: 'cat', label: 'Cat Guide', icon: <Cat size={20} /> },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    setCalculatedAmount(null);
+                    setPetWeight('');
+                  }}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${activeTab === tab.id
+                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                    }`}
+                >
+                  {tab.icon}
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Main Content */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <section className="py-16">
         <div className="container mx-auto px-4">
+
           {/* Interactive Calculator */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="bg-gradient-to-r from-blue-100 dark:from-blue-900/30 to-green-100 dark:to-green-900/30 rounded-lg p-8 mb-12 border border-green-200 dark:border-green-800 transition-colors duration-300"
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-slate-800 mb-16 max-w-4xl mx-auto"
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6 transition-colors duration-300">📊 Portion Calculator</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-              <div>
-                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2 transition-colors duration-300">
-                  Pet Weight (lbs):
-                </label>
-                <input
-                  type="number"
-                  value={petWeight}
-                  onChange={(e) => setPetWeight(e.target.value)}
-                  placeholder="Enter weight..."
-                  className="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-300 placeholder-gray-400 dark:placeholder-gray-600"
-                />
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400">
+                <Scale size={24} />
               </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Portion Calculator</h2>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Calculate daily food intake based on weight</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+              <div className="md:col-span-2">
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                  Pet Weight (lbs)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    value={petWeight}
+                    onChange={(e) => setPetWeight(e.target.value)}
+                    placeholder="e.g., 25"
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-gray-900 dark:text-white"
+                  />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">lbs</span>
+                </div>
+              </div>
+
               <button
                 onClick={handleCalculate}
-                className="bg-gradient-to-r from-blue-600 to-green-600 dark:from-blue-700 dark:to-green-700 hover:from-blue-700 hover:to-green-700 dark:hover:from-blue-800 dark:hover:to-green-800 text-white font-bold py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-6 rounded-xl hover:opacity-90 transition-all shadow-lg flex items-center justify-center gap-2"
               >
                 Calculate
+                <ChevronRight size={18} />
               </button>
-              {calculatedAmount && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="bg-white dark:bg-gray-800 border-2 border-green-500 dark:border-green-600 rounded-lg p-4 transition-colors duration-300"
-                >
-                  <p className="text-gray-700 dark:text-gray-300 font-semibold transition-colors duration-300">Daily Portions:</p>
-                  <p className="text-2xl font-bold text-green-600 dark:text-green-400 transition-colors duration-300">{calculatedAmount} cups</p>
-                </motion.div>
-              )}
             </div>
+
+            {calculatedAmount && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="mt-8 p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-100 dark:border-green-800 flex items-center justify-between"
+              >
+                <div>
+                  <p className="text-green-800 dark:text-green-300 font-medium mb-1">Recommended Daily Portion</p>
+                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">{calculatedAmount} cups</p>
+                </div>
+                <div className="h-12 w-12 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center text-green-600 dark:text-green-300">
+                  <Apple size={24} />
+                </div>
+              </motion.div>
+            )}
           </motion.div>
 
           {/* Feeding Guide Tables */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8 transition-colors duration-300">
-              {activeTab === 'dog' ? '🐕 Dog Feeding Guide' : '🐱 Cat Feeding Guide'}
+          <div className="mb-20">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+              {activeTab === 'dog' ? 'Dog Feeding Guidelines' : 'Cat Feeding Guidelines'}
             </h2>
 
-            <div className="overflow-x-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(activeTab === 'dog' ? dogFeedingData : catFeedingData).map((row, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-lg dark:shadow-black/30 p-6 border-l-4 border-blue-500 dark:border-blue-600 hover:shadow-2xl dark:hover:shadow-2xl dark:hover:shadow-black/50 transition-all duration-300"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <span className="text-4xl">{row.icon}</span>
-                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold transition-colors duration-300">
-                        {row.lifeStage}
-                      </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {(activeTab === 'dog' ? dogFeedingData : catFeedingData).map((row, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md transition-all group"
+                >
+                  <div className="flex items-start justify-between mb-6">
+                    <span className="text-4xl group-hover:scale-110 transition-transform duration-300">{row.icon}</span>
+                    <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                      {row.lifeStage}
+                    </span>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Weight Range</p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-white">{row.weight}</p>
                     </div>
-                    <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2 transition-colors duration-300">Weight Range</h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4 transition-colors duration-300">{row.weight}</p>
-                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300">
-                      <p className="text-gray-700 dark:text-gray-300 font-semibold mb-2 transition-colors duration-300">Daily Portions:</p>
-                      <p className="text-2xl font-bold text-green-600 dark:text-green-400 transition-colors duration-300">{row.amount} cups</p>
+                    <div className="pt-4 border-t border-gray-100 dark:border-slate-800">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Daily Portion</p>
+                      <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{row.amount} cups</p>
                     </div>
-                  </motion.div>
-                ))}
-              </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Tips Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="mt-16 pt-16 border-t-2 border-gray-200 dark:border-gray-700 transition-colors duration-300"
-          >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-10 text-center transition-colors duration-300">
-              💡 Feeding Tips for {activeTab === 'dog' ? 'Dogs' : 'Cats'}
+          <div className="mb-20">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-10 text-center">
+              Expert Feeding Tips
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {tips[activeTab].map((tip, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {tips[activeTab as keyof typeof tips].map((tip, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-lg dark:shadow-black/30 p-6 flex gap-4 border-l-4 border-yellow-500 dark:border-yellow-600 hover:shadow-2xl dark:hover:shadow-2xl dark:hover:shadow-black/50 transition-all duration-300"
+                  className="bg-white dark:bg-slate-900 rounded-2xl p-6 flex gap-5 border border-gray-100 dark:border-slate-800 hover:border-blue-200 dark:hover:border-blue-800 transition-colors"
                 >
-                  <div className="flex-shrink-0">{tip.icon}</div>
+                  <div className="flex-shrink-0 w-12 h-12 bg-gray-50 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                    {tip.icon}
+                  </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2 transition-colors duration-300">{tip.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">{tip.description}</p>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{tip.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{tip.description}</p>
                   </div>
                 </motion.div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Important Note */}
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-16 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 dark:border-yellow-600 p-6 rounded-lg transition-colors duration-300"
+            className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/30 rounded-2xl p-8 flex flex-col md:flex-row gap-6 items-start"
           >
-            <div className="flex gap-4">
-              <AlertCircle size={28} className="text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-1 transition-colors duration-300" />
-              <div>
-                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2 transition-colors duration-300">⚠️ Important Notice</h3>
-                <p className="text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
-                  These guidelines are general recommendations. Every pet is unique with individual dietary needs.
-                </p>
-                <ul className="text-gray-700 dark:text-gray-400 list-disc list-inside space-y-1 transition-colors duration-300">
-                  <li>Consult your veterinarian before making dietary changes</li>
-                  <li>Consider your pet's activity level and metabolism</li>
-                  <li>Transition to new food gradually over 7-10 days</li>
-                  <li>Monitor your pet's weight and adjust portions as needed</li>
-                </ul>
-              </div>
+            <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-full text-amber-600 dark:text-amber-400 flex-shrink-0">
+              <AlertCircle size={24} />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Important Notice</h3>
+              <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                These guidelines are general recommendations. Every pet is unique with individual dietary needs.
+                Always consult with your veterinarian for the best advice tailored to your pet.
+              </p>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-600 dark:text-gray-400 text-sm">
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                  Consult your veterinarian before dietary changes
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                  Consider activity level and metabolism
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                  Transition to new food gradually (7-10 days)
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                  Monitor weight and adjust portions
+                </li>
+              </ul>
             </div>
           </motion.div>
 
-          {/* Nutritional Info Box */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="mt-16 bg-gradient-to-r from-green-50 dark:from-green-900/20 to-emerald-50 dark:to-emerald-900/20 rounded-lg p-8 border border-green-200 dark:border-green-800 transition-colors duration-300"
-          >
-            <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center transition-colors duration-300">🌿 Key Nutritional Elements</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { title: 'Protein', desc: 'Essential for muscle development' },
-                { title: 'Fats', desc: 'Healthy coat and skin support' },
-                { title: 'Fiber', desc: 'Aids digestion and gut health' },
-                { title: 'Vitamins & Minerals', desc: 'Supports immune system' },
-              ].map((nutrient, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center shadow-md dark:shadow-lg dark:shadow-black/30 transition-all duration-300"
-                >
-                  <p className="font-bold text-gray-800 dark:text-white mb-2 transition-colors duration-300">{nutrient.title}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">{nutrient.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
         </div>
       </section>
     </div>

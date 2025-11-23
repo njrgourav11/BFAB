@@ -1,9 +1,8 @@
 "use client";
 import React, { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Heart, Users, Home, BookOpen, Award, DollarSign, Handshake, Mail, Phone, ExternalLink, CheckCircle, Target, TrendingUp } from 'lucide-react';
+import { Heart, Users, DollarSign, Mail, Phone, ExternalLink, CheckCircle, TrendingUp, Handshake, ArrowRight } from 'lucide-react';
 
 const BFABCaresPage = () => {
   const [selectedTab, setSelectedTab] = useState<'shelters' | 'rescue' | 'community'>('shelters');
@@ -79,13 +78,13 @@ const BFABCaresPage = () => {
       amount: '1,000+ active volunteers',
     },
     {
-      icon: <BookOpen size={28} />,
+      icon: <Handshake size={28} />,
       title: 'Education Initiative',
       description: 'Free workshops and resources on pet care, nutrition, and responsible ownership',
       amount: '100+ workshops yearly',
     },
     {
-      icon: <Award size={28} />,
+      icon: <TrendingUp size={28} />,
       title: 'Scholarship Program',
       description: 'Supporting students pursuing careers in animal nutrition and welfare',
       amount: '$100K+ in scholarships',
@@ -126,38 +125,36 @@ const BFABCaresPage = () => {
   const filteredPartnerships = partnerships.filter(p => p.category === selectedTab);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-rose-50 to-red-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 font-sans">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-red-600 via-pink-600 to-rose-600 text-white py-12 sm:py-16 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-white rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl animate-pulse"></div>
-        </div>
-
+      <section className="bg-slate-900 text-white py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center"
+            className="text-center max-w-3xl mx-auto"
           >
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="inline-block mb-4 sm:mb-6"
+              className="inline-flex p-4 bg-rose-500/20 rounded-full mb-6 text-rose-500"
             >
-              <Heart size={40} className="sm:w-12 sm:h-12 fill-current" />
+              <Heart size={48} className="fill-current" />
             </motion.div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4">BFAB Cares</h1>
-            <p className="text-base sm:text-lg md:text-xl text-rose-100 max-w-2xl mx-auto leading-relaxed px-2">
-              Dedicated to improving the lives of animals through compassion, support, and action
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">BFAB Cares</h1>
+            <p className="text-xl text-gray-400 leading-relaxed">
+              Dedicated to improving the lives of animals through compassion, support, and action.
+              Together, we can make a difference.
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* Mission Statement */}
-      <section className="py-12 sm:py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -166,25 +163,26 @@ const BFABCaresPage = () => {
             viewport={{ once: true }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4 sm:mb-6">Our Mission</h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8 px-2">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Our Mission</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed mb-12">
               At BFAB, we believe that every pet deserves a loving home and proper nutrition. Our mission is to support animal welfare organizations and promote responsible pet ownership. We are committed to making a positive impact on the lives of pets in our community and beyond.
             </p>
-            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4">
-              <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-lg p-4 sm:p-6 border border-red-200 flex-1 min-w-full sm:min-w-52">
-                <TrendingUp className="text-red-600 mx-auto mb-3" size={28} />
-                <p className="font-bold text-gray-800 text-sm sm:text-base">50+ Partners</p>
-                <p className="text-xs sm:text-sm text-gray-600">Active partnerships</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-gray-50 dark:bg-slate-800 rounded-2xl p-8 border border-gray-100 dark:border-slate-700">
+                <TrendingUp className="text-rose-500 mx-auto mb-4" size={32} />
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mb-1">50+ Partners</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Active partnerships</p>
               </div>
-              <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg p-4 sm:p-6 border border-pink-200 flex-1 min-w-full sm:min-w-52">
-                <Heart className="text-pink-600 mx-auto mb-3" size={28} />
-                <p className="font-bold text-gray-800 text-sm sm:text-base">150K+ Animals</p>
-                <p className="text-xs sm:text-sm text-gray-600">Helped and supported</p>
+              <div className="bg-gray-50 dark:bg-slate-800 rounded-2xl p-8 border border-gray-100 dark:border-slate-700">
+                <Heart className="text-rose-500 mx-auto mb-4" size={32} />
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mb-1">150K+ Animals</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Helped and supported</p>
               </div>
-              <div className="bg-gradient-to-br from-rose-50 to-red-50 rounded-lg p-4 sm:p-6 border border-rose-200 flex-1 min-w-full sm:min-w-52">
-                <DollarSign className="text-rose-600 mx-auto mb-3" size={28} />
-                <p className="font-bold text-gray-800 text-sm sm:text-base">$500K+</p>
-                <p className="text-xs sm:text-sm text-gray-600">Donated annually</p>
+              <div className="bg-gray-50 dark:bg-slate-800 rounded-2xl p-8 border border-gray-100 dark:border-slate-700">
+                <DollarSign className="text-rose-500 mx-auto mb-4" size={32} />
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mb-1">$500K+</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Donated annually</p>
               </div>
             </div>
           </motion.div>
@@ -192,20 +190,19 @@ const BFABCaresPage = () => {
       </section>
 
       {/* Initiatives Section */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-8 sm:mb-12"
+            className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">Our Initiatives</h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600">Making a real difference in animal welfare</p>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Our Initiatives</h2>
+            <p className="text-gray-600 dark:text-gray-400">Making a real difference in animal welfare</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {initiatives.map((initiative, index) => (
               <motion.div
                 key={index}
@@ -213,12 +210,14 @@ const BFABCaresPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-lg transition border border-gray-100"
+                className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md transition-all group"
               >
-                <div className="text-red-600 mb-4 text-2xl sm:text-3xl">{initiative.icon}</div>
-                <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 mb-3">{initiative.title}</h3>
-                <p className="text-gray-600 mb-4 text-xs sm:text-sm leading-relaxed">{initiative.description}</p>
-                <p className="font-bold text-red-600 text-xs sm:text-sm">{initiative.amount}</p>
+                <div className="w-12 h-12 bg-rose-50 dark:bg-rose-900/20 rounded-xl flex items-center justify-center text-rose-500 mb-6 group-hover:scale-110 transition-transform">
+                  {initiative.icon}
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">{initiative.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">{initiative.description}</p>
+                <p className="font-bold text-rose-500 text-sm">{initiative.amount}</p>
               </motion.div>
             ))}
           </div>
@@ -226,114 +225,101 @@ const BFABCaresPage = () => {
       </section>
 
       {/* Partnerships Section */}
-      <section className="py-12 sm:py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-slate-900 border-y border-gray-100 dark:border-slate-800">
         <div className="container mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-8 sm:mb-12"
+            className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">Our Partnerships</h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600">Working with amazing organizations</p>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Our Partnerships</h2>
+            <p className="text-gray-600 dark:text-gray-400">Working with amazing organizations</p>
           </motion.div>
 
           {/* Tab Navigation */}
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-8 sm:mb-12">
-            {[
-              { id: 'shelters', label: '🏠 Animal Shelters' },
-              { id: 'rescue', label: '🦮 Rescue Organizations' },
-              { id: 'community', label: '🤝 Community Programs' },
-            ].map((tab) => (
-              <motion.button
-                key={tab.id}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedTab(tab.id as any)}
-                className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold transition text-xs sm:text-sm md:text-base ${
-                  selectedTab === tab.id
-                    ? 'bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {tab.label}
-              </motion.button>
-            ))}
+          <div className="flex justify-center mb-12">
+            <div className="flex p-1 bg-gray-100 dark:bg-slate-800 rounded-xl">
+              {[
+                { id: 'shelters', label: 'Animal Shelters' },
+                { id: 'rescue', label: 'Rescue Orgs' },
+                { id: 'community', label: 'Community' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedTab(tab.id as any)}
+                  className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition-all ${selectedTab === tab.id
+                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                    }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Partnership Cards */}
-          <motion.div
-            layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPartnerships.map((partnership, index) => (
               <motion.div
                 key={partnership.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-lg transition border border-gray-100 hover:border-red-200"
+                className="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 border border-gray-100 dark:border-slate-700 hover:border-rose-200 dark:hover:border-rose-800 transition-colors"
               >
-                <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">{partnership.logo}</div>
-                <h3 className="text-lg sm:text-2xl font-bold text-gray-800 mb-2">{partnership.name}</h3>
-                <p className="text-gray-600 mb-4 text-xs sm:text-sm leading-relaxed">{partnership.description}</p>
-                
-                <div className="bg-red-50 rounded-lg p-2 sm:p-3 mb-4 border border-red-200">
-                  <p className="text-xs sm:text-sm font-semibold text-red-700 flex items-center gap-2">
-                    <CheckCircle size={14} className="sm:w-4 sm:h-4 flex-shrink-0" />
-                    {partnership.impact}
-                  </p>
-                </div>
+                <div className="text-4xl mb-4">{partnership.logo}</div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{partnership.name}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 leading-relaxed">{partnership.description}</p>
 
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 overflow-x-auto">
-                  <Mail size={14} className="sm:w-4 sm:h-4 flex-shrink-0" />
-                  <a href={`mailto:${partnership.contact}`} className="hover:text-red-600 transition break-all">
-                    {partnership.contact}
-                  </a>
+                <div className="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-slate-700">
+                  <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 text-sm font-medium">
+                    <CheckCircle size={16} />
+                    {partnership.impact}
+                  </div>
                 </div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Ways to Help Section */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-8 sm:mb-12"
+            className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">Ways to Help</h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600">Get involved and make a difference</p>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Ways to Help</h2>
+            <p className="text-gray-600 dark:text-gray-400">Get involved and make a difference</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {wayToHelp.map((item, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="relative group"
+                className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md transition-all group relative overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-red-600 to-pink-600 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                <div className="relative bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow-sm group-hover:shadow-xl transition h-full flex flex-col">
-                  <div className="text-4xl sm:text-5xl font-bold text-red-600/20 mb-3 sm:mb-4">{item.number}</div>
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-2 sm:mb-3">{item.title}</h3>
-                  <p className="text-gray-600 mb-4 sm:mb-6 flex-1 text-xs sm:text-sm">{item.description}</p>
+                <div className="absolute top-0 right-0 p-4 opacity-10 font-bold text-6xl text-gray-900 dark:text-white select-none">
+                  {item.number}
+                </div>
+                <div className="relative z-10 h-full flex flex-col">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 mt-4">{item.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 flex-grow">{item.description}</p>
                   <Link
                     href={item.link}
-                    className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700 transition group/link text-xs sm:text-sm"
+                    className="inline-flex items-center gap-2 text-rose-600 dark:text-rose-400 font-semibold text-sm hover:gap-3 transition-all"
                   >
                     {item.action}
-                    <ExternalLink size={14} className="sm:w-4 sm:h-4 group-hover/link:translate-x-1 transition" />
+                    <ArrowRight size={16} />
                   </Link>
                 </div>
               </motion.div>
@@ -343,79 +329,60 @@ const BFABCaresPage = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-12 sm:py-16 bg-gradient-to-r from-red-600 via-pink-600 to-rose-600 text-white">
-        <div className="container mx-auto px-4">
+      <section className="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10"></div>
+        <div className="container mx-auto px-4 relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center max-w-2xl mx-auto px-2"
+            className="max-w-2xl mx-auto"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Ready to Make a Difference?</h2>
-            <p className="text-base sm:text-lg md:text-xl text-rose-100 mb-6 sm:mb-8 leading-relaxed">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
+            <p className="text-lg text-gray-400 mb-8 leading-relaxed">
               Join us in our mission to improve the lives of animals everywhere. Whether you shop, donate, volunteer, or adopt, your support matters.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  href="/shop-now"
-                  className="inline-block bg-white text-red-600 px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-bold hover:bg-rose-50 transition shadow-lg text-sm sm:text-base"
-                >
-                  Shop Now
-                </Link>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  href="/contact-us"
-                  className="inline-block border-2 border-white text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-bold hover:bg-white/10 transition text-sm sm:text-base"
-                >
-                  Get in Touch
-                </Link>
-              </motion.div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/shop-now"
+                className="bg-white text-slate-900 px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition shadow-lg"
+              >
+                Shop Now
+              </Link>
+              <Link
+                href="/contact-us"
+                className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-xl font-bold hover:bg-white/10 transition"
+              >
+                Get in Touch
+              </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Contact Info */}
-      <section className="py-8 sm:py-12 bg-white border-t border-gray-100">
+      <section className="py-12 bg-gray-50 dark:bg-slate-950 border-t border-gray-200 dark:border-slate-800">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 text-center">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0 }}
-              viewport={{ once: true }}
-            >
-              <Mail className="text-red-600 mx-auto mb-3" size={28} />
-              <p className="text-xs sm:text-sm text-gray-600">Email us</p>
-              <a href="mailto:cares@bfab.com" className="font-bold text-gray-800 hover:text-red-600 transition text-xs sm:text-sm break-all">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <Mail className="text-rose-500 mx-auto mb-3" size={24} />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Email us</p>
+              <a href="mailto:cares@bfab.com" className="font-bold text-gray-900 dark:text-white hover:text-rose-500 transition">
                 cares@bfab.com
               </a>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <Phone className="text-red-600 mx-auto mb-3" size={28} />
-              <p className="text-xs sm:text-sm text-gray-600">Call us</p>
-              <a href="tel:+1-800-BFAB-CARES" className="font-bold text-gray-800 hover:text-red-600 transition text-xs sm:text-sm">
+            </div>
+            <div>
+              <Phone className="text-rose-500 mx-auto mb-3" size={24} />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Call us</p>
+              <a href="tel:+1-800-BFAB-CARES" className="font-bold text-gray-900 dark:text-white hover:text-rose-500 transition">
                 1-800-BFAB-CARES
               </a>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <Heart className="text-red-600 mx-auto mb-3" size={28} />
-              <p className="text-xs sm:text-sm text-gray-600">Follow us</p>
-              <p className="font-bold text-gray-800 text-xs sm:text-sm">@BFABCares</p>
-            </motion.div>
+            </div>
+            <div>
+              <Heart className="text-rose-500 mx-auto mb-3" size={24} />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Follow us</p>
+              <p className="font-bold text-gray-900 dark:text-white">@BFABCares</p>
+            </div>
           </div>
         </div>
       </section>
