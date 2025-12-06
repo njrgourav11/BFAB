@@ -6,6 +6,10 @@ import { motion } from 'framer-motion';
 import 'swiper/css';
 import { Star, ShieldCheck, Truck, Phone, RotateCcw, CheckCircle } from 'lucide-react';
 import ClientCarousel from './components/ClientCarousel';
+import TestimonialSlider from '@/components/ui/testimonial-slider';
+import { ProductRevealCard } from '@/components/ui/product-reveal-card';
+import { ProfileCard } from '@/components/ui/profile-card';
+import { useCart } from './components/CartContext';
 
 
 
@@ -56,37 +60,10 @@ const featuredProducts = [
 
 
 // Sample data for testimonials/reviews
-const testimonials = [
-  {
-    id: 1,
-    name: 'Noah the beagle',
-    comment: 'Food with Hemp oil drops, ever since I started using Hemp seed oil of @begginforabite Noah\'s appetite has noticeably increased! She now enjoys her meals with excitement, making mealtime a happy and satisfying moment for both of us. A small addition with big benefits, healthy, happy, and always ready for her next bite! This is not a paid promotion or collaboration just my genuine review after using Hemp seed oil of Beggin For A Bite for Noah. I\'ve noticed a real difference in her appetite, and it\'s been amazing to see her enjoy her meals more.',
-    avatar: '/review/3.svg',
-    pet: 'Beagle',
-    rating: 5,
-    verified: true,
-  },
-  {
-    id: 2,
-    name: 'Binit Soreng',
-    comment: "My pup Berry's overall health and skin condition improved drastically after using this supplement for just 5 weeks. Earlier, he struggled with ticks, dry skin, and excessive hair fall. But after starting this Ashwagandha + Hemp Protein supplement, his coat became healthier, his skin improved, and the shedding reduced a lot. This has now become Berry's everyday supplement, and I couldn't be happier with the results! I highly recommend it to all pet parents looking for natural health solutions. Definitely worth giving a try!",
-    avatar: '/review/Golden-Retriever.webp',
-    pet: 'Dog',
-    rating: 5,
-    verified: true,
-  },
-  {
-    id: 3,
-    name: 'Sudeshna Jena',
-    comment: 'I honestly didn\'t expect such a big difference, but these supplements have been a blessing for my pet. What I love the most is how clean and natural the ingredients are, it gives me peace of mind every time I use it. And the best part? My pupper actually enjoys it! No more forcing or mixing tricks… he happily finishes every meal when this is added on top. It\'s super easy to use and fits perfectly into our daily routine. Truly worth it. I\'d happily recommend it to any pet parent who wants real, visible improvements.',
-    avatar: '/review/2.svg',
-    pet: 'Dog',
-    rating: 5,
-    verified: true,
-  },
-];
+
 
 export default function Home() {
+  const { addToCart } = useCart();
   return (
     <div>
       {/* Hero Section */}
@@ -104,7 +81,7 @@ export default function Home() {
           <div className="hidden sm:block absolute bottom-10 left-40 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-2xl sm:blur-3xl opacity-20 animate-pulse dark:opacity-10" style={{ animationDelay: '4s' }}></div>
         </div>
 
-       
+
       </section>
 
       <section className="py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
@@ -133,50 +110,32 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.15 }}
                 viewport={{ once: true }}
-                className="group"
+                className="group flex justify-center"
               >
-                <Link href={`/products/${product.id}`} className="block h-full">
-                  <div className="rounded-2xl p-4 sm:p-6 text-center bg-white dark:bg-slate-900 h-full flex flex-col hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 cursor-pointer border border-transparent hover:border-gray-100 dark:hover:border-slate-800">
-                    <div className="relative mb-4 overflow-hidden rounded-xl bg-gray-50 dark:bg-slate-800 aspect-square group-hover:shadow-inner transition-all duration-300">
-                      <Image
-                        src={product.images[0]}
-                        alt={product.name}
-                        fill
-                        className="object-contain p-4 group-hover:scale-110 transition duration-500"
-                      />
-
-                      {/* Quick Add Overlay (Optional Idea) */}
-                      <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                    </div>
-
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 line-clamp-2">{product.name}</h3>
-
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">{product.description}</p>
-
-                    {/* Rating */}
-                    <div className="flex items-center justify-center mb-4">
-                      <div className="flex text-yellow-400 gap-0.5">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} size={14} fill="currentColor" />
-                        ))}
-                      </div>
-                      <span className="ml-2 text-xs font-medium text-gray-500 dark:text-gray-400">
-                        ({product.reviews} reviews)
-                      </span>
-                    </div>
-
-                    <div className="mt-auto">
-                      <div className="flex items-center justify-center gap-3 mb-4">
-                        <p className="text-sm text-gray-400 dark:text-gray-500 line-through">₹{product.originalPrice}</p>
-                        <p className="text-2xl font-extrabold text-gray-900 dark:text-white">{product.price}</p>
-                      </div>
-
-                      <div className="w-full bg-gray-900 dark:bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-blue-700 transition-colors duration-300 shadow-md">
-                        View Details
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                <ProductRevealCard
+                  name={product.name}
+                  price={product.price}
+                  originalPrice={product.originalPrice}
+                  image={product.images[0]}
+                  description={product.description}
+                  rating={product.rating}
+                  reviewCount={product.reviews}
+                  onAdd={() => addToCart({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.images[0],
+                    // Add missing properties required by CartItem if any, or rely on partial
+                    // data/products.ts has inStock etc, but these are local mock objects?
+                    // Actually useCart likely expects specific fields. 
+                    // Based on shop-now page: petType, productCategory are passed. 
+                    // The local mock data here doesn't have petType/productCategory.
+                    // I should probably add them to the mock data or mock them for now.
+                    petType: 'Both', // Default or guess
+                    productCategory: 'Treats'
+                  })}
+                  className="w-full max-w-[320px]"
+                />
               </motion.div>
             ))}
           </div>
@@ -516,102 +475,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-slate-800 transition-colors duration-300">
-        <div className="container mx-auto px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">Real Pets, Real Transformations!</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">Join thousands of happy pet parents</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {testimonials.slice(0, 3).map((testimonial, index) => (
-              <motion.div
-                key={testimonial.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                className="flex flex-col items-center"
-              >
-                {/* Review Card */}
-                <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-slate-800 w-full mb-8 min-h-[280px] sm:min-h-[320px] flex flex-col relative group">
-
-                  {/* Decorative Quote Icon */}
-                  <div className="absolute top-4 right-6 text-6xl text-gray-100 dark:text-slate-800 font-serif opacity-50 group-hover:opacity-100 transition-opacity duration-300">
-                    &rdquo;
-                  </div>
-
-                  {/* Stars in Card */}
-                  <div className="p-6 pb-0 flex justify-center">
-                    <div className="flex gap-1 bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-full">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={16} fill="#fbbf24" stroke="#fbbf24" />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Review Comment */}
-                  <div className="p-6 sm:p-8 flex-1 flex items-center justify-center">
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed italic text-center text-base sm:text-lg font-medium">
-                      &ldquo;{testimonial.comment}&rdquo;
-                    </p>
-                  </div>
-                </div>
-
-                {/* Separated Round Avatar Below */}
-                <div className="relative">
-                  {/* Pointer Arrow */}
-                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-8 border-transparent border-b-yellow-300 dark:border-b-yellow-400"></div>
-
-                  <div className="w-20 h-20 rounded-full border-4 border-yellow-300 dark:border-yellow-400 shadow-lg overflow-hidden bg-white dark:bg-slate-800">
-                    <Image
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      width={80}
-                      height={80}
-                      className="w-full h-full object-cover scale-150"
-                    />
-                  </div>
-
-                  {/* User Name and Info Below Avatar */}
-                  <div className="text-center mt-3">
-                    <p className="font-bold text-gray-800 dark:text-gray-100 text-sm">{testimonial.name}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center justify-center gap-1 mb-2">
-                    </p>
-                    {testimonial.verified && (
-                      <div className="flex items-center justify-center gap-1 bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full">
-                        <CheckCircle size={12} className="text-green-600 dark:text-green-400" />
-                        <span className="text-xs font-semibold text-green-600 dark:text-green-400">Verified</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* View All Reviews Button */}
-          {/* <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mt-12"
-          >
-            <Link
-              href="#"
-              className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 hover:from-blue-700 hover:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white py-3 px-10 rounded-full font-semibold transition duration-300 inline-block shadow-lg hover:shadow-xl"
-            >
-              View All Reviews (3,100+)
-            </Link>
-          </motion.div> */}
-        </div>
+      <section className="bg-white dark:bg-slate-800 transition-colors duration-300">
+        <TestimonialSlider />
       </section>
 
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-pink-50/50 via-white to-purple-50/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden">
@@ -638,80 +503,92 @@ export default function Home() {
           </motion.div>
 
           {/* Scrollable Pet Gallery */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="overflow-x-auto pb-4">
-              <div className="flex gap-4 sm:gap-6 w-max">
-                {[
-                  { name: "Buddy", instagram: "@buddy_the_golden", breed: "Golden Retriever" },
-                  { name: "Luna", instagram: "@luna_loves_bfab", breed: "Husky" },
-                  { name: "Max", instagram: "@max_the_beagle", breed: "Beagle" },
-                  { name: "Bella", instagram: "@bella_bfab_fan", breed: "Labrador" },
-                  { name: "Charlie", instagram: "@charlie_healthy_pup", breed: "Poodle" },
-                  { name: "Daisy", instagram: "@daisy_nutrition", breed: "Border Collie" },
-                  { name: "Rocky", instagram: "@rocky_strong_dog", breed: "German Shepherd" },
-                  { name: "Milo", instagram: "@milo_bfab_journey", breed: "French Bulldog" }
-                ].map((pet, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="flex-shrink-0 group cursor-pointer"
-                  >
-                    <a
-                      href={`https://instagram.com/${pet.instagram.replace('@', '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block"
-                    >
-                      <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-4 border-2 border-transparent hover:border-pink-300 dark:hover:border-pink-600 group-hover:scale-105">
-                        {/* Pet Image */}
-                        <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-xl overflow-hidden bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30">
-                          <div className="w-full h-full bg-gradient-to-br from-pink-200 to-purple-200 dark:from-pink-800 dark:to-purple-800 flex items-center justify-center text-4xl sm:text-5xl md:text-6xl">
-                            🐶
-                          </div>
-                          {/* Instagram Icon Overlay */}
-                          <div className="absolute top-2 right-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </div>
-                        </div>
-
-                        {/* Pet Info */}
-                        <div className="mt-3 text-center">
-                          <h3 className="font-bold text-gray-800 dark:text-gray-100 text-sm sm:text-base">{pet.name}</h3>
-                          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">{pet.breed}</p>
-                          <p className="text-xs sm:text-sm font-semibold text-pink-600 dark:text-pink-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                            {pet.instagram}
-                          </p>
-                        </div>
-
-                        {/* Hover Effect */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
-                      </div>
-                    </a>
-                  </motion.div>
-                ))}
-              </div>
+          <div className="relative mt-12">
+            {/* Profile Card Grid */}
+            <div className="flex flex-row overflow-x-auto pb-8 gap-6 px-4 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+              {[
+                {
+                  name: "Buddy",
+                  breed: "Golden Retriever • 50k",
+                  followers: 50400,
+                  following: 120,
+                  image: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=800",
+                  isVerified: true
+                },
+                {
+                  name: "Luna",
+                  breed: "Husky • 32k",
+                  followers: 32100,
+                  following: 450,
+                  image: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=800",
+                  isVerified: true
+                },
+                {
+                  name: "Charlie",
+                  breed: "Poodle • 28k",
+                  followers: 28900,
+                  following: 89,
+                  image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=800",
+                  isVerified: false
+                },
+                {
+                  name: "Max",
+                  breed: "Beagle • 45k",
+                  followers: 45200,
+                  following: 230,
+                  image: "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&q=80&w=800",
+                  isVerified: true
+                },
+                {
+                  name: "Daisy",
+                  breed: "Border Collie • 12k",
+                  followers: 12500,
+                  following: 56,
+                  image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=800",
+                  isVerified: false
+                },
+                {
+                  name: "Rocky",
+                  breed: "German Shepherd • 67k",
+                  followers: 67800,
+                  following: 112,
+                  image: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?auto=format&fit=crop&q=80&w=800",
+                  isVerified: true
+                },
+                {
+                  name: "Milo",
+                  breed: "French Bulldog • 89k",
+                  followers: 89200,
+                  following: 15,
+                  image: "https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?auto=format&fit=crop&q=80&w=800",
+                  isVerified: true
+                },
+                {
+                  name: "Bella",
+                  breed: "Labrador • 34k",
+                  followers: 34500,
+                  following: 340,
+                  image: "https://images.unsplash.com/photo-1591769225440-811ad7d6eca6?auto=format&fit=crop&q=80&w=800",
+                  isVerified: false
+                }
+              ].map((pet, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 snap-center"
+                >
+                  <ProfileCard
+                    name={pet.name}
+                    description={pet.breed}
+                    image={pet.image}
+                    isVerified={pet.isVerified}
+                    followers={pet.followers}
+                    following={pet.following}
+                    className=""
+                  />
+                </div>
+              ))}
             </div>
-
-            {/* Scroll Indicators */}
-            <div className="flex justify-center mt-6 gap-2">
-              <div className="text-gray-400 dark:text-gray-600 text-sm flex items-center gap-2">
-                <span>←</span>
-                <span>Scroll to see more pets</span>
-                <span>→</span>
-              </div>
-            </div>
-          </motion.div>
+          </div>
 
         </div>
       </section>

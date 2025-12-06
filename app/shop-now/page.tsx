@@ -7,6 +7,7 @@ import { ShoppingCart, Star, Filter, Grid3x3, LayoutList, Search, ChevronDown, S
 import { products } from '../data/products';
 import ProductImageCarousel from '../components/ProductImageCarousel';
 import { useCart } from '../components/CartContext';
+import { ProductRevealCard } from '@/components/ui/product-reveal-card';
 
 const categories = [
   { id: 'all', name: 'All Products' },
@@ -331,111 +332,132 @@ const ShopNowPage = () => {
               >
                 <AnimatePresence>
                   {filteredProducts.map((product) => (
-                    <motion.div
-                      layout
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.3 }}
-                      key={product.id}
-                      className={`group bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 overflow-hidden hover:shadow-2xl hover:border-blue-100 dark:hover:border-blue-900/30 transition-all duration-300 ${viewMode === 'list' ? 'flex flex-row items-center p-4 gap-6' : 'flex flex-col'
-                        }`}
-                    >
-                      {/* Image Container */}
-                      <div className={`relative overflow-hidden bg-gray-50 dark:bg-slate-800 ${viewMode === 'list' ? 'w-48 h-48 rounded-xl flex-shrink-0' : 'aspect-square'
-                        }`}>
-                        <ProductImageCarousel
-                          images={product.images}
-                          alt={product.name}
-                          className="w-full h-full"
-                          imageClassName="object-contain p-6 group-hover:scale-105 transition-transform duration-500"
+                    viewMode === 'grid' ? (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
+                        key={product.id}
+                        className="flex flex-col"
+                      >
+                        <ProductRevealCard
+                          name={product.name}
+                          price={product.price}
+                          originalPrice={`₹${(parseFloat(product.price.replace(/[^0-9.]/g, '')) * 1.2).toFixed(0)}`}
+                          image={product.images[0]}
+                          description={product.description}
+                          rating={product.rating}
+                          reviewCount={product.reviews}
+                          features={product.benefits}
+                          onAdd={() => addToCart({
+                            id: product.id,
+                            name: product.name,
+                            price: product.price,
+                            image: product.images[0],
+                            petType: product.petType,
+                            productCategory: product.productCategory
+                          })}
+                          className="w-full"
                         />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
+                        key={product.id}
+                        className={`group bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 overflow-hidden hover:shadow-2xl hover:border-blue-100 dark:hover:border-blue-900/30 transition-all duration-300 flex flex-row items-center p-4 gap-6`}
+                      >
+                        {/* Image Container */}
+                        <div className={`relative overflow-hidden bg-gray-50 dark:bg-slate-800 w-48 h-48 rounded-xl flex-shrink-0`}>
+                          <ProductImageCarousel
+                            images={product.images}
+                            alt={product.name}
+                            className="w-full h-full"
+                            imageClassName="object-contain p-6 group-hover:scale-105 transition-transform duration-500"
+                          />
 
-                        {/* Quick Actions Overlay (Grid Only) */}
-                        {viewMode === 'grid' && (
-                          <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-black/50 to-transparent flex justify-center">
-                            {/* Can add quick view button here later */}
+                          {/* Badges */}
+                          <div className="absolute top-3 left-3 flex flex-col gap-2">
+                            {product.rating >= 4.8 && (
+                              <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">
+                                Bestseller
+                              </span>
+                            )}
+                            {product.petType === 'Both' && (
+                              <span className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">
+                                For All Pets
+                              </span>
+                            )}
                           </div>
-                        )}
-
-                        {/* Badges */}
-                        <div className="absolute top-3 left-3 flex flex-col gap-2">
-                          {product.rating >= 4.8 && (
-                            <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">
-                              Bestseller
-                            </span>
-                          )}
-                          {product.petType === 'Both' && (
-                            <span className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">
-                              For All Pets
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className={`flex flex-col flex-grow ${viewMode === 'grid' ? 'p-5' : 'py-2 pr-4'}`}>
-                        <div className="mb-2">
-                          <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-                            {product.productCategory}
-                          </span>
                         </div>
 
-                        <Link href={`/products/${product.id}`} className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                          <h3 className={`font-bold text-gray-900 dark:text-white mb-2 leading-tight ${viewMode === 'grid' ? 'text-lg line-clamp-2 h-14' : 'text-xl'
-                            }`}>
-                            {product.name}
-                          </h3>
-                        </Link>
-
-                        {/* Rating */}
-                        <div className="flex items-center mb-4">
-                          <div className="flex text-yellow-400 gap-0.5">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                size={14}
-                                fill={i < Math.floor(product.rating) ? "currentColor" : "none"}
-                                className={i < Math.floor(product.rating) ? "" : "text-gray-300 dark:text-gray-600"}
-                              />
-                            ))}
-                          </div>
-                          <span className="ml-2 text-xs font-medium text-gray-500 dark:text-gray-400">
-                            ({product.reviews} reviews)
-                          </span>
-                        </div>
-
-                        {/* Price & Action */}
-                        <div className={`mt-auto flex items-center justify-between gap-4 ${viewMode === 'list' ? 'justify-start' : ''}`}>
-                          <div className="flex flex-col">
-                            <span className="text-xs text-gray-400 line-through">₹{parseFloat(product.price.replace(/[^0-9.]/g, '')) * 1.2}</span>
-                            <span className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white">
-                              {product.price}
+                        {/* Content */}
+                        <div className={`flex flex-col flex-grow py-2 pr-4`}>
+                          <div className="mb-2">
+                            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                              {product.productCategory}
                             </span>
                           </div>
 
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              addToCart({
-                                id: product.id,
-                                name: product.name,
-                                price: product.price,
-                                image: product.images[0],
-                                petType: product.petType,
-                                productCategory: product.productCategory
-                              });
-                            }}
-                            className={`bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-blue-600 dark:hover:bg-blue-400 hover:text-white dark:hover:text-white transition-all duration-300 font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg hover:shadow-blue-500/25 ${viewMode === 'grid' ? 'p-3 w-12 h-12 rounded-full' : 'px-6 py-3'
-                              }`}
-                            aria-label="Add to cart"
-                          >
-                            <ShoppingCart size={20} />
-                            {viewMode === 'list' && <span>Add to Cart</span>}
-                          </button>
+                          <Link href={`/products/${product.id}`} className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                            <h3 className={`font-bold text-gray-900 dark:text-white mb-2 leading-tight text-xl`}>
+                              {product.name}
+                            </h3>
+                          </Link>
+
+                          {/* Rating */}
+                          <div className="flex items-center mb-4">
+                            <div className="flex text-yellow-400 gap-0.5">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  size={14}
+                                  fill={i < Math.floor(product.rating) ? "currentColor" : "none"}
+                                  className={i < Math.floor(product.rating) ? "" : "text-gray-300 dark:text-gray-600"}
+                                />
+                              ))}
+                            </div>
+                            <span className="ml-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                              ({product.reviews} reviews)
+                            </span>
+                          </div>
+
+                          {/* Price & Action */}
+                          <div className={`mt-auto flex items-center justify-between gap-4 justify-start`}>
+                            <div className="flex flex-col">
+                              <span className="text-xs text-gray-400 line-through">₹{parseFloat(product.price.replace(/[^0-9.]/g, '')) * 1.2}</span>
+                              <span className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white">
+                                {product.price}
+                              </span>
+                            </div>
+
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                addToCart({
+                                  id: product.id,
+                                  name: product.name,
+                                  price: product.price,
+                                  image: product.images[0],
+                                  petType: product.petType,
+                                  productCategory: product.productCategory
+                                });
+                              }}
+                              className={`bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-blue-600 dark:hover:bg-blue-400 hover:text-white dark:hover:text-white transition-all duration-300 font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg hover:shadow-blue-500/25 px-6 py-3`}
+                              aria-label="Add to cart"
+                            >
+                              <ShoppingCart size={20} />
+                              <span>Add to Cart</span>
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
+                      </motion.div>
+                    )
                   ))}
                 </AnimatePresence>
               </motion.div>
