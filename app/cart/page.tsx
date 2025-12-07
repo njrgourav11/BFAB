@@ -88,7 +88,7 @@ const CartPage = () => {
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Your cart is empty</h3>
                   <p className="text-gray-500 dark:text-gray-400 mb-8">Looks like you haven't added any items yet.</p>
                   <Link
-                    href="/shop-now"
+                    href="/products"
                     className="inline-block bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-xl font-bold hover:shadow-lg transition-all"
                   >
                     Start Shopping
@@ -184,7 +184,7 @@ const CartPage = () => {
             {cartItems.length > 0 && (
               <div className="mt-8">
                 <Link
-                  href="/shop-now"
+                  href="/products"
                   className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   <ArrowRight size={16} className="rotate-180" />

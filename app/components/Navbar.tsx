@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
 
   const menuItems = [
     { label: 'Home', href: '/' },
-    { label: 'Shop Now', href: '/shop-now' },
+    { label: 'Shop Now', href: '/products' },
     { label: 'Paw Blog', href: '/paw-blog' },
     { label: 'About Us', href: '/about-us' },
     { label: 'Contact Us', href: '/contact-us' },
@@ -36,8 +36,8 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
 
   return (
     <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled
-        ? 'bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-gray-200 dark:border-slate-800'
-        : 'bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800'
+      ? 'bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-gray-200 dark:border-slate-800'
+      : 'bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800'
       }`}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">

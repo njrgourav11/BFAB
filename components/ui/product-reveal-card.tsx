@@ -5,8 +5,10 @@ import { buttonVariants } from "@/components/ui/button"
 import { ShoppingCart, Star, Heart } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 interface ProductRevealCardProps {
+    id?: string | number
     name?: string
     price?: string
     originalPrice?: string
@@ -22,6 +24,7 @@ interface ProductRevealCardProps {
 }
 
 export function ProductRevealCard({
+    id,
     name = "Premium Wireless Headphones",
     price = "$199",
     originalPrice = "$299",
@@ -277,18 +280,20 @@ export function ProductRevealCard({
                             Add to Cart
                         </motion.button>
 
-                        <motion.button
-                            variants={buttonVariants_motion}
-                            initial="rest"
-                            whileHover="hover"
-                            whileTap="tap"
-                            className={cn(
-                                buttonVariants({ variant: "outline" }),
-                                "w-full h-10 font-medium"
-                            )}
-                        >
-                            View Details
-                        </motion.button>
+                        <Link href={id ? `/products/${id}` : '#'}>
+                            <motion.button
+                                variants={buttonVariants_motion}
+                                initial="rest"
+                                whileHover="hover"
+                                whileTap="tap"
+                                className={cn(
+                                    buttonVariants({ variant: "outline" }),
+                                    "w-full h-10 font-medium"
+                                )}
+                            >
+                                View Details
+                            </motion.button>
+                        </Link>
                     </motion.div>
                 </div>
             </motion.div>

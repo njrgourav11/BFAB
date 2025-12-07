@@ -22,7 +22,7 @@ export default function Login() {
       await signInWithEmailAndPassword(auth, email, password);
       setShowToast(true);
       setTimeout(() => {
-        router.push('/shop-now');
+        router.push('/products');
       }, 2000);
     } catch (error) {
       console.error('Login error:', error);
@@ -36,7 +36,7 @@ export default function Login() {
       await signInWithPopup(auth, googleProvider);
       setShowToast(true);
       setTimeout(() => {
-        router.push('/shop-now');
+        router.push('/products');
       }, 2000);
     } catch (error) {
       console.error('Google login error:', error);

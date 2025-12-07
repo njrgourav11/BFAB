@@ -20,8 +20,8 @@ const Footer = () => {
   ];
 
   const productLinks = [
-    { label: 'All Products', href: '/shop-now' },
-    { label: 'Shop Now', href: '/shop-now' },
+    { label: 'All Products', href: '/products' },
+    { label: 'Shop Now', href: '/products' },
     { label: 'Saver Packs', href: '/ultimate-saver-packs' },
     { label: 'BFAB Cares', href: '/bfab-cares' },
   ];

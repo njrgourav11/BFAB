@@ -62,7 +62,7 @@ const CheckoutPage = () => {
   const handlePlaceOrder = () => {
     setShowToast(true);
     setTimeout(() => {
-      window.location.href = '/shop-now';
+      window.location.href = '/products';
     }, 2000);
   };
 
@@ -72,7 +72,7 @@ const CheckoutPage = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Your cart is empty</h1>
           <Link
-            href="/shop-now"
+            href="/products"
             className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors inline-block"
           >
             Continue Shopping

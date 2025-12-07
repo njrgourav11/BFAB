@@ -113,6 +113,7 @@ export default function Home() {
                 className="group flex justify-center"
               >
                 <ProductRevealCard
+                  id={product.id}
                   name={product.name}
                   price={product.price}
                   originalPrice={product.originalPrice}
@@ -148,7 +149,7 @@ export default function Home() {
             className="text-center mt-12"
           >
             <Link
-              href="/shop-now"
+              href="/products"
               className="bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 text-white py-3 px-8 rounded-full font-semibold transition duration-300 inline-block"
             >
               View All Products
@@ -179,12 +180,12 @@ export default function Home() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 sm:gap-8">
             {[
-              { name: 'Dental Health', image: '/category/10.svg', href: '/shop-now' },
-              { name: 'Gut Health', image: '/category/11.svg', href: '/shop-now' },
-              { name: 'Hip & Joint', image: '/category/12.svg', href: '/shop-now' },
-              { name: 'Weight Control', image: '/category/13.svg', href: '/shop-now' },
-              { name: 'Anxiety Relief', image: '/category/14.svg', href: '/shop-now' },
-              { name: 'Skin & Coat', image: '/category/15.svg', href: '/shop-now' }
+              { name: 'Dental Health', image: '/category/10.svg', href: '/products' },
+              { name: 'Gut Health', image: '/category/11.svg', href: '/products' },
+              { name: 'Hip & Joint', image: '/category/12.svg', href: '/products' },
+              { name: 'Weight Control', image: '/category/13.svg', href: '/products' },
+              { name: 'Anxiety Relief', image: '/category/14.svg', href: '/products' },
+              { name: 'Skin & Coat', image: '/category/15.svg', href: '/products' }
             ].map((category, index) => (
               <motion.div
                 key={index}
@@ -354,7 +355,7 @@ export default function Home() {
             className="mt-12 sm:mt-16 lg:mt-20 text-center px-4"
           >
             <Link
-              href="/shop-now"
+              href="/products"
               className="inline-block bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-bold text-sm sm:text-base lg:text-lg py-3 sm:py-4 px-6 sm:px-8 lg:px-10 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
             >
               Shop BFAB Now – Give Your Pet the Best!
@@ -686,7 +687,7 @@ export default function Home() {
               whileTap={{ scale: 0.95 }}
             >
               <Link
-                href="/shop-now"
+                href="/products"
                 className="inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold py-4 px-10 rounded-full text-lg sm:text-xl shadow-2xl hover:shadow-orange-500/20 transition-all duration-300"
               >
                 Start Shopping Now

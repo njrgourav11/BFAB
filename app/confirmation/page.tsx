@@ -88,8 +88,8 @@ const ConfirmationPage = () => {
                                 ].map((step, index) => (
                                     <div key={index} className="relative flex items-start gap-4 mb-8 last:mb-0">
                                         <div className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center ${step.status === 'completed' ? 'bg-green-500 text-white' :
-                                                step.status === 'current' ? 'bg-blue-500 text-white' :
-                                                    'bg-gray-200 dark:bg-slate-700 text-gray-400'
+                                            step.status === 'current' ? 'bg-blue-500 text-white' :
+                                                'bg-gray-200 dark:bg-slate-700 text-gray-400'
                                             }`}>
                                             <step.icon size={16} />
                                         </div>
@@ -191,7 +191,7 @@ const ConfirmationPage = () => {
                             Back to Home
                         </Link>
                         <Link
-                            href="/shop-now"
+                            href="/products"
                             className="flex-1 flex items-center justify-center gap-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-2 border-slate-900 dark:border-white px-6 py-4 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-slate-800 transition-all"
                         >
                             <ShoppingBag size={20} />

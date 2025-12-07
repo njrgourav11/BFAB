@@ -23,7 +23,7 @@ export default function Register() {
       // Ideally update profile with name here
       setShowToast(true);
       setTimeout(() => {
-        router.push('/shop-now');
+        router.push('/products');
       }, 2000);
     } catch (error) {
       console.error('Signup error:', error);
@@ -36,7 +36,7 @@ export default function Register() {
       await signInWithPopup(auth, googleProvider);
       setShowToast(true);
       setTimeout(() => {
-        router.push('/shop-now');
+        router.push('/products');
       }, 2000);
     } catch (error) {
       console.error('Google signup error:', error);

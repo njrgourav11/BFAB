@@ -28,22 +28,18 @@ export default function ProductDetail() {
   }
 
   // Map data/products format to ProductDetailPage props
+  // The interface in ProductDetailPage has been updated to accept these new fields directly
   return (
     <ProductDetailPage
       product={{
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        originalPrice: product.originalPrice,
-        description: product.description,
-        rating: product.rating,
-        reviewCount: product.reviews,
-        images: product.images,
-        features: product.benefits,
-        category: product.category,
-        sku: `BFAB-${product.id.toString().padStart(3, '0')}`, // Synthesize SKU
-        inStock: product.inStock,
+        ...product, // Spread all properties including new detailed ones
+        sku: `BFAB-${product.id.toString().padStart(3, '0')}`,
       }}
+      breadcrumbs={[
+        { label: 'Home', href: '/' },
+        { label: 'Shop', href: '/products' },
+        { label: product.name, href: '#' },
+      ]}
       onAddToCart={(quantity) => {
         // Add multiple items based on quantity
         for (let i = 0; i < quantity; i++) {

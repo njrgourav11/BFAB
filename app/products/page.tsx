@@ -343,6 +343,7 @@ const ShopNowPage = () => {
                         className="flex flex-col"
                       >
                         <ProductRevealCard
+                          id={product.id}
                           name={product.name}
                           price={product.price}
                           originalPrice={`₹${(parseFloat(product.price.replace(/[^0-9.]/g, '')) * 1.2).toFixed(0)}`}

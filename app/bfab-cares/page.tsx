@@ -97,7 +97,7 @@ const BFABCaresPage = () => {
       title: 'Shop with Purpose',
       description: 'Every purchase directly supports our partner shelters and rescue organizations',
       action: 'Start Shopping',
-      link: '/shop-now',
+      link: '/products',
     },
     {
       number: '02',
@@ -249,8 +249,8 @@ const BFABCaresPage = () => {
                   key={tab.id}
                   onClick={() => setSelectedTab(tab.id as any)}
                   className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition-all ${selectedTab === tab.id
-                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                     }`}
                 >
                   {tab.label}
@@ -344,7 +344,7 @@ const BFABCaresPage = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/shop-now"
+                href="/products"
                 className="bg-white text-slate-900 px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition shadow-lg"
               >
                 Shop Now

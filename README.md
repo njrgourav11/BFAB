@@ -21,7 +21,7 @@ BFAB is a full-featured pet food e-commerce platform designed for pet owners see
 ### Pages & Functionality
 
 - **Home** (`/`) - Landing page with featured products and promotions
-- **Shop** (`/shop-now`) - Product catalog and browsing
+- **Shop** (`/products`) - Product catalog and browsing
 - **About Us** (`/about-us`) - Company information and values
 - **Feeding Guide** (`/feeding-guide`) - Nutritional guidance and portion calculator
 - **Paw Blog** (`/paw-blog`) - Pet care articles and resources
@@ -112,7 +112,7 @@ bfab/
 │   ├── login/                # User login page
 │   ├── register/             # User registration page
 │   ├── paw-blog/             # Blog listing and articles
-│   ├── shop-now/             # Product catalog
+│   ├── products/             # Product catalog
 │   ├── bfab-cares/           # Community initiatives
 │   └── ultimate-saver-packs/ # Bundle deals page
 ├── public/                   # Static assets
