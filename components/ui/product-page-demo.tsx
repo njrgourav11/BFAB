@@ -2,6 +2,7 @@
 import React from "react";
 import { ProductDetailPage, ProductDetailPageProps } from "@/components/ui/product-detail-page";
 import { Tag, Ruler, Users, Info } from "lucide-react";
+import NextImage from "next/image";
 
 // Mock data to be passed into the component
 const demoProps: ProductDetailPageProps = {
@@ -63,10 +64,11 @@ const ProductPageDemo = () => {
                         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
                             {relatedProducts.map((item) => (
                                 <div key={item.id} className="bg-muted/50 rounded-lg aspect-square overflow-hidden group">
-                                    <img
+                                    <NextImage
                                         src={item.src}
                                         alt={item.alt}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-300"
                                     />
                                 </div>
                             ))}

@@ -68,10 +68,12 @@ export default function Home() {
     <div>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
-        {/* Mobile Background */}
-        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat md:hidden" style={{ backgroundImage: 'url("/images/mobile.png")' }}></div>
-        {/* Desktop Background */}
-        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block" style={{ backgroundImage: 'url("/hero.svg")' }}></div>
+        <Link href="/products" className="absolute inset-0 block cursor-pointer z-0">
+          {/* Mobile Background */}
+          <div className="absolute inset-0 bg-cover bg-center bg-no-repeat md:hidden" style={{ backgroundImage: 'url("/images/mobile.png")' }}></div>
+          {/* Desktop Background */}
+          <div className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block" style={{ backgroundImage: 'url("/hero.svg")' }}></div>
+        </Link>
         {/* Overlay for better text readability */}
 
         {/* Animated Background Elements - Optimized for Mobile */}

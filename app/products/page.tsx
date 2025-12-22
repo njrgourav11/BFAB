@@ -1,26 +1,27 @@
 "use client";
-import React, { useState, useMemo } from 'react';
-import Image from 'next/image';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Star, Filter, Grid3x3, LayoutList, Search, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
-import { products } from '../data/products';
+import { ShoppingCart, Star, Filter, Grid3x3, LayoutList, Search, ChevronDown, SlidersHorizontal, X, Loader2 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import ProductImageCarousel from '../components/ProductImageCarousel';
 import { useCart } from '../components/CartContext';
 import { ProductRevealCard } from '@/components/ui/product-reveal-card';
+import { getAllProducts } from '@/lib/product-utils';
+import { Product } from '@/lib/types';
 
 const categories = [
   { id: 'all', name: 'All Products' },
-  { id: 'Treats', name: 'Treats' },
-  { id: 'Food', name: 'Food' },
-  { id: 'Supplements', name: 'Supplements' },
-  { id: 'Grooming', name: 'Grooming' },
+  { id: 'treats', name: 'Treats' }, // Lowercase match with productCategory usually? or check data. Static was 'Treats'.
+  { id: 'food', name: 'Food' },
+  { id: 'supplements', name: 'Supplements' },
+  { id: 'grooming', name: 'Grooming' },
 ];
 
 const petTypes = [
   { id: 'all', name: 'All Pets' },
-  { id: 'Canine', name: 'Dogs' },
-  { id: 'Feline', name: 'Cats' },
+  { id: 'dog', name: 'Dogs' },
+  { id: 'cat', name: 'Cats' },
 ];
 
 const sortOptions = [
@@ -33,12 +34,27 @@ const sortOptions = [
 
 const ShopNowPage = () => {
   const { addToCart } = useCart();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedPetType, setSelectedPetType] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('popular');
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error(error);
+      }
+      setLoading(false);
+    };
+    fetchProducts();
+  }, []);
 
   // Filter and Sort Logic
   const filteredProducts = useMemo(() => {
@@ -55,34 +71,97 @@ const ShopNowPage = () => {
 
     // Category Filter
     if (selectedCategory !== 'all') {
-      result = result.filter(p => p.productCategory === selectedCategory);
+      // Comparison case-insensitive
+      result = result.filter(p => p.productCategory?.toLowerCase() === selectedCategory.toLowerCase());
     }
 
     // Pet Type Filter
     if (selectedPetType !== 'all') {
-      result = result.filter(p => p.petType === selectedPetType || p.petType === 'Both');
+      result = result.filter(p => p.petType === selectedPetType || p.petType === 'both');
     }
 
     // Sorting
     switch (sortBy) {
       case 'price-low':
-        result.sort((a, b) => parseFloat(a.price.replace(/[^0-9.]/g, '')) - parseFloat(b.price.replace(/[^0-9.]/g, '')));
+        result.sort((a, b) => {
+          const pa = typeof a.price === 'string' ? parseFloat(a.price) : a.price;
+          const pb = typeof b.price === 'string' ? parseFloat(b.price) : b.price;
+          return pa - pb;
+        });
         break;
       case 'price-high':
-        result.sort((a, b) => parseFloat(b.price.replace(/[^0-9.]/g, '')) - parseFloat(a.price.replace(/[^0-9.]/g, '')));
+        result.sort((a, b) => {
+          const pa = typeof a.price === 'string' ? parseFloat(a.price) : a.price;
+          const pb = typeof b.price === 'string' ? parseFloat(b.price) : b.price;
+          return pb - pa;
+        });
         break;
       case 'rating':
-        result.sort((a, b) => b.rating - a.rating);
+        result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
       case 'newest':
-        result.sort((a, b) => b.id - a.id); // Assuming higher ID is newer
+        // using ID string compare or created_at if available
+        // Fallback to ID string
+        result.sort((a, b) => b.id.localeCompare(a.id));
         break;
       default: // popular
-        result.sort((a, b) => b.reviews - a.reviews);
+        result.sort((a, b) => (b.reviews || 0) - (a.reviews || 0));
     }
 
     return result;
   }, [products, selectedCategory, selectedPetType, sortBy, searchQuery]);
+
+  if (loading) {
+    return (
+      <div className="bg-gray-50 dark:bg-slate-950 min-h-screen">
+        <section className="relative bg-slate-900 text-white py-20 sm:py-24 overflow-hidden">
+          <div className="container mx-auto px-4 relative z-10 text-center">
+            <div className="max-w-2xl mx-auto space-y-4">
+              <Skeleton className="h-12 w-3/4 mx-auto bg-slate-800" />
+              <Skeleton className="h-6 w-1/2 mx-auto bg-slate-800" />
+            </div>
+          </div>
+        </section>
+        <div className="container mx-auto px-4 py-12">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Sidebar Skeleton */}
+            <aside className="hidden lg:block w-64 flex-shrink-0 space-y-8">
+              <Skeleton className="h-12 w-full" />
+              <div className="space-y-4">
+                <Skeleton className="h-8 w-1/2" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            </aside>
+            {/* Grid Skeleton */}
+            <div className="flex-1">
+              <div className="flex justify-between mb-8">
+                <Skeleton className="h-6 w-32" />
+                <Skeleton className="h-10 w-48" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-100 dark:border-slate-800 space-y-4">
+                    <Skeleton className="h-48 w-full rounded-xl" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-1/3" />
+                      <Skeleton className="h-6 w-3/4" />
+                    </div>
+                    <Skeleton className="h-4 w-1/2" />
+                    <div className="flex justify-between items-center pt-4">
+                      <Skeleton className="h-8 w-20" />
+                      <Skeleton className="h-10 w-32 rounded-xl" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 dark:bg-slate-950 min-h-screen transition-colors duration-300 font-sans">
@@ -345,18 +424,18 @@ const ShopNowPage = () => {
                         <ProductRevealCard
                           id={product.id}
                           name={product.name}
-                          price={product.price}
-                          originalPrice={`₹${(parseFloat(product.price.replace(/[^0-9.]/g, '')) * 1.2).toFixed(0)}`}
-                          image={product.images[0]}
+                          price={String(product.price).startsWith('₹') ? String(product.price) : `₹${product.price}`}
+                          originalPrice={`₹${(parseFloat(product.price.toString().replace(/[^0-9.]/g, '')) * 1.2).toFixed(0)}`}
+                          image={product.images && product.images[0] ? product.images[0] : '/placeholder.jpg'}
                           description={product.description}
-                          rating={product.rating}
-                          reviewCount={product.reviews}
-                          features={product.benefits}
+                          rating={product.rating || 0}
+                          reviewCount={product.reviews || 0}
+                          features={product.features || []}
                           onAdd={() => addToCart({
                             id: product.id,
                             name: product.name,
-                            price: product.price,
-                            image: product.images[0],
+                            price: product.price.toString(),
+                            image: product.images && product.images[0] ? product.images[0] : '/placeholder.jpg',
                             petType: product.petType,
                             productCategory: product.productCategory
                           })}
@@ -376,7 +455,7 @@ const ShopNowPage = () => {
                         {/* Image Container */}
                         <div className={`relative overflow-hidden bg-gray-50 dark:bg-slate-800 w-48 h-48 rounded-xl flex-shrink-0`}>
                           <ProductImageCarousel
-                            images={product.images}
+                            images={product.images || []}
                             alt={product.name}
                             className="w-full h-full"
                             imageClassName="object-contain p-6 group-hover:scale-105 transition-transform duration-500"
@@ -384,12 +463,12 @@ const ShopNowPage = () => {
 
                           {/* Badges */}
                           <div className="absolute top-3 left-3 flex flex-col gap-2">
-                            {product.rating >= 4.8 && (
+                            {product.rating && product.rating >= 4.8 ? (
                               <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">
                                 Bestseller
                               </span>
-                            )}
-                            {product.petType === 'Both' && (
+                            ) : null}
+                            {product.petType === 'both' && (
                               <span className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">
                                 For All Pets
                               </span>
@@ -418,22 +497,22 @@ const ShopNowPage = () => {
                                 <Star
                                   key={i}
                                   size={14}
-                                  fill={i < Math.floor(product.rating) ? "currentColor" : "none"}
-                                  className={i < Math.floor(product.rating) ? "" : "text-gray-300 dark:text-gray-600"}
+                                  fill={i < Math.floor(product.rating || 0) ? "currentColor" : "none"}
+                                  className={i < Math.floor(product.rating || 0) ? "" : "text-gray-300 dark:text-gray-600"}
                                 />
                               ))}
                             </div>
                             <span className="ml-2 text-xs font-medium text-gray-500 dark:text-gray-400">
-                              ({product.reviews} reviews)
+                              ({product.reviews || 0} reviews)
                             </span>
                           </div>
 
                           {/* Price & Action */}
                           <div className={`mt-auto flex items-center justify-between gap-4 justify-start`}>
                             <div className="flex flex-col">
-                              <span className="text-xs text-gray-400 line-through">₹{parseFloat(product.price.replace(/[^0-9.]/g, '')) * 1.2}</span>
+                              <span className="text-xs text-gray-400 line-through">₹{(parseFloat(product.price.toString().replace(/[^0-9.]/g, '')) * 1.2).toFixed(2)}</span>
                               <span className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white">
-                                {product.price}
+                                {typeof product.price === 'number' ? `₹${product.price}` : product.price}
                               </span>
                             </div>
 
@@ -443,8 +522,8 @@ const ShopNowPage = () => {
                                 addToCart({
                                   id: product.id,
                                   name: product.name,
-                                  price: product.price,
-                                  image: product.images[0],
+                                  price: product.price.toString(),
+                                  image: product.images && product.images[0] ? product.images[0] : '/placeholder.jpg',
                                   petType: product.petType,
                                   productCategory: product.productCategory
                                 });

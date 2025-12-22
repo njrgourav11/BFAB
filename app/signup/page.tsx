@@ -5,12 +5,14 @@ import { auth, googleProvider } from '@/lib/firebase';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, Mail, Lock, Loader2, User } from 'lucide-react';
+import { Loader2, Lock, Mail, User, ArrowRight, CheckCircle } from 'lucide-react';
+import { createUserProfile } from '@/lib/auth-utils';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const router = useRouter();
@@ -19,8 +21,10 @@ export default function Signup() {
     e.preventDefault();
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      // Ideally update profile with name here
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Create user profile in Firestore
+      await createUserProfile(userCredential.user, { displayName: name, phoneNumber: phone });
+
       setShowToast(true);
       setTimeout(() => {
         router.push('/products');
@@ -33,7 +37,10 @@ export default function Signup() {
 
   const handleGoogleSignup = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      // Create user profile (checks if exists internally)
+      await createUserProfile(userCredential.user);
+
       setShowToast(true);
       setTimeout(() => {
         router.push('/products');
@@ -158,6 +165,25 @@ export default function Signup() {
                   />
                 </div>
               </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    {/* Phone Icon */}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  </div>
+                  <input
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    placeholder="9876543210"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Email</label>
                 <div className="relative">
@@ -174,6 +200,7 @@ export default function Signup() {
                   />
                 </div>
               </div>
+
               <div>
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Password</label>
                 <div className="relative">
@@ -231,6 +258,7 @@ export default function Signup() {
             </Link>
           </p>
         </div>
+
       </div>
     </div>
   );

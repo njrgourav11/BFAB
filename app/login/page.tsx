@@ -5,7 +5,8 @@ import { auth, googleProvider } from '@/lib/firebase';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, Mail, Lock, Loader2 } from 'lucide-react';
+import { ArrowRight, CheckCircle, Loader2, Lock, Mail } from 'lucide-react';
+import { createUserProfile } from '@/lib/auth-utils';
 import Image from 'next/image';
 
 export default function Login() {
@@ -33,7 +34,10 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      // Create/Check user profile
+      await createUserProfile(userCredential.user);
+
       setShowToast(true);
       setTimeout(() => {
         router.push('/products');
@@ -150,9 +154,9 @@ export default function Login() {
                   </label>
                 </div>
                 <div className="text-sm">
-                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+                  <Link href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
               </div>
 

@@ -6,7 +6,7 @@ import { Star, ShoppingCart } from 'lucide-react';
 import ProductImageCarousel from './ProductImageCarousel';
 
 interface Product {
-  id: number;
+  id: string | number;
   name: string;
   price: string;
   originalPrice?: string;

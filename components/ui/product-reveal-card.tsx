@@ -2,8 +2,7 @@
 
 import { motion, useReducedMotion, Variants } from "framer-motion"
 import { buttonVariants } from "@/components/ui/button"
-import { ShoppingCart, Star, Heart } from "lucide-react"
-import { useState } from "react"
+import { ShoppingCart, Star } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
@@ -17,7 +16,7 @@ interface ProductRevealCardProps {
     rating?: number
     reviewCount?: number
     onAdd?: () => void
-    onFavorite?: () => void
+
     enableAnimations?: boolean
     features?: string[]
     className?: string
@@ -33,20 +32,13 @@ export function ProductRevealCard({
     rating = 4.8,
     reviewCount = 124,
     onAdd,
-    onFavorite,
     enableAnimations = true,
     features = [],
     className,
 }: ProductRevealCardProps) {
     // ... existing hooks ...
-    const [isFavorite, setIsFavorite] = useState(false)
     const shouldReduceMotion = useReducedMotion()
     const shouldAnimate = enableAnimations && !shouldReduceMotion
-
-    const handleFavorite = () => {
-        setIsFavorite(!isFavorite)
-        onFavorite?.()
-    }
 
     const containerVariants: Variants = {
         rest: {
@@ -126,17 +118,7 @@ export function ProductRevealCard({
         tap: shouldAnimate ? { scale: 0.95 } : {},
     }
 
-    const favoriteVariants: Variants = {
-        rest: { scale: 1, rotate: 0 },
-        favorite: {
-            scale: [1, 1.3, 1],
-            rotate: [0, 10, -10, 0],
-            transition: {
-                duration: 0.5,
-                ease: "easeInOut"
-            }
-        },
-    }
+
 
     return (
         <motion.div
@@ -152,29 +134,16 @@ export function ProductRevealCard({
         >
             {/* Image Container */}
             <div className="relative overflow-hidden">
-                <motion.img
-                    src={image}
-                    alt={name}
-                    className="h-56 w-full object-cover"
-                    variants={imageVariants}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-
-                {/* Favorite Button */}
-                <motion.button
-                    onClick={handleFavorite}
-                    variants={favoriteVariants}
-                    animate={isFavorite ? "favorite" : "rest"}
-                    className={cn(
-                        "absolute top-4 right-4 p-2 rounded-full backdrop-blur-sm border border-white/20",
-                        isFavorite
-                            ? "bg-red-500 text-white"
-                            : "bg-white/20 text-white hover:bg-white/30"
-                    )}
-                >
-                    <Heart className={cn("w-4 h-4", isFavorite && "fill-current")} />
-                </motion.button>
+                <Link href={id ? `/products/${id}` : '#'}>
+                    <motion.img
+                        src={image}
+                        alt={name}
+                        className="h-56 w-full object-cover"
+                        variants={imageVariants}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+                </Link>
 
                 {/* Discount Badge */}
                 {originalPrice && (
@@ -213,22 +182,37 @@ export function ProductRevealCard({
 
                 {/* Product Info */}
                 <div className="space-y-1">
-                    <motion.h3
-                        className="text-xl font-bold leading-tight tracking-tight"
-                        initial={{ opacity: 0.9 }}
-                        whileHover={{ opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        {name}
-                    </motion.h3>
+                    <Link href={id ? `/products/${id}` : '#'} className="block">
+                        <motion.h3
+                            className="text-xl font-bold leading-tight tracking-tight hover:text-primary transition-colors"
+                            initial={{ opacity: 0.9 }}
+                            whileHover={{ opacity: 1 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            {name}
+                        </motion.h3>
+                    </Link>
 
-                    <div className="flex items-center gap-2">
-                        <span className="text-2xl font-bold text-primary">{price}</span>
-                        {originalPrice && (
-                            <span className="text-lg text-muted-foreground line-through">
-                                {originalPrice}
-                            </span>
-                        )}
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <span className="text-2xl font-bold text-primary">{price}</span>
+                            {originalPrice && (
+                                <span className="text-lg text-muted-foreground line-through">
+                                    {originalPrice}
+                                </span>
+                            )}
+                        </div>
+                        {/* Mobile Add to Cart Button */}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onAdd?.();
+                            }}
+                            className="md:hidden flex items-center justify-center p-3 bg-primary text-primary-foreground rounded-full shadow-lg active:scale-90 transition-transform"
+                            aria-label="Add to cart"
+                        >
+                            <ShoppingCart size={20} />
+                        </button>
                     </div>
                 </div>
             </div>
@@ -242,7 +226,7 @@ export function ProductRevealCard({
                     {/* Product Description */}
                     <motion.div variants={contentVariants}>
                         <h4 className="font-semibold mb-2">Product Details</h4>
-                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                        <p className="text-sm text-black dark:text-white leading-relaxed line-clamp-3 font-medium">
                             {description}
                         </p>
                     </motion.div>

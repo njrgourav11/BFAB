@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion, Variants } from "framer-motion"
 import { Check, Users, UserCheck } from "lucide-react"
-import { useState } from "react"
+
 import { cn } from "@/lib/utils"
 
 interface ProfileCardProps {
@@ -30,7 +30,6 @@ export function ProfileCard({
     onFollow = () => { },
     isFollowing = false,
 }: ProfileCardProps) {
-    const [hovered, setHovered] = useState(false)
     const shouldReducedMotion = useReducedMotion()
     const shouldAnimate = enableAnimations && !shouldReducedMotion
 
@@ -120,8 +119,6 @@ export function ProfileCard({
     return (
         <motion.div
             data-slot="profile-hover-card"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
             initial="rest"
             whileHover="hover"
             variants={containerVariants}

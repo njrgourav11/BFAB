@@ -2,7 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, Search, ShoppingCart, User, Moon, Sun, ChevronDown } from 'lucide-react';
+import { Menu, X, Search, ShoppingCart, User, Moon, Sun, ChevronDown, LogOut } from 'lucide-react';
+import { auth } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { getUserRole } from '@/lib/auth-utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from './CartContext';
 
@@ -14,20 +17,34 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { cartItems } = useCart();
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (u) => {
+      if (u) {
+        // Fetch role
+        const role = await getUserRole(u.uid);
+        setUser({ ...u, role });
+      } else {
+        setUser(null);
+      }
+    });
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      unsubscribe();
+    };
   }, []);
 
   const menuItems = [
     { label: 'Home', href: '/' },
     { label: 'Shop Now', href: '/products' },
-    { label: 'Paw Blog', href: '/paw-blog' },
+    { label: 'Paw Blog', href: '/blogs' },
     { label: 'About Us', href: '/about-us' },
     { label: 'Contact Us', href: '/contact-us' },
   ];
@@ -93,13 +110,73 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
               {isDark ? <Sun size={20} className="text-yellow-500" /> : <Moon size={20} />}
             </motion.button>
 
-            <Link
-              href="/login"
-              className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all"
-              aria-label="Login"
-            >
-              <User size={20} />
-            </Link>
+            {/* User Menu / Login */}
+            {user ? (
+              <div className="relative">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all flex items-center gap-2"
+                >
+                  {user.photoURL ? (
+                    <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200 dark:border-slate-700">
+                      <Image src={user.photoURL} alt="Profile" width={32} height={32} className="object-cover" />
+                    </div>
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold border border-blue-200 dark:border-blue-800">
+                      {user.displayName ? user.displayName[0].toUpperCase() : <User size={18} />}
+                    </div>
+                  )}
+                </motion.button>
+
+                <AnimatePresence>
+                  {isProfileOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-gray-200 dark:border-slate-800 overflow-hidden py-1"
+                    >
+                      <div className="px-4 py-3 border-b border-gray-200 dark:border-slate-800">
+                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user.displayName || 'User'}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+                      </div>
+                      <Link href="/profile" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+                        <User size={16} /> Profile
+                      </Link>
+                      {user.role === 'admin' && (
+                        <Link href="/admin" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><line x1="3" x2="21" y1="9" y2="9" /><path d="m9 16 3-3 3 3" /></svg>
+                          Admin Dashboard
+                        </Link>
+                      )}
+                      <button
+                        onClick={() => auth.signOut()}
+                        className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors text-left"
+                      >
+                        <LogOut size={16} /> Logout
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-4 py-2 text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
 
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -179,14 +256,43 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
                 </Link>
               ))}
               <div className="border-t border-gray-200 dark:border-slate-800 pt-3 mt-3 space-y-1">
-                <Link
-                  href="/login"
-                  className="flex items-center gap-2 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all font-medium"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <User size={18} />
-                  <span>Login</span>
-                </Link>
+                {user ? (
+                  <>
+                    <div className="px-4 py-2 text-sm text-slate-500 dark:text-slate-400 font-medium flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
+                        {user.photoURL ? <Image src={user.photoURL} alt="Profile" width={24} height={24} className="object-cover" /> : <User size={14} />}
+                      </div>
+                      <span className="truncate">{user.displayName || user.email}</span>
+                    </div>
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-2 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all font-medium"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <User size={18} />
+                      <span>Profile</span>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        auth.signOut();
+                        setIsOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-all font-medium text-left"
+                    >
+                      <LogOut size={18} />
+                      <span>Logout</span>
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="flex items-center gap-2 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all font-medium"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <User size={18} />
+                    <span>Login</span>
+                  </Link>
+                )}
                 <Link
                   href="/cart"
                   className="flex items-center gap-2 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all font-medium"

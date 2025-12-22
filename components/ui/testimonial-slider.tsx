@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import Image from 'next/image';
 
@@ -97,7 +97,7 @@ const TestimonialSlider: React.FC = () => {
         setTimeout(() => setIsAutoPlaying(true), 8000);
     };
 
-    const handleDragEnd = (event: any, info: any) => {
+    const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         const { offset } = info;
         const swipeThreshold = 30;
 
@@ -243,7 +243,7 @@ const TestimonialSlider: React.FC = () => {
                     </div>
 
                     <div className="flex justify-center mt-6 sm:mt-8">
-                        {Array.from({ length: testimonials.length - visibleCount + 1 }, (_: any, index: any) => (
+                        {Array.from({ length: testimonials.length - visibleCount + 1 }, (_: unknown, index: number) => (
                             <motion.button
                                 key={index}
                                 onClick={() => goToSlide(index)}
