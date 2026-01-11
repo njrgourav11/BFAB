@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ArrowLeft, Calendar, User, Tag } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
+import 'react-quill-new/dist/quill.snow.css';
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const blog = await getBlogBySlug(slug);
@@ -63,9 +65,9 @@ export default async function BlogDetail({ params }: { params: Promise<{ slug: s
                 )}
 
                 {/* Content */}
-                <article className="prose prose-lg dark:prose-invert max-w-none prose-img:rounded-2xl prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-500">
-                    <div dangerouslySetInnerHTML={{ __html: blog.content }} />
-                </article>
+                <div className="ql-snow">
+                    <div className="ql-editor prose prose-lg dark:prose-invert max-w-none prose-img:rounded-2xl prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-500 [&_p]:mb-4 [&_p]:min-h-[1em]" dangerouslySetInnerHTML={{ __html: blog.content }} />
+                </div>
 
                 {/* Tags */}
                 {blog.seoKeywords && blog.seoKeywords.length > 0 && (

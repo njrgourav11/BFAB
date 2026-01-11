@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { BlogPost } from '@/lib/types';
 import { createBlog, updateBlog } from '@/lib/blog-utils';
-import { uploadImage } from '@/lib/storage-utils';
 import { ArrowLeft, Upload, Loader2, Save } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -56,19 +55,28 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
         }
     };
 
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        setUploading(true);
-        try {
-            const url = await uploadImage(file, 'blog-covers');
-            setCoverImage(url);
-        } catch (error) {
-            console.error("Upload failed", error);
-            alert('Failed to upload image');
+        // Check file size (limit to 1MB approx to be safe for Firestore)
+        if (file.size > 1024 * 1024) {
+            alert("File size is too large. Please select an image under 1MB.");
+            return;
         }
-        setUploading(false);
+
+        setUploading(true);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setCoverImage(reader.result as string);
+            setUploading(false);
+        };
+        reader.onerror = () => {
+            console.error("Failed to read file");
+            alert("Failed to read file");
+            setUploading(false);
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
