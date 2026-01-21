@@ -10,13 +10,14 @@ const CartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCart();
 
   // Calculate totals
-  const subtotal = cartItems.reduce((total, item) => total + parseFloat(item.price.slice(1)) * item.quantity, 0);
+  // Calculate totals
+  const subtotal = cartItems.reduce((total, item) => total + parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.quantity, 0);
 
-  const shipping = 0; // Free shipping
-  const discountAmount = 0; // Discount disabled
-  const tax = subtotal * 0.1; // 10% tax example or adjust as per logic
-  // Note: Previous code had tax = (subtotal - discount) * 0.1
-  const total = subtotal + tax + shipping;
+  const shipping = subtotal > 0 && subtotal < 1000 ? 100 : 0;
+  const convenienceFee = subtotal * 0.03;
+  const tax = subtotal * 0.18; // 18% GST
+
+  const total = subtotal + tax + shipping + convenienceFee;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-black transition-colors duration-300 font-sans selection:bg-blue-100 dark:selection:bg-blue-900">
@@ -104,7 +105,7 @@ const CartPage = () => {
                                   {item.name}
                                 </h3>
                                 <p className="text-lg font-bold text-slate-900 dark:text-white">
-                                  ₹{parseFloat(item.price.slice(1)).toFixed(2)}
+                                  ₹{parseFloat(item.price.replace(/[^0-9.]/g, '')).toFixed(2)}
                                 </p>
                               </div>
                               <div className="flex flex-wrap gap-2 justify-center sm:justify-start mb-4">
@@ -184,11 +185,13 @@ const CartPage = () => {
                       </div>
                       <div className="flex justify-between text-slate-600 dark:text-slate-400">
                         <span>Shipping</span>
-                        <span className="font-semibold text-green-600 dark:text-green-400">Free</span>
+                        <span className={shipping === 0 ? "font-semibold text-green-600 dark:text-green-400" : "font-semibold text-slate-900 dark:text-white"}>
+                          {shipping === 0 ? 'Free' : `₹${shipping.toFixed(2)}`}
+                        </span>
                       </div>
                       <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                        <span>Tax (10%)</span>
-                        <span className="font-semibold text-slate-900 dark:text-white">₹{tax.toFixed(2)}</span>
+                        <span>Convenience Fee (3%)</span>
+                        <span className="font-semibold text-slate-900 dark:text-white">₹{convenienceFee.toFixed(2)}</span>
                       </div>
                       <div className="pt-4 border-t border-dashed border-slate-200 dark:border-slate-700">
                         <div className="flex justify-between items-end">

@@ -80,9 +80,10 @@ const CheckoutPage = () => {
 
   // Calculate totals
   const subtotal = getTotalPrice();
-  const shipping = subtotal > 999 ? 0 : 99;
+  const shipping = subtotal > 0 && subtotal < 1000 ? 100 : 0;
+  const convenienceFee = subtotal * 0.03;
   const tax = subtotal * 0.18;
-  const total = subtotal + shipping + tax;
+  const total = subtotal + shipping + tax + convenienceFee;
 
   const handleBillingChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setBillingInfo({ ...billingInfo, [e.target.name]: e.target.value });
@@ -480,6 +481,10 @@ const CheckoutPage = () => {
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                   <span>Shipping</span>
                   <span>{shipping === 0 ? 'Free' : `₹${shipping.toFixed(2)}`}</span>
+                </div>
+                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                  <span>Convenience Fee (3%)</span>
+                  <span>₹{convenienceFee.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                   <span>Tax (18% GST)</span>
