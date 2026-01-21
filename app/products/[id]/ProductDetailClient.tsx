@@ -29,12 +29,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 { label: 'Shop', href: '/products' },
                 { label: product.name, href: '#' },
             ]}
-            onAddToCart={(quantity) => {
+            onAddToCart={(quantity, variant) => {
                 for (let i = 0; i < quantity; i++) {
                     addToCart({
-                        id: product.id,
-                        name: product.name,
-                        price: product.price.toString(),
+                        id: variant ? `${product.id}-${variant.label}` : product.id,
+                        name: variant ? `${product.name} - ${variant.label}` : product.name,
+                        price: variant ? variant.price.toString() : product.price.toString(),
                         image: product.images && product.images[0] ? product.images[0] : '/placeholder.jpg',
                         petType: product.petType,
                         productCategory: product.productCategory

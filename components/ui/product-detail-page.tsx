@@ -25,6 +25,7 @@ export interface Product {
     inStock?: boolean;
     category?: string;
     sku?: string;
+    packOptions?: { label: string; price: number; stock?: number; sku?: string }[];
     // New detailed fields
     longDescription?: string;
     detailedBenefits?: { title: string; description: string }[];
@@ -48,7 +49,7 @@ export interface ProductDetailPageProps {
     product: Product;
     seller?: Seller;
     breadcrumbs?: { label: string; href: string }[];
-    onAddToCart?: (quantity: number) => void;
+    onAddToCart?: (quantity: number, variant?: { label: string; price: number }) => void;
 }
 
 const StarRating = ({ rating, className }: { rating: number; className?: string }) => (
@@ -62,7 +63,6 @@ const StarRating = ({ rating, className }: { rating: number; className?: string 
                 )}
             />
         ))}
-        {/* <span className="ml-2 text-sm font-medium text-muted-foreground">{rating.toFixed(1)}</span> */}
     </div>
 );
 
@@ -96,6 +96,22 @@ const AccordionItem = ({ title, content }: { title: string; content: string }) =
 export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, seller, breadcrumbs, onAddToCart }) => {
     const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
     const [quantity, setQuantity] = React.useState(1);
+    const [selectedPackIndex, setSelectedPackIndex] = React.useState<number | null>(null);
+
+    React.useEffect(() => {
+        if (product.packOptions && product.packOptions.length > 0 && selectedPackIndex === null) {
+            setSelectedPackIndex(0);
+        }
+    }, [product.packOptions]);
+
+    const activeOption = selectedPackIndex !== null && product.packOptions && product.packOptions[selectedPackIndex]
+        ? product.packOptions[selectedPackIndex]
+        : null;
+
+    const currentPrice = activeOption ? activeOption.price : product.price;
+    // Fallback stock logic could be improved, but this matches previous behavior for main product
+    const currentStock = activeOption ? (activeOption.stock ?? 0) : ((product.inStock === false) ? 0 : 100);
+    const isInStock = activeOption ? (activeOption.stock ?? 0) > 0 : product.inStock;
 
     return (
         <div className="w-full bg-white dark:bg-slate-950 transition-colors duration-300">
@@ -119,7 +135,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, s
                             <AnimatePresence mode="wait">
                                 <motion.img
                                     key={currentImageIndex}
-                                    src={product.images[currentImageIndex]}
+                                    src={product.images[currentImageIndex] || '/placeholder.jpg'}
                                     alt={product.name}
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
@@ -173,7 +189,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, s
                                     )}
                                 </div>
                             )}
-                            {product.inStock ? (
+                            {isInStock ? (
                                 <span className="text-green-600 dark:text-green-400 text-sm font-medium flex items-center gap-1">
                                     <Check size={16} /> In Stock
                                 </span>
@@ -182,16 +198,40 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, s
                             )}
                         </div>
 
+                        {/* Pack Selection */}
+                        {product.packOptions && product.packOptions.length > 0 && (
+                            <div className="mb-6">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Select Pack Size</label>
+                                <div className="flex flex-wrap gap-3">
+                                    {product.packOptions.map((option, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => setSelectedPackIndex(idx)}
+                                            className={cn(
+                                                "px-4 py-2 rounded-lg border text-sm font-semibold transition-all",
+                                                selectedPackIndex === idx
+                                                    ? "bg-blue-600 text-white border-blue-600 ring-2 ring-blue-200 dark:ring-blue-900"
+                                                    : "bg-white dark:bg-slate-900 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-slate-800 hover:border-blue-400"
+                                            )}
+                                        >
+                                            {option.label}
+                                            <span className="block text-xs font-normal opacity-90 mt-0.5">₹{option.price}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         <div className="flex items-baseline gap-4 mb-8">
                             <span className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white">
-                                {product.currency || ''}{product.price}
+                                {product.currency || ''}{currentPrice}
                             </span>
-                            {product.originalPrice && (
+                            {product.originalPrice && !activeOption && (
                                 <span className="text-xl text-gray-400 line-through font-medium">
                                     {product.currency || ''}{product.originalPrice}
                                 </span>
                             )}
-                            {product.originalPrice && product.price && (
+                            {product.originalPrice && product.price && !activeOption && (
                                 <span className="text-green-600 dark:text-green-400 font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-md text-sm">
                                     SAVE {Math.round((1 - parseFloat(product.price.toString().replace(/[^0-9.]/g, '')) / parseFloat(product.originalPrice.toString().replace(/[^0-9.]/g, ''))) * 100)}%
                                 </span>
@@ -217,11 +257,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, s
                             <Button
                                 size="lg"
                                 className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-auto py-4 text-lg font-bold shadow-xl shadow-blue-500/20"
-                                onClick={() => onAddToCart && onAddToCart(quantity)}
-                                disabled={product.inStock === false}
+                                onClick={() => onAddToCart && onAddToCart(quantity, activeOption ? { label: activeOption.label, price: activeOption.price } : undefined)}
+                                disabled={!isInStock}
                             >
                                 <ShoppingCart className="mr-2 h-5 w-5" />
-                                {product.inStock === false ? 'Out of Stock' : 'Add to Cart'}
+                                {!isInStock ? 'Out of Stock' : 'Add to Cart'}
                             </Button>
                         </div>
 

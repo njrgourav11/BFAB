@@ -66,7 +66,7 @@ export default async function BlogDetail({ params }: { params: Promise<{ slug: s
 
                 {/* Content */}
                 <div className="ql-snow">
-                    <div className="ql-editor prose prose-lg dark:prose-invert max-w-none prose-img:rounded-2xl prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-500 [&_p]:mb-4 [&_p]:min-h-[1em]" dangerouslySetInnerHTML={{ __html: blog.content }} />
+                    <div className="ql-editor prose prose-lg dark:prose-invert max-w-none prose-img:rounded-2xl prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-500 [&_p]:min-h-[1em] [&_p]:m-0 !whitespace-normal" dangerouslySetInnerHTML={{ __html: blog.content }} />
                 </div>
 
                 {/* Tags */}

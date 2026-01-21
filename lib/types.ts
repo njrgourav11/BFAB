@@ -30,6 +30,22 @@ export interface Product {
     isNew?: boolean;
     rating?: number;
     reviews?: number;
+    packOptions?: {
+        label: string; // e.g. "Pack of 1", "Pack of 2"
+        price: number;
+        stock?: number;
+        sku?: string;
+    }[];
+    // New detailed fields
+    longDescription?: string;
+    detailedBenefits?: { title: string; description: string }[];
+    ingredients?: { name: string; description: string }[];
+    feedGuide?: string[];
+    vetApproval?: { quote: string; doctorName: string; qualification: string };
+    processSteps?: { title: string; description: string }[];
+    whyUnique?: { title: string; points: string[] }[];
+    faqs?: { question: string; answer: string }[];
+    detailedReviews?: { name: string; rating: number; text: string; date?: string; verified?: boolean }[];
 }
 
 export interface Address {
