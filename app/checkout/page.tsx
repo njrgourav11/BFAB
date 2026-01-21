@@ -486,10 +486,6 @@ const CheckoutPage = () => {
                   <span>Convenience Fee (3%)</span>
                   <span>₹{convenienceFee.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>Tax (18% GST)</span>
-                  <span>₹{tax.toFixed(2)}</span>
-                </div>
                 <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-gray-100 pt-2 border-t border-gray-200 dark:border-slate-700">
                   <span>Total</span>
                   <span>₹{total.toFixed(2)}</span>
