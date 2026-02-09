@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/lib/types';
 import { createProduct, updateProduct } from '@/lib/product-utils';
-import { uploadImage } from '@/lib/storage-utils';
+// import { uploadImage } from '@/lib/storage-utils';
 import { ArrowLeft, Upload, Loader2, Save, X, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -48,14 +48,24 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
     const [benefits, setBenefits] = useState<{ title: string; description: string }[]>(initialData?.detailedBenefits || []);
     const [feedGuide, setFeedGuide] = useState<string[]>(initialData?.feedGuide || []);
 
+    const convertFileToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = error => reject(error);
+        });
+    };
+
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         setUploading(true);
         try {
-            const url = await uploadImage(file, 'products');
-            setImages([...images, url]);
+            // Converts to Base64
+            const base64 = await convertFileToBase64(file);
+            setImages([...images, base64]);
         } catch (error) {
             console.error(error);
             alert('Failed to upload image');
@@ -130,26 +140,27 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
         e.preventDefault();
         setLoading(true);
 
-        const productData = {
+        const productData: any = {
             name,
             price: parseFloat(price),
             stock: parseInt(stock),
             description,
-            category, // Keep as string for now if schema uses it
+            category,
             productCategory,
             petType: petType as 'dog' | 'cat' | 'both',
             images,
             features,
-            isNew: false, // Default
-            rating: initialData?.rating || 5, // Default/Preserve
-            reviews: reviews, // Use state if we were editing it, or initialData
-            packOptions: packOptions.length > 0 ? packOptions : undefined,
-            longDescription: longDescription || undefined,
-            faqs: faqs.length > 0 ? faqs : undefined,
-            ingredients: ingredients.length > 0 ? ingredients : undefined,
-            detailedBenefits: benefits.length > 0 ? benefits : undefined,
-            feedGuide: feedGuide.length > 0 ? feedGuide : undefined,
+            isNew: false,
+            rating: initialData?.rating || 5,
+            reviews: reviews,
         };
+
+        if (packOptions.length > 0) productData.packOptions = packOptions;
+        if (longDescription) productData.longDescription = longDescription;
+        if (faqs.length > 0) productData.faqs = faqs;
+        if (ingredients.length > 0) productData.ingredients = ingredients;
+        if (benefits.length > 0) productData.detailedBenefits = benefits;
+        if (feedGuide.length > 0) productData.feedGuide = feedGuide;
 
         try {
             if (isEditing && initialData?.id) {
