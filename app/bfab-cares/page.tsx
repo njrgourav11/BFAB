@@ -126,32 +126,7 @@ const BFABCaresPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 font-sans">
-      {/* Hero Section */}
-      <section className="bg-slate-900 text-white py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="inline-flex p-4 bg-rose-500/20 rounded-full mb-6 text-rose-500"
-            >
-              <Heart size={48} className="fill-current" />
-            </motion.div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">BFAB Cares</h1>
-            <p className="text-xl text-gray-400 leading-relaxed">
-              Dedicated to improving the lives of animals through compassion, support, and action.
-              Together, we can make a difference.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      {/* Hero Section Removed */}
 
       {/* Mission Statement */}
       <section className="py-16 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">

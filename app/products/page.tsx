@@ -13,9 +13,8 @@ import { Product } from '@/lib/types';
 const categories = [
   { id: 'all', name: 'All Products' },
   { id: 'treats', name: 'Treats' }, // Lowercase match with productCategory usually? or check data. Static was 'Treats'.
-  { id: 'food', name: 'Food' },
+  { id: 'food', name: 'Meals' },
   { id: 'supplements', name: 'Supplements' },
-  { id: 'grooming', name: 'Grooming' },
 ];
 
 const petTypes = [
@@ -166,28 +165,7 @@ const ShopNowPage = () => {
   return (
     <div className="bg-gray-50 dark:bg-slate-950 min-h-screen transition-colors duration-300 font-sans">
 
-      {/* Hero Section */}
-      <section className="relative bg-slate-900 text-white py-20 sm:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-
-        <div className="container mx-auto px-4 relative z-10 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 tracking-tight"
-          >
-            Premium Pet <span className="text-blue-400">Essentials</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed"
-          >
-            Curated nutrition and care products for your furry companions. Science-backed, vet-approved, and loved by pets.
-          </motion.p>
-        </div>
-      </section>
+      {/* Hero Section Removed */}
 
       {/* Main Content Area */}
       <div className="container mx-auto px-4 py-12">

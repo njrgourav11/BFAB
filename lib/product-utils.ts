@@ -1,6 +1,7 @@
 import { db } from './firebase';
-import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, orderBy, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, orderBy, writeBatch, setDoc as firebaseSetDoc } from 'firebase/firestore';
 import { Product } from './types';
+import { k9DemoProduct } from '@/data/k9-demo-product';
 
 const PRODUCT_COLLECTION = 'products';
 
@@ -19,6 +20,17 @@ export const getProductById = async (id: string) => {
     }
     return null;
 };
+
+// Seed the complex K9 Demonstration Product
+export const seedK9Product = async () => {
+    // We use a specific ID so we can find it easily, or let Firestore generate one. 
+    // To match the URL /products/k9-demo, we should try to set the ID to 'k9-demo'.
+    const docRef = doc(db, PRODUCT_COLLECTION, 'k9-demo');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...data } = k9DemoProduct;
+    await firebaseSetDoc(docRef, data); // We need to import setDoc as firebaseSetDoc to avoid conflict if any
+};
+
 
 export const createProduct = async (data: Omit<Product, 'id'>) => {
     const docRef = await addDoc(collection(db, PRODUCT_COLLECTION), data);

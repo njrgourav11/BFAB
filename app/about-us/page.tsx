@@ -30,40 +30,22 @@ const teamMembers = [
 
 const AboutUsPage = () => {
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300 font-sans">
+    <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300 font-sans overflow-x-hidden">
 
-      {/* Hero Section */}
-      <section className="bg-slate-900 text-white py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/hero-pattern.svg')] opacity-5"></div>
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-4xl mx-auto"
-          >
-            <span className="text-blue-400 font-semibold tracking-wider uppercase text-sm mb-4 block">Our Story</span>
-            <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight leading-tight">
-              Revolutionizing <br /> Pet Nutrition
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light">
-              Science-backed formulas, unwavering commitment to quality, and a deep love for every pet.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+
 
       {/* Our Story Section */}
-      <section className="py-24 bg-white dark:bg-slate-950">
+      <section className="pt-12 pb-24 md:pt-20 bg-white dark:bg-slate-950">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">The BFAB Journey</h2>
+              <span className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm mb-3 block">About Us</span>
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">The BFAB Journey</h1>
               <div className="space-y-6 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 <p>
                   BFAB Pet Food Store was founded in 2023 with a simple yet powerful mission: to provide pet owners with the highest quality, most nutritious pet food on the market.

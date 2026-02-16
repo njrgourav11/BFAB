@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getAllProducts, deleteProduct, seedProducts } from '@/lib/product-utils';
+import { getAllProducts, deleteProduct, seedProducts, seedK9Product } from '@/lib/product-utils';
 import { Product } from '@/lib/types';
 import { products as staticProducts } from '@/app/data/products';
 import Link from 'next/link';
@@ -31,26 +31,39 @@ export default function AdminProductsPage() {
     };
 
     const handleSeed = async () => {
-        if (confirm('This will overwrite/add products from the static file app/data/products.ts to Firestore. Continue?')) {
-            setSeeding(true);
-            try {
-                await seedProducts(staticProducts);
+        if (!confirm('This will overwrite/add products from the static file app/data/products.ts to Firestore. Continue?')) return;
 
-                // Also ensure admin user
-                const { ensureAdminPrivileges } = await import('@/lib/auth-utils');
-                await ensureAdminPrivileges('njrgourav@gmail.com');
+        setSeeding(true);
+        try {
+            // Map static products to match the Firestore Product interface
+            const productsToSeed = staticProducts.map(p => ({
+                ...p,
+                price: Number(p.price),
+                originalPrice: p.originalPrice ? Number(p.originalPrice) : undefined,
+                stock: p.inStock ? 50 : 0,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                petType: (p.petType === 'Canine' ? 'dog' : p.petType === 'Feline' ? 'cat' : 'both') as any,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                productCategory: p.productCategory as any,
+            }));
 
-                alert('Seeding complete! Products added and Admin permissions verified.');
-                fetchProducts();
-            } catch (e) {
-                console.error(e);
-                alert('Seeding failed.');
-            }
+            await seedProducts(productsToSeed);
+
+            // Also ensure admin user
+            const { ensureAdminPrivileges } = await import('@/lib/auth-utils');
+            await ensureAdminPrivileges('njrgourav@gmail.com');
+
+            alert('Seeding complete! Products added and Admin permissions verified.');
+            fetchProducts();
+        } catch (e) {
+            console.error(e);
+            alert('Seeding failed.');
+        } finally {
             setSeeding(false);
         }
     };
 
-    if (loading) return <div className="p-8 text-center"><Loader2 className="animate-spin inline mr-2" /> Loading products...</div>;
+    if (loading) return <div className="p-8 text-center text-slate-500"><Loader2 className="animate-spin inline mr-2" /> Loading products...</div>;
 
     return (
         <div>
@@ -64,8 +77,25 @@ export default function AdminProductsPage() {
                         className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 font-medium transition-colors disabled:opacity-70"
                     >
                         {seeding ? <Loader2 className="animate-spin" size={20} /> : <Database size={20} />}
-                        Seed Data
+                        Seed Standard
                     </button>
+
+                    <button
+                        onClick={async () => {
+                            if (confirm('Seed K9 Demo Product to DB?')) {
+                                setSeeding(true);
+                                await seedK9Product();
+                                setSeeding(false);
+                                fetchProducts();
+                            }
+                        }}
+                        disabled={seeding}
+                        className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 font-medium transition-colors disabled:opacity-70"
+                    >
+                        {seeding ? <Loader2 className="animate-spin" size={20} /> : <Database size={20} />}
+                        Seed K9 Demo
+                    </button>
+
 
                     <Link
                         href="/admin/products/new"

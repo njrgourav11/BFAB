@@ -94,33 +94,7 @@ const UltimateSaverPacksPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 font-sans">
-      {/* Hero Section */}
-      <section className="bg-slate-900 text-white py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400/20 text-yellow-400 rounded-full text-sm font-bold mb-6 border border-yellow-400/30"
-            >
-              <Star size={16} className="fill-current" />
-              SAVE UP TO 50%
-            </motion.div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">Ultimate Saver Packs</h1>
-            <p className="text-xl text-gray-400 leading-relaxed">
-              Unbeatable value bundles curated for every pet and budget.
-              Get more of what they love for less.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      {/* Hero Section Removed */}
 
       {/* Featured Slider Section */}
       <section className="py-20 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
@@ -158,8 +132,8 @@ const UltimateSaverPacksPage = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                   className={`relative bg-white dark:bg-slate-900 rounded-2xl border ${index === 1
-                      ? 'border-blue-500 dark:border-blue-500 shadow-xl scale-105 z-10'
-                      : 'border-gray-100 dark:border-slate-800 shadow-sm'
+                    ? 'border-blue-500 dark:border-blue-500 shadow-xl scale-105 z-10'
+                    : 'border-gray-100 dark:border-slate-800 shadow-sm'
                     } overflow-hidden flex flex-col h-full`}
                 >
                   {/* Badge */}
@@ -215,8 +189,8 @@ const UltimateSaverPacksPage = () => {
                       </div>
 
                       <button className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${index === 1
-                          ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-200 dark:shadow-none'
-                          : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90'
+                        ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-200 dark:shadow-none'
+                        : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90'
                         }`}>
                         <ShoppingCart size={18} />
                         Add to Cart

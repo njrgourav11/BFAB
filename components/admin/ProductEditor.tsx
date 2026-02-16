@@ -48,6 +48,13 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
     const [benefits, setBenefits] = useState<{ title: string; description: string }[]>(initialData?.detailedBenefits || []);
     const [feedGuide, setFeedGuide] = useState<string[]>(initialData?.feedGuide || []);
 
+    // Comparison Table State
+    const [comparisonTable, setComparisonTable] = useState<{ feature: string; us: string | boolean; others: string | boolean; curd: string | boolean; medicine: string | boolean; }[]>(initialData?.comparisonTable || []);
+
+    // Unique Selling Points State
+    const [uniqueSellingPoints, setUniqueSellingPoints] = useState<{ icon: string; title: string; description: string; }[]>(initialData?.uniqueSellingPoints || []);
+
+
     const convertFileToBase64 = (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -136,6 +143,25 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
     };
     const removeFeedGuide = (index: number) => setFeedGuide(feedGuide.filter((_, i) => i !== index));
 
+    // Comparison Table Handlers
+    const addComparisonRow = () => setComparisonTable([...comparisonTable, { feature: '', us: true, others: false, curd: false, medicine: false }]);
+    const updateComparisonRow = (index: number, field: keyof typeof comparisonTable[0], value: any) => {
+        const newTable = [...comparisonTable];
+        newTable[index] = { ...newTable[index], [field]: value };
+        setComparisonTable(newTable);
+    };
+    const removeComparisonRow = (index: number) => setComparisonTable(comparisonTable.filter((_, i) => i !== index));
+
+    // USP Handlers
+    const addUSP = () => setUniqueSellingPoints([...uniqueSellingPoints, { icon: '💎', title: '', description: '' }]);
+    const updateUSP = (index: number, field: keyof typeof uniqueSellingPoints[0], value: string) => {
+        const newUSPs = [...uniqueSellingPoints];
+        newUSPs[index] = { ...newUSPs[index], [field]: value };
+        setUniqueSellingPoints(newUSPs);
+    };
+    const removeUSP = (index: number) => setUniqueSellingPoints(uniqueSellingPoints.filter((_, i) => i !== index));
+
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -161,6 +187,9 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
         if (ingredients.length > 0) productData.ingredients = ingredients;
         if (benefits.length > 0) productData.detailedBenefits = benefits;
         if (feedGuide.length > 0) productData.feedGuide = feedGuide;
+        if (comparisonTable.length > 0) productData.comparisonTable = comparisonTable;
+        if (uniqueSellingPoints.length > 0) productData.uniqueSellingPoints = uniqueSellingPoints;
+
 
         try {
             if (isEditing && initialData?.id) {
@@ -326,11 +355,70 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
                                     <Plus size={16} /> Add Step
                                 </button>
                             </div>
+
                             <div className="space-y-2">
                                 {feedGuide.map((step, i) => (
                                     <div key={i} className="flex gap-2">
                                         <input type="text" placeholder={`Step ${i + 1}`} value={step} onChange={e => updateFeedGuide(i, e.target.value)} className="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950" />
                                         <button type="button" onClick={() => removeFeedGuide(i)} className="text-red-500 p-2"><X size={16} /></button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Comparison Table */}
+                        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                            <div className="flex items-center justify-between">
+                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Comparison Table</label>
+                                <button type="button" onClick={addComparisonRow} className="text-sm text-blue-600 font-bold flex items-center gap-1 hover:underline">
+                                    <Plus size={16} /> Add Row
+                                </button>
+                            </div>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-sm">
+                                    <thead>
+                                        <tr className="border-b dark:border-slate-800">
+                                            <th className="p-2">Feature</th>
+                                            <th className="p-2">Us</th>
+                                            <th className="p-2">Others</th>
+                                            <th className="p-2">Curd</th>
+                                            <th className="p-2">Meds</th>
+                                            <th className="p-2"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y dark:divide-slate-800">
+                                        {comparisonTable.map((row, i) => (
+                                            <tr key={i}>
+                                                <td className="p-2"><input type="text" placeholder="Feature" value={row.feature} onChange={e => updateComparisonRow(i, 'feature', e.target.value)} className="w-full px-2 py-1 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800" /></td>
+                                                <td className="p-2"><input type="text" placeholder="Us" value={row.us.toString()} onChange={e => updateComparisonRow(i, 'us', e.target.value)} className="w-full px-2 py-1 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800" /></td>
+                                                <td className="p-2"><input type="text" placeholder="Others" value={row.others.toString()} onChange={e => updateComparisonRow(i, 'others', e.target.value)} className="w-full px-2 py-1 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800" /></td>
+                                                <td className="p-2"><input type="text" placeholder="Curd" value={row.curd.toString()} onChange={e => updateComparisonRow(i, 'curd', e.target.value)} className="w-full px-2 py-1 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800" /></td>
+                                                <td className="p-2"><input type="text" placeholder="Meds" value={row.medicine.toString()} onChange={e => updateComparisonRow(i, 'medicine', e.target.value)} className="w-full px-2 py-1 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800" /></td>
+                                                <td className="p-2 text-right"><button type="button" onClick={() => removeComparisonRow(i)} className="text-red-500"><X size={16} /></button></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* Unique Selling Points */}
+                        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                            <div className="flex items-center justify-between">
+                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Unique Selling Points</label>
+                                <button type="button" onClick={addUSP} className="text-sm text-blue-600 font-bold flex items-center gap-1 hover:underline">
+                                    <Plus size={16} /> Add USP
+                                </button>
+                            </div>
+                            <div className="space-y-4">
+                                {uniqueSellingPoints.map((item, i) => (
+                                    <div key={i} className="p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-slate-800 relative group space-y-3">
+                                        <button type="button" onClick={() => removeUSP(i)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100"><X size={16} /></button>
+                                        <div className="flex gap-2">
+                                            <input type="text" placeholder="Icon" value={item.icon} onChange={e => updateUSP(i, 'icon', e.target.value)} className="w-16 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-center" />
+                                            <input type="text" placeholder="Title" value={item.title} onChange={e => updateUSP(i, 'title', e.target.value)} className="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-medium" />
+                                        </div>
+                                        <textarea rows={2} placeholder="Description" value={item.description} onChange={e => updateUSP(i, 'description', e.target.value)} className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm" />
                                     </div>
                                 ))}
                             </div>
@@ -425,7 +513,7 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     );
 }

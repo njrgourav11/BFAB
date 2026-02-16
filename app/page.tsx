@@ -13,57 +13,34 @@ import { useCart } from './components/CartContext';
 
 
 
-// Sample data for featured products
-const featuredProducts = [
-  {
-    id: 1,
-    name: 'BFAB Peanut Butter for Dogs - 500g',
-    price: '₹349',
-    originalPrice: '₹399',
-    images: ['/products/1/20.png', '/products/1/21.png', '/products/1/22.png', '/products/1/23.png', '/products/1/24.png', '/products/1/26.png'],
-    rating: 4.9,
-    reviews: 328,
-    description: 'All-Natural, xylitol-Free | Protein-Rich Treat with Zero preservatives | Perfect for Training, Grooming, Rewards & Snacking',
-  },
-  {
-    id: 2,
-    name: 'BFAB Oven Baked Kitten Kibble Dry Cat Food - 1Kg',
-    price: '₹599',
-    originalPrice: '₹799',
-    images: ['/products/3/12.png', '/products/3/14.png', '/products/3/16.png', '/products/3/18.png', '/products/3/9.png'],
-    rating: 4.8,
-    reviews: 245,
-    description: 'Chicken & Ocean Fish | Promotes Brain & Vision Development | Enhances Immunity | Improves Digestive Health',
-  },
-  {
-    id: 3,
-    name: 'BFAB Natural Frozen Dog Treats - 2 x 40gm',
-    price: '₹99',
-    originalPrice: '₹199',
-    images: ['/products/2/3.png', '/products/2/4.png', '/products/2/5.png', '/products/2/6.png', '/products/2/7.png', '/products/2/8.png'],
-    rating: 5.0,
-    reviews: 512,
-    description: 'Alphonso Mango & Peanut Butter + Banana | Healthy Dog Treats | No Colour & Flavours | Made with Oat & Coconut Milk',
-  },
-  {
-    id: 4,
-    name: 'BFAB Chicken Broth for Cats & Dogs | Zero Preservatives',
-    price: '₹349',
-    originalPrice: '₹399',
-    images: ['/products/4/12.png', '/products/4/13.png', '/products/4/15.png', '/products/4/17.png', '/products/4/19.png'],
-    rating: 4.9,
-    reviews: 187,
-    description: 'Zero Preservatives | Aids Joint Health and Digestion | Collagen Rich | Human Grade, Natural Wet Dog Food | Bone Broth',
-  },
-];
-
-
-
 // Sample data for testimonials/reviews
 
+import { getAllProducts } from '@/lib/product-utils';
+import { Product } from '@/lib/types';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const { addToCart } = useCart();
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProducts();
+        // Determine featured products (e.g., first 4, or filtered by some logic)
+        // For now, just taking the first 4
+        setFeaturedProducts(data.slice(0, 4));
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <div>
       {/* Hero Section */}
@@ -104,44 +81,42 @@ export default function Home() {
             <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Our bestsellers loved by pet owners everywhere</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-            {featuredProducts.slice(0, 4).map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.15 }}
-                viewport={{ once: true }}
-                className="group flex justify-center"
-              >
-                <ProductRevealCard
-                  id={product.id}
-                  name={product.name}
-                  price={product.price}
-                  originalPrice={product.originalPrice}
-                  image={product.images[0]}
-                  description={product.description}
-                  rating={product.rating}
-                  reviewCount={product.reviews}
-                  onAdd={() => addToCart({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.images[0],
-                    // Add missing properties required by CartItem if any, or rely on partial
-                    // data/products.ts has inStock etc, but these are local mock objects?
-                    // Actually useCart likely expects specific fields. 
-                    // Based on shop-now page: petType, productCategory are passed. 
-                    // The local mock data here doesn't have petType/productCategory.
-                    // I should probably add them to the mock data or mock them for now.
-                    petType: 'Both', // Default or guess
-                    productCategory: 'Treats'
-                  })}
-                  className="w-full max-w-[320px]"
-                />
-              </motion.div>
-            ))}
-          </div>
+          {loading ? (
+            <div className="text-center py-10">Loading products...</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+              {featuredProducts.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.15 }}
+                  viewport={{ once: true }}
+                  className="group flex justify-center"
+                >
+                  <ProductRevealCard
+                    id={product.id}
+                    name={product.name}
+                    price={String(product.price)} // Ensure string
+                    originalPrice={product.originalPrice ? String(product.originalPrice) : undefined}
+                    image={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.png'}
+                    description={product.description ? (product.description.length > 100 ? product.description.substring(0, 100) + '...' : product.description) : ''}
+                    rating={product.rating || 0}
+                    reviewCount={product.reviews || 0}
+                    onAdd={() => addToCart({
+                      id: product.id,
+                      name: product.name,
+                      price: String(product.price), // Cart expects string
+                      image: product.images && product.images.length > 0 ? product.images[0] : '/placeholder.png',
+                      petType: product.petType,
+                      productCategory: product.productCategory
+                    })}
+                    className="w-full max-w-[320px]"
+                  />
+                </motion.div>
+              ))}
+            </div>
+          )}
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}

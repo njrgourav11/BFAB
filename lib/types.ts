@@ -20,6 +20,7 @@ export interface Product {
     id: string; // Changed from number to string for Firestore compatibility (legacy IDs can be strings too)
     name: string;
     price: number;
+    originalPrice?: number;
     description: string;
     images: string[];
     category: string;
@@ -46,6 +47,18 @@ export interface Product {
     whyUnique?: { title: string; points: string[] }[];
     faqs?: { question: string; answer: string }[];
     detailedReviews?: { name: string; rating: number; text: string; date?: string; verified?: boolean }[];
+    comparisonTable?: {
+        feature: string;
+        us: string | boolean;
+        others: string | boolean;
+        curd: string | boolean;
+        medicine: string | boolean;
+    }[];
+    uniqueSellingPoints?: {
+        icon: string; // Emoji character or Lucide icon name
+        title: string;
+        description: string;
+    }[];
 }
 
 export interface Address {
