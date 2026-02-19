@@ -2,22 +2,24 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import 'swiper/css';
-import { Star, ShieldCheck, Truck, Phone, RotateCcw, CheckCircle } from 'lucide-react';
-import ClientCarousel from './components/ClientCarousel';
-import TestimonialSlider from '@/components/ui/testimonial-slider';
+import { ShieldCheck, Truck, Phone, RotateCcw } from 'lucide-react';
 import { ProductRevealCard } from '@/components/ui/product-reveal-card';
 import { ProfileCard } from '@/components/ui/profile-card';
 import { useCart } from './components/CartContext';
-
-
-
-// Sample data for testimonials/reviews
-
-import { getAllProducts } from '@/lib/product-utils';
 import { Product } from '@/lib/types';
 import { useEffect, useState } from 'react';
+
+const ClientCarousel = dynamic(() => import('./components/ClientCarousel'), {
+  ssr: false,
+  loading: () => <div className="h-40 animate-pulse rounded-2xl bg-gray-100 dark:bg-slate-800" />,
+});
+
+const TestimonialSlider = dynamic(() => import('@/components/ui/testimonial-slider'), {
+  ssr: false,
+  loading: () => <div className="h-80 animate-pulse rounded-2xl bg-gray-100 dark:bg-slate-800" />,
+});
 
 export default function Home() {
   const { addToCart } = useCart();
@@ -25,20 +27,29 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     const fetchProducts = async () => {
       try {
+        const { getAllProducts } = await import('@/lib/product-utils');
         const data = await getAllProducts();
-        // Determine featured products (e.g., first 4, or filtered by some logic)
-        // For now, just taking the first 4
-        setFeaturedProducts(data.slice(0, 4));
+        if (mounted) {
+          setFeaturedProducts(data.slice(0, 4));
+        }
       } catch (error) {
         console.error("Failed to fetch products", error);
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchProducts();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (
@@ -82,7 +93,15 @@ export default function Home() {
           </motion.div>
 
           {loading ? (
-            <div className="text-center py-10">Loading products...</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+              {[1, 2, 3, 4].map((item) => (
+                <div key={item} className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                  <div className="mb-4 h-48 animate-pulse rounded-xl bg-gray-200 dark:bg-slate-700" />
+                  <div className="mb-2 h-4 w-2/3 animate-pulse rounded bg-gray-200 dark:bg-slate-700" />
+                  <div className="h-4 w-1/2 animate-pulse rounded bg-gray-200 dark:bg-slate-700" />
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
               {featuredProducts.map((product, index) => (

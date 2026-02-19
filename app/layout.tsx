@@ -1,11 +1,8 @@
-"use client";
-import React from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import { CartProvider } from "./components/CartContext";
+import AppShell from "./components/AppShell";
+import type { ReactNode } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,50 +17,15 @@ const geistMono = Geist_Mono({
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
-  const [isDark, setIsDark] = React.useState(false);
-
-  const updateTheme = (dark: boolean) => {
-    const html = document.documentElement;
-    if (dark) {
-      html.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      console.log('Dark mode enabled, classes:', html.className);
-    } else {
-      html.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      console.log('Light mode enabled, classes:', html.className);
-    }
-  };
-
-  React.useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const stored = localStorage.getItem('theme');
-    const shouldBeDark = stored ? stored === 'dark' : prefersDark;
-    setIsDark(shouldBeDark);
-    updateTheme(shouldBeDark);
-  }, []);
-
-  const toggleTheme = () => {
-    const newDark = !isDark;
-    setIsDark(newDark);
-    updateTheme(newDark);
-  };
-
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-300`}
-        style={{backgroundColor: isDark ? undefined : '#fef6eb'}}
+        style={{ backgroundColor: '#fef6eb' }}
       >
-        <CartProvider>
-          <Navbar isDark={isDark} toggleTheme={toggleTheme} />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </CartProvider>
+        <AppShell>{children}</AppShell>
         <Analytics />
       </body>
     </html>
