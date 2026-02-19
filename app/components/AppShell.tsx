@@ -2,6 +2,7 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 import { CartProvider } from './CartContext';
 
 const Navbar = dynamic(() => import('./Navbar'));
@@ -25,6 +26,7 @@ function InitialLoader() {
 }
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [isDark, setIsDark] = React.useState(false);
   const [showLoader, setShowLoader] = React.useState(true);
 
@@ -48,12 +50,20 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     localStorage.setItem('theme', nextDark ? 'dark' : 'light');
   }, [isDark]);
 
+  const isMaintenancePage = pathname === '/maintenance';
+
   return (
     <CartProvider>
       {showLoader ? <InitialLoader /> : null}
-      <Navbar isDark={isDark} toggleTheme={toggleTheme} />
-      <main className="flex-grow">{children}</main>
-      <Footer />
+      {isMaintenancePage ? (
+        <main className="flex-grow overflow-x-hidden">{children}</main>
+      ) : (
+        <>
+          <Navbar isDark={isDark} toggleTheme={toggleTheme} />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+        </>
+      )}
     </CartProvider>
   );
 }
