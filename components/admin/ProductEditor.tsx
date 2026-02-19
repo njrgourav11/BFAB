@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/lib/types';
 import { createProduct, updateProduct } from '@/lib/product-utils';
-// import { uploadImage } from '@/lib/storage-utils';
-import { ArrowLeft, Upload, Loader2, Save, X, Plus } from 'lucide-react';
+import { uploadImage } from '@/lib/storage-utils';
+import { ArrowLeft, Loader2, Save, X, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -54,30 +54,23 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
     // Unique Selling Points State
     const [uniqueSellingPoints, setUniqueSellingPoints] = useState<{ icon: string; title: string; description: string; }[]>(initialData?.uniqueSellingPoints || []);
 
-
-    const convertFileToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = error => reject(error);
-        });
-    };
-
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0) return;
 
         setUploading(true);
         try {
-            // Converts to Base64
-            const base64 = await convertFileToBase64(file);
-            setImages([...images, base64]);
+            const uploadedUrls = await Promise.all(
+                files.map((file) => uploadImage(file, 'products'))
+            );
+            setImages((prev) => [...prev, ...uploadedUrls]);
         } catch (error) {
             console.error(error);
-            alert('Failed to upload image');
+            alert(error instanceof Error ? error.message : 'Failed to upload image(s)');
+        } finally {
+            setUploading(false);
+            e.target.value = '';
         }
-        setUploading(false);
     };
 
     const removeImage = (index: number) => {
@@ -166,15 +159,40 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
         e.preventDefault();
         setLoading(true);
 
+        const parsedPrice = Number(price);
+        const parsedStock = Number(stock);
+
+        if (!Number.isFinite(parsedPrice) || parsedPrice < 0) {
+            alert('Please enter a valid price.');
+            setLoading(false);
+            return;
+        }
+
+        if (!Number.isFinite(parsedStock) || parsedStock < 0) {
+            alert('Please enter a valid stock.');
+            setLoading(false);
+            return;
+        }
+
+        const cleanedImages = images
+            .map((img) => img.trim())
+            .filter((img) => img.length > 0);
+
+        if (cleanedImages.length === 0) {
+            alert('Please upload at least one product image.');
+            setLoading(false);
+            return;
+        }
+
         const productData: any = {
             name,
-            price: parseFloat(price),
-            stock: parseInt(stock),
+            price: parsedPrice,
+            stock: parsedStock,
             description,
             category,
             productCategory,
             petType: petType as 'dog' | 'cat' | 'both',
-            images,
+            images: cleanedImages,
             features,
             isNew: false,
             rating: initialData?.rating || 5,
@@ -201,8 +219,9 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
         } catch (error) {
             console.error('Error saving product:', error);
             alert('Failed to save product');
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (
@@ -455,7 +474,7 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
                             ))}
                             <div className="aspect-square border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl flex items-center justify-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 relative">
                                 {uploading ? <Loader2 className="animate-spin" /> : <Plus size={24} className="text-slate-400" />}
-                                <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} className="absolute inset-0 opacity-0 cursor-pointer" />
+                                <input type="file" accept="image/*" multiple onChange={handleImageUpload} disabled={uploading} className="absolute inset-0 opacity-0 cursor-pointer" />
                             </div>
                         </div>
                     </div>
@@ -480,7 +499,7 @@ export default function ProductEditor({ initialData, isEditing = false }: Produc
                 <div className="space-y-6">
                     <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
                         <button
-                            onClick={handleSubmit}
+                            type="submit"
                             disabled={loading}
                             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-70"
                         >
