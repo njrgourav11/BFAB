@@ -45,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
     { label: 'Home', href: '/' },
     { label: 'Shop Now', href: '/products' },
     { label: 'Paw Blog', href: '/blogs' },
-    { label: 'About Us', href: '/about-us' },
+    // { label: 'About Us', href: '/about-us' },
     { label: 'Contact Us', href: '/contact-us' },
   ];
 

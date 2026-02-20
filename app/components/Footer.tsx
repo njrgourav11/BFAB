@@ -13,7 +13,7 @@ const Footer = () => {
   ];
 
   const quickLinks = [
-    { label: 'About Us', href: '/about-us' },
+    // { label: 'About Us', href: '/about-us' },
     { label: 'Contact Us', href: '/contact-us' },
     { label: 'Paw Blog', href: '/paw-blog' },
     { label: 'Feeding Guide', href: '/feeding-guide' },

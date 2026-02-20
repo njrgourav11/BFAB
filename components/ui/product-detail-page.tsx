@@ -23,7 +23,7 @@ export interface ProductDetailPageProps {
     product: Product;
     seller?: Seller;
     breadcrumbs?: { label: string; href: string }[];
-    onAddToCart?: (quantity: number, variant?: { label: string; price: number }) => void;
+    onAddToCart?: (quantity: number, variant?: { label: string; price: number }, unitPrice?: number) => void;
 }
 
 const StarRating = ({ rating, className }: { rating: number; className?: string }) => (
@@ -82,11 +82,35 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
     const activeOption = selectedPackIndex !== null && product.packOptions && product.packOptions[selectedPackIndex]
         ? product.packOptions[selectedPackIndex]
         : null;
+    const hasPackOptions = Boolean(product.packOptions && product.packOptions.length > 0);
 
     const combinedPrice = activeOption ? activeOption.price : Number(product.price);
-    const finalPrice = isSubscribe ? Math.round(combinedPrice * 0.9) : combinedPrice;
-
+    const finalPrice = !hasPackOptions && isSubscribe ? Math.round(combinedPrice * 0.9) : combinedPrice;
     const isInStock = activeOption ? (activeOption.stock ?? 0) > 0 : (product.stock > 0);
+
+    const getPackCount = (label?: string) => {
+        const match = label?.match(/\d+/);
+        return match ? Number(match[0]) : NaN;
+    };
+
+    const getPackSavings = (optionIndex: number) => {
+        if (!product.packOptions || optionIndex <= 0) return null;
+
+        const baseOption = product.packOptions[0];
+        const option = product.packOptions[optionIndex];
+        const basePrice = Number(baseOption?.price);
+        const optionPrice = Number(option?.price);
+        const baseCountRaw = getPackCount(baseOption?.label);
+        const optionCountRaw = getPackCount(option?.label);
+        const baseCount = Number.isFinite(baseCountRaw) && baseCountRaw > 0 ? baseCountRaw : 1;
+        const optionCount = Number.isFinite(optionCountRaw) && optionCountRaw > 0 ? optionCountRaw : optionIndex + 1;
+
+        if (!Number.isFinite(basePrice) || !Number.isFinite(optionPrice)) return null;
+
+        const expectedPrice = (basePrice / baseCount) * optionCount;
+        const savings = Math.round(expectedPrice - optionPrice);
+        return Number.isFinite(savings) && savings > 0 ? savings : 0;
+    };
 
     return (
         <div className="w-full bg-white dark:bg-slate-950 transition-colors duration-300 font-sans">
@@ -168,19 +192,23 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                                             className={cn(
                                                 "w-full flex items-center justify-between px-6 py-4 rounded-xl border-2 text-sm font-bold transition-all",
                                                 selectedPackIndex === idx
-                                                    ? "bg-white border-[#0b1e47] text-[#0b1e47] shadow-sm"
-                                                    : "bg-white border-gray-100 text-gray-600 hover:border-blue-100"
+                                                    ? "bg-white dark:bg-slate-900 border-[#0b1e47] dark:border-blue-400 text-[#0b1e47] dark:text-blue-200 shadow-sm"
+                                                    : "bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:border-blue-100 dark:hover:border-blue-500/40"
                                             )}
                                         >
                                             <span>{option.label}</span>
                                             <div className="flex items-center gap-3">
                                                 {idx === 1 && <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Most Popular</span>}
                                                 {idx === 2 && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Maximum Savings</span>}
-                                                {idx > 0 && (
-                                                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                                                        Save ₹{Math.round((product.packOptions?.[0].price || 0) * (parseInt(option.label) / 120) - option.price)}
-                                                    </span>
-                                                )}
+                                                {idx > 0 && (() => {
+                                                    const savings = getPackSavings(idx);
+                                                    if (savings === null) return null;
+                                                    return (
+                                                        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                                                            Save {"\u20B9"}{savings}
+                                                        </span>
+                                                    );
+                                                })()}
                                             </div>
                                         </button>
                                     ))}
@@ -190,16 +218,16 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
 
                         {/* Quantity Selector */}
                         <div className="mb-4">
-                            <label className="block text-sm font-bold text-[#0b1e47] mb-2">Quantity</label>
-                            <div className="inline-flex items-center border border-gray-300 rounded-lg bg-white">
+                            <label className="block text-sm font-bold text-[#0b1e47] dark:text-gray-200 mb-2">Quantity</label>
+                            <div className="inline-flex items-center border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900">
                                 <button
                                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                    className="px-4 py-2 text-gray-600 hover:bg-gray-50"
+                                    className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800"
                                 >-</button>
-                                <span className="px-4 font-bold text-[#0b1e47]">{quantity}</span>
+                                <span className="px-4 font-bold text-[#0b1e47] dark:text-white">{quantity}</span>
                                 <button
                                     onClick={() => setQuantity(quantity + 1)}
-                                    className="px-4 py-2 text-gray-600 hover:bg-gray-50"
+                                    className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800"
                                 >+</button>
                             </div>
                         </div>
@@ -208,32 +236,41 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                         <Button
                             size="lg"
                             className="w-full bg-[#ff5500] hover:bg-[#e64d00] text-white rounded-xl py-6 text-xl font-bold uppercase shadow-xl shadow-orange-500/20 mb-6"
-                            onClick={() => onAddToCart && onAddToCart(quantity, activeOption ? { label: activeOption.label, price: finalPrice } : undefined)}
+                            onClick={() =>
+                                onAddToCart &&
+                                onAddToCart(
+                                    quantity,
+                                    activeOption ? { label: activeOption.label, price: combinedPrice } : undefined,
+                                    finalPrice
+                                )
+                            }
                             disabled={!isInStock}
                         >
-                            {!isInStock ? 'Out of Stock' : (isSubscribe ? `Subscribe - ₹{finalPrice}` : `Add to Cart - ₹${finalPrice}`)}
+                            {!isInStock ? "Out of Stock" : (!hasPackOptions && isSubscribe ? `Subscribe - INR ${finalPrice}` : `Add to Cart - INR ${finalPrice}`)}
                         </Button>
 
                         {/* Subscription Widget */}
-                        <div className="border border-blue-100 rounded-xl bg-blue-50/50 p-4 mb-8">
-                            <div className="flex items-center gap-3 mb-3 cursor-pointer" onClick={() => setIsSubscribe(false)}>
-                                <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center", !isSubscribe ? "border-[#0b1e47]" : "border-gray-300")}>
-                                    {!isSubscribe && <div className="w-2.5 h-2.5 rounded-full bg-[#0b1e47]" />}
+                        {!hasPackOptions && (
+                            <div className="border border-blue-100 dark:border-blue-900/50 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 p-4 mb-8">
+                                <div className="flex items-center gap-3 mb-3 cursor-pointer" onClick={() => setIsSubscribe(false)}>
+                                    <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center", !isSubscribe ? "border-[#0b1e47] dark:border-blue-300" : "border-gray-300 dark:border-slate-600")}>
+                                        {!isSubscribe && <div className="w-2.5 h-2.5 rounded-full bg-[#0b1e47] dark:bg-blue-300" />}
+                                    </div>
+                                    <span className={cn("font-bold flex-1", !isSubscribe ? "text-[#0b1e47] dark:text-blue-200" : "text-gray-600 dark:text-gray-300")}>One-Time Purchase</span>
+                                    <span className="font-bold text-gray-900 dark:text-white">INR {combinedPrice}</span>
                                 </div>
-                                <span className={cn("font-bold flex-1", !isSubscribe ? "text-[#0b1e47]" : "text-gray-600")}>One-Time Purchase</span>
-                                <span className="font-bold">₹{combinedPrice}</span>
-                            </div>
-                            <div className="flex items-center gap-3 cursor-pointer" onClick={() => setIsSubscribe(true)}>
-                                <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center", isSubscribe ? "border-[#0b1e47]" : "border-gray-300")}>
-                                    {isSubscribe && <div className="w-2.5 h-2.5 rounded-full bg-[#0b1e47]" />}
+                                <div className="flex items-center gap-3 cursor-pointer" onClick={() => setIsSubscribe(true)}>
+                                    <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center", isSubscribe ? "border-[#0b1e47] dark:border-blue-300" : "border-gray-300 dark:border-slate-600")}>
+                                        {isSubscribe && <div className="w-2.5 h-2.5 rounded-full bg-[#0b1e47] dark:bg-blue-300" />}
+                                    </div>
+                                    <span className={cn("font-bold flex-1", isSubscribe ? "text-[#0b1e47] dark:text-blue-200" : "text-gray-600 dark:text-gray-300")}>Subscribe & Save <span className="bg-[#2bbf85] text-white text-[10px] px-1.5 py-0.5 rounded ml-1">10% OFF</span></span>
+                                    <span className="font-bold text-gray-900 dark:text-white">INR {Math.round(combinedPrice * 0.9)}</span>
                                 </div>
-                                <span className={cn("font-bold flex-1", isSubscribe ? "text-[#0b1e47]" : "text-gray-600")}>Subscribe & Save <span className="bg-[#2bbf85] text-white text-[10px] px-1.5 py-0.5 rounded ml-1">10% OFF</span></span>
-                                <span className="font-bold">₹{Math.round(combinedPrice * 0.9)}</span>
                             </div>
-                        </div>
+                        )}
 
                         {/* Guarantee / Shipping */}
-                        <div className="flex items-center gap-4 text-xs font-medium text-gray-500 justify-center border-t pt-4">
+                        <div className="flex items-center gap-4 text-xs font-medium text-gray-500 dark:text-gray-300 justify-center border-t border-gray-100 dark:border-slate-800 pt-4">
                             <span className="flex items-center gap-1"><RefreshCw size={14} /> 30-Day Returns</span>
                             <span className="flex items-center gap-1"><Truck size={14} /> Free Shipping</span>
                             <span className="flex items-center gap-1"><ShieldCheck size={14} /> Secure Checkout</span>
@@ -242,7 +279,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                 </div>
 
                 {/* --- Certifications Row --- */}
-                <div className="mt-20 py-12 border-t border-b border-gray-100 flex flex-wrap justify-between gap-8 text-center max-w-4xl mx-auto">
+                <div className="mt-20 py-12 border-t border-b border-gray-100 dark:border-slate-800 flex flex-wrap justify-between gap-8 text-center max-w-4xl mx-auto">
                     {[
                         { label: 'VET APPROVED', icon: Award },
                         { label: 'ISO CERTIFIED', icon: ShieldCheck },
@@ -250,10 +287,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                         { label: 'HACCP CERTIFIED', icon: Zap } // Using Zap as placeholder for HACCP
                     ].map((cert, i) => (
                         <div key={i} className="flex flex-col items-center gap-3 flex-1 min-w-[150px]">
-                            <div className="w-16 h-16 rounded-full bg-[#0b1e47] text-white flex items-center justify-center">
+                            <div className="w-16 h-16 rounded-full bg-[#0b1e47] dark:bg-blue-900 text-white flex items-center justify-center">
                                 <cert.icon size={32} strokeWidth={1.5} />
                             </div>
-                            <span className="font-bold text-[#0b1e47] text-sm tracking-wide">{cert.label}</span>
+                            <span className="font-bold text-[#0b1e47] dark:text-gray-100 text-sm tracking-wide">{cert.label}</span>
                         </div>
                     ))}
                 </div>
@@ -266,8 +303,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                         <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=1000" alt="Dog enjoying life" className="w-full h-full object-cover" />
                     </div>
                     <div>
-                        <h2 className="text-3xl font-bold text-[#0b1e47] mb-6">Made for everyday dogs with everyday gut ups and downs</h2>
-                        <p className="text-gray-600 mb-6">Not everyone has "serious issues". Most dogs just get inconsistent sometimes. This is for keeping things steady.</p>
+                        <h2 className="text-3xl font-bold text-[#0b1e47] dark:text-white mb-6">Made for everyday dogs with everyday gut ups and downs</h2>
+                        <p className="text-gray-600 dark:text-gray-300 mb-6">Not everyone has "serious issues". Most dogs just get inconsistent sometimes. This is for keeping things steady.</p>
                         <ul className="space-y-4">
                             {[
                                 "On and off skin or paw attention linked to internal balance",
@@ -278,7 +315,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                             ].map((item, i) => (
                                 <li key={i} className="flex items-start gap-3">
                                     <span className="mt-1 text-[#2bbf85]"><Check size={20} /></span>
-                                    <span className="text-gray-700 font-medium">{item}</span>
+                                    <span className="text-gray-700 dark:text-gray-200 font-medium">{item}</span>
                                 </li>
                             ))}
                         </ul>
@@ -288,16 +325,16 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                 {/* 2. Key Benefits Grid */}
                 {product.detailedBenefits && (
                     <div className="mt-20">
-                        <h2 className="text-3xl font-bold text-center text-[#0b1e47] mb-12">What most pet parents notice with consistent use</h2>
+                        <h2 className="text-3xl font-bold text-center text-[#0b1e47] dark:text-white mb-12">What most pet parents notice with consistent use</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {product.detailedBenefits.map((benefit, i) => (
-                                <div key={i} className="text-center p-6 bg-blue-50/30 rounded-2xl border border-blue-50">
+                                <div key={i} className="text-center p-6 bg-blue-50/30 dark:bg-slate-900 rounded-2xl border border-blue-50 dark:border-slate-800">
                                     {/* Icon placeholder - would need actual SVGs from design */}
-                                    <div className="w-16 h-16 mx-auto mb-4 bg-white rounded-full flex items-center justify-center text-[#0b1e47] shadow-sm">
+                                    <div className="w-16 h-16 mx-auto mb-4 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-[#0b1e47] dark:text-blue-200 shadow-sm">
                                         <ShieldCheck size={32} />
                                     </div>
-                                    <h3 className="font-bold text-[#0b1e47] mb-2">{benefit.title}</h3>
-                                    <p className="text-sm text-gray-600">{benefit.description}</p>
+                                    <h3 className="font-bold text-[#0b1e47] dark:text-gray-100 mb-2">{benefit.title}</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">{benefit.description}</p>
                                 </div>
                             ))}
                         </div>
@@ -307,30 +344,33 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
 
                 {/* 3. Vet Reviews - "Reviewed by Veterinarians" */}
                 {product.vetApproval && (
-                    <div className="mt-20 bg-blue-50/50 rounded-[40px] p-8 md:p-16">
-                        <h2 className="text-2xl md:text-3xl font-bold text-center text-[#0b1e47] mb-12">Reviewed by Veterinarians for Daily, Long-Term Use</h2>
+                    <div className="mt-20 bg-blue-50/50 dark:bg-slate-900 rounded-[40px] p-8 md:p-16">
+                        <h2 className="text-2xl md:text-3xl font-bold text-center text-[#0b1e47] dark:text-white mb-12">Reviewed by Veterinarians for Daily, Long-Term Use</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                             {/* Card 1 - Dr. Deepanshi */}
-                            <div className="bg-white p-8 rounded-3xl shadow-sm border border-blue-100 flex flex-col items-center text-center">
-                                <div className="w-24 h-24 rounded-full overflow-hidden mb-6 border-4 border-blue-50">
-                                    {/* Placeholder Vet Image */}
+                            <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-blue-100 dark:border-slate-700 flex flex-col items-center text-center">
+                                {/* <div className="w-24 h-24 rounded-full overflow-hidden mb-6 border-4 border-blue-50 dark:border-slate-700">
+                                    
                                     <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=300" alt="Vet" className="w-full h-full object-cover" />
-                                </div>
-                                <blockquote className="text-gray-700 italic mb-6">"{product.vetApproval.quote}"</blockquote>
+                                    
+                                </div> */}
+                                <blockquote className="text-gray-700 dark:text-gray-200 italic mb-6">"{product.vetApproval.quote}"</blockquote>
                                 <div>
-                                    <div className="font-bold text-[#0b1e47]">{product.vetApproval.doctorName}</div>
-                                    <div className="text-xs text-secondary-foreground font-semibold uppercase tracking-wide text-gray-500">{product.vetApproval.qualification}</div>
+                                    <div className="font-bold text-[#0b1e47] dark:text-white">{product.vetApproval.doctorName}</div>
+                                    <div className="text-xs text-secondary-foreground font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{product.vetApproval.qualification}</div>
                                 </div>
                             </div>
                             {/* Card 2 - Dr. Jasleen (Hardcoded from mock data logic plan) */}
-                            <div className="bg-white p-8 rounded-3xl shadow-sm border border-blue-100 flex flex-col items-center text-center">
-                                <div className="w-24 h-24 rounded-full overflow-hidden mb-6 border-4 border-blue-50">
+                            <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-blue-100 dark:border-slate-700 flex flex-col items-center text-center">
+                                {/* <div className="w-24 h-24 rounded-full overflow-hidden mb-6 border-4 border-blue-50 dark:border-slate-700">
+                                    
                                     <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=300" alt="Vet" className="w-full h-full object-cover" />
-                                </div>
-                                <blockquote className="text-gray-700 italic mb-6">"Palatability and acceptance were excellent — dogs finished their meals without resistance. Results weren't overnight, but within 20–30 days, stool quality and consistency improved."</blockquote>
+                                    
+                                </div> */}
+                                <blockquote className="text-gray-700 dark:text-gray-200 italic mb-6">"Palatability and acceptance were excellent — dogs finished their meals without resistance. Results weren't overnight, but within 20–30 days, stool quality and consistency improved."</blockquote>
                                 <div>
-                                    <div className="font-bold text-[#0b1e47]">Dr. Jasleen Kaur</div>
-                                    <div className="text-xs text-secondary-foreground font-semibold uppercase tracking-wide text-gray-500">Veterinary Surgeon (12+ years)</div>
+                                    <div className="font-bold text-[#0b1e47] dark:text-white">Dr. Jasleen Kaur</div>
+                                    <div className="text-xs text-secondary-foreground font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Veterinary Surgeon (12+ years)</div>
                                 </div>
                             </div>
                         </div>
@@ -342,32 +382,32 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                     <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
                         {/* Comparison Table */}
                         {product.comparisonTable && (
-                            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800 overflow-hidden">
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-sm text-left">
                                         <thead>
-                                            <tr className="bg-white border-b border-gray-100">
-                                                <th className="p-4 font-bold text-[#0b1e47]">Feature</th>
+                                            <tr className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
+                                                <th className="p-4 font-bold text-[#0b1e47] dark:text-white">Feature</th>
                                                 <th className="p-4 font-bold text-white bg-[#0b1e47]">Beggin for a bite</th>
-                                                <th className="p-4 font-bold text-gray-500">Other Brands</th>
-                                                <th className="p-4 font-bold text-gray-500">Curd</th>
-                                                <th className="p-4 font-bold text-gray-500">Existing Medicines</th>
+                                                <th className="p-4 font-bold text-gray-500 dark:text-gray-300">Other Brands</th>
+                                                <th className="p-4 font-bold text-gray-500 dark:text-gray-300">Curd</th>
+                                                <th className="p-4 font-bold text-gray-500 dark:text-gray-300">Existing Medicines</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-gray-100">
+                                        <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
                                             {product.comparisonTable.map((row, i) => (
                                                 <tr key={i}>
-                                                    <td className="p-4 font-bold text-[#0b1e47]">{row.feature}</td>
-                                                    <td className="p-4 bg-blue-50/30 font-medium text-[#0b1e47]">
+                                                    <td className="p-4 font-bold text-[#0b1e47] dark:text-white">{row.feature}</td>
+                                                    <td className="p-4 bg-blue-50/30 dark:bg-blue-900/20 font-medium text-[#0b1e47] dark:text-blue-100">
                                                         {row.us === true ? <Check className="text-[#2bbf85]" size={20} /> : row.us === false ? <span className="text-red-500 font-bold">✕</span> : row.us}
                                                     </td>
-                                                    <td className="p-4 text-gray-600">
+                                                    <td className="p-4 text-gray-600 dark:text-gray-300">
                                                         {row.others === true ? <Check className="text-[#2bbf85]" size={20} /> : row.others === false ? <span className="text-red-500 font-bold">✕</span> : row.others}
                                                     </td>
-                                                    <td className="p-4 text-gray-600">
+                                                    <td className="p-4 text-gray-600 dark:text-gray-300">
                                                         {row.curd === true ? <Check className="text-[#2bbf85]" size={20} /> : row.curd === false ? <span className="text-red-500 font-bold">✕</span> : row.curd}
                                                     </td>
-                                                    <td className="p-4 text-gray-600">
+                                                    <td className="p-4 text-gray-600 dark:text-gray-300">
                                                         {row.medicine === true ? <Check className="text-[#2bbf85]" size={20} /> : row.medicine === false ? <span className="text-red-500 font-bold">✕</span> : row.medicine}
                                                     </td>
                                                 </tr>
@@ -381,14 +421,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                         {/* USPs - "What Makes Us Truly Different" */}
                         {product.uniqueSellingPoints && (
                             <div>
-                                <h2 className="text-3xl font-bold text-[#0b1e47] mb-8">What Makes Us Truly Different</h2>
+                                <h2 className="text-3xl font-bold text-[#0b1e47] dark:text-white mb-8">What Makes Us Truly Different</h2>
                                 <div className="space-y-6">
                                     {product.uniqueSellingPoints.map((usp, i) => (
                                         <div key={i} className="flex gap-4">
                                             <div className="text-2xl pt-1">{usp.icon}</div>
                                             <div>
-                                                <h3 className="font-bold text-[#0b1e47] text-lg">
-                                                    {usp.title} <span className="font-normal text-gray-600">– {usp.description}</span>
+                                                <h3 className="font-bold text-[#0b1e47] dark:text-white text-lg">
+                                                    {usp.title} <span className="font-normal text-gray-600 dark:text-gray-300">– {usp.description}</span>
                                                 </h3>
                                             </div>
                                         </div>
@@ -402,15 +442,15 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                 {/* 4. Ingredients */}
                 {product.ingredients && (
                     <div className="mt-20">
-                        <h2 className="text-3xl font-bold mb-12 text-center text-[#0b1e47]">Power-Packed Ingredients</h2>
+                        <h2 className="text-3xl font-bold mb-12 text-center text-[#0b1e47] dark:text-white">Power-Packed Ingredients</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {product.ingredients.map((ing, i) => (
-                                <div key={i} className="p-6 rounded-2xl bg-white border border-gray-100 hover:shadow-lg transition-shadow text-center">
-                                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-amber-50 flex items-center justify-center text-amber-500">
+                                <div key={i} className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 hover:shadow-lg transition-shadow text-center">
+                                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-amber-500 dark:text-amber-300">
                                         <Zap size={32} />
                                     </div>
-                                    <h3 className="font-bold text-lg text-[#0b1e47] mb-3">{ing.name}</h3>
-                                    <p className="text-sm text-gray-600 leading-relaxed">{ing.description}</p>
+                                    <h3 className="font-bold text-lg text-[#0b1e47] dark:text-white mb-3">{ing.name}</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{ing.description}</p>
                                 </div>
                             ))}
                         </div>
@@ -420,7 +460,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ product, b
                 {/* FAQ Section */}
                 {product.faqs && (
                     <div className="mt-20 max-w-3xl mx-auto">
-                        <h2 className="text-2xl font-bold mb-8 text-center text-[#0b1e47]">Frequently Asked Questions</h2>
+                        <h2 className="text-2xl font-bold mb-8 text-center text-[#0b1e47] dark:text-white">Frequently Asked Questions</h2>
                         <div className="space-y-4">
                             {product.faqs.map((faq, i) => (
                                 <AccordionItem key={i} title={faq.question} content={faq.answer} />
