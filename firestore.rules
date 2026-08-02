@@ -62,9 +62,8 @@ service cloud.firestore {
       // Users can read their own orders, Admins can read all
       allow read: if (isAuthenticated() && resource.data.userId == request.auth.uid) || isAdmin();
       
-      // Only admins can update orders (e.g., change status)
-      // (Optionally allow users to cancel pending orders if needed, but restricting to admin for now)
-      allow update: if isAdmin();
+      // Only admins can update or delete orders
+      allow update, delete: if isAdmin();
     }
   }
 }

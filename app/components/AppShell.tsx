@@ -51,9 +51,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
       {showLoader ? <InitialLoader /> : null}
-      <Navbar isDark={isDark} toggleTheme={toggleTheme} />
       <main className="flex-grow">{children}</main>
-      <Footer />
     </CartProvider>
   );
 }
