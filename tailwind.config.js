@@ -16,6 +16,11 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        display: ['var(--font-display)', 'serif'],
+        body: ['var(--font-body)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -53,6 +58,15 @@ module.exports = {
         'k9-blue': '#0b1e47',
         'k9-orange': '#ff5500',
         'k9-green': '#2bbf85',
+        ink: "#241F1B",
+        pine: {
+          DEFAULT: "#1F3D2B",
+          tint: "#EAF0EA",
+        },
+        marigold: "#E3A438",
+        paprika: "#B3552B",
+        paper: "#F7F3EA",
+        stone: "#6B655C",
       },
       borderRadius: {
         lg: "var(--radius)",

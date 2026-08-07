@@ -1,16 +1,22 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import AppShell from "./components/AppShell";
 import type { ReactNode } from "react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fontDisplay = Fraunces({
+  variable: "--font-display",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fontBody = Inter({
+  variable: "--font-body",
+  subsets: ["latin"],
+});
+
+const fontMono = IBM_Plex_Mono({
+  variable: "--font-mono",
+  weight: ["400", "500", "600"],
   subsets: ["latin"],
 });
 
@@ -22,8 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-300`}
-        style={{ backgroundColor: '#fef6eb' }}
+        className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable} font-body antialiased flex flex-col min-h-screen text-ink bg-paper transition-colors duration-300`}
       >
         <AppShell>{children}</AppShell>
         <Analytics />

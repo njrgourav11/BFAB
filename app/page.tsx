@@ -4,9 +4,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Truck, Phone, RotateCcw } from 'lucide-react';
+import { ShieldCheck, Truck, Phone, RotateCcw, Users, TrendingUp, Leaf, Award } from 'lucide-react';
 import { ProductRevealCard } from '@/components/ui/product-reveal-card';
-import { ProfileCard } from '@/components/ui/profile-card';
+
 import { useCart } from './components/CartContext';
 import { Product } from '@/lib/types';
 import { useEffect, useState } from 'react';
@@ -74,12 +74,199 @@ export default function Home() {
 
       </section>
 
-      <section className="py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
-        <ClientCarousel />
+      {/* Shop by Category Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300 relative overflow-hidden">
+        {/* Background Decorative Elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-64 h-64 bg-purple-200/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container mx-auto px-4 md:px-6 relative">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">Shop by Concern</h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Targeted solutions for your pet's specific needs</p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 sm:gap-8">
+            {[
+              { name: 'Dental Health', image: '/category/10.svg', href: '/products' },
+              { name: 'Gut Health', image: '/category/11.svg', href: '/products' },
+              { name: 'Hip & Joint', image: '/category/12.svg', href: '/products' },
+              { name: 'Weight Control', image: '/category/13.svg', href: '/products' },
+              { name: 'Anxiety Relief', image: '/category/14.svg', href: '/products' },
+              { name: 'Skin & Coat', image: '/category/15.svg', href: '/products' }
+            ].map((category, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="group"
+              >
+                <Link href={category.href} className="block flex flex-col items-center">
+                  <div className="relative p-1 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-700 group-hover:from-blue-400 group-hover:to-purple-500 transition-all duration-500 shadow-lg group-hover:shadow-2xl">
+                    <div className="relative overflow-hidden rounded-full w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 border-4 border-white dark:border-slate-900 bg-white dark:bg-slate-800">
+                      <Image
+                        src={category.image}
+                        alt={category.name}
+                        fill
+                        className="object-cover group-hover:scale-110 transition duration-700"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 text-center">
+                    <h3 className="text-sm sm:text-base font-bold text-gray-800 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                      {category.name}
+                    </h3>
+                    <div className="h-1 w-0 bg-blue-500 mx-auto mt-1 group-hover:w-1/2 transition-all duration-300 rounded-full"></div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </section>
 
-      {/* Featured Products Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
+      {/* Trust & Results Banner Section */}
+      <section className="py-4 bg-white dark:bg-slate-900 border-y border-gray-200 dark:border-slate-800 shadow-sm relative z-10 overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap justify-center items-center gap-x-6 md:gap-x-8 gap-y-3">
+            {[
+              { icon: Users, text: '1k+ Pet Parents', color: 'text-blue-500' },
+              { icon: TrendingUp, text: '9 out of 10 Saw Improvement', color: 'text-green-500' },
+              { icon: ShieldCheck, text: 'Vet Formulated', color: 'text-purple-500' },
+              { icon: Leaf, text: 'All Natural', color: 'text-emerald-500' },
+              { icon: Award, text: 'Made in India (GMP)', color: 'text-orange-500' },
+              { icon: RotateCcw, text: '90-Day Guarantee', color: 'text-pink-500' },
+            ].map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div key={idx} className="flex items-center gap-2">
+                  <Icon size={16} className={item.color} />
+                  <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">{item.text}</span>
+                  {idx < 5 && <span className="hidden lg:inline-block text-gray-300 dark:text-gray-600 ml-4 lg:ml-6">•</span>}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Wellness Products Showcase */}
+      <section className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden relative">
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+
+            {/* Left Content */}
+            <div className="w-full lg:w-1/3 pr-0 lg:pr-4">
+              <h2 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-[#0B1527] dark:text-white leading-[1] tracking-tight mb-8">
+                We create <br /> pet wellness.
+              </h2>
+              <div className="text-lg sm:text-xl text-[#2D3748] dark:text-gray-300 leading-relaxed font-semibold">
+                Formulated with clinically supported ingredients to help dogs & cats <span className="border-b-4 border-[#8B234D] pb-1">live healthier, happier lives.</span>
+              </div>
+            </div>
+
+            {/* Right Content - Cards */}
+            <div className="w-full lg:w-2/3 relative">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                {loading ? (
+                  [1, 2, 3].map((item) => (
+                    <div key={item} className="h-[280px] animate-pulse rounded-xl bg-gray-100 dark:bg-slate-800" />
+                  ))
+                ) : (
+                  featuredProducts.slice(0, 3).map((product, idx) => {
+                    const colors = [
+                      { bg: 'bg-[#781B43]', hover: 'group-hover:bg-[#5C1533]' },
+                      { bg: 'bg-[#4F46E5]', hover: 'group-hover:bg-[#4338CA]' },
+                      { bg: 'bg-[#5A942F]', hover: 'group-hover:bg-[#487824]' }
+                    ];
+                    const color = colors[idx % colors.length];
+
+                    return (
+                      <Link href={`/product/${product.id}`} key={product.id} className="group rounded-xl overflow-hidden bg-[#F8F9FA] dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer">
+                        <div className="relative p-6 flex-grow flex items-center justify-center min-h-[220px]">
+                          <Image src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.png'} alt={product.name} width={150} height={150} className="object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md" />
+                        </div>
+                        <div className={`${color.bg} text-white p-5 mt-auto flex justify-center items-center ${color.hover} transition-colors`}>
+                          <div className="w-full text-center">
+                            <h3 className="font-extrabold text-sm sm:text-base leading-tight tracking-wide line-clamp-1">{product.name}</h3>
+                            <p className="text-xs opacity-90 mt-1 font-medium line-clamp-1">{product.productCategory || 'Wellness Supplement'}</p>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Wellness Products Showcase 2 (Flipped) */}
+      <section className="py-16 md:py-24 bg-gray-50 dark:bg-slate-900 overflow-hidden relative">
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <div className="flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-16">
+
+            {/* Right Content (Text) */}
+            <div className="w-full lg:w-1/3 pl-0 lg:pl-4">
+              <h2 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-[#0B1527] dark:text-white leading-[1] tracking-tight mb-8">
+                We make <br /> real food.
+              </h2>
+              <div className="text-lg sm:text-xl text-[#2D3748] dark:text-gray-300 leading-relaxed font-semibold">
+                Food so clean, we declare each and every ingredient, <span className="border-b-4 border-[#8B234D] pb-1">proudly, upfront.</span>
+              </div>
+            </div>
+
+            {/* Left Content - Cards */}
+            <div className="w-full lg:w-2/3 relative">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                {loading ? (
+                  [1, 2, 3].map((item) => (
+                    <div key={item} className="h-[280px] animate-pulse rounded-xl bg-gray-100 dark:bg-slate-800" />
+                  ))
+                ) : (
+                  featuredProducts.slice(1, 4).map((product, idx) => {
+                    const colors = [
+                      { bg: 'bg-[#5A942F]', hover: 'group-hover:bg-[#487824]' },
+                      { bg: 'bg-[#781B43]', hover: 'group-hover:bg-[#5C1533]' },
+                      { bg: 'bg-[#4F46E5]', hover: 'group-hover:bg-[#4338CA]' }
+                    ];
+                    const color = colors[idx % colors.length];
+
+                    return (
+                      <Link href={`/product/${product.id}`} key={product.id} className="group rounded-xl overflow-hidden bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer">
+                        <div className="relative p-6 flex-grow flex items-center justify-center min-h-[220px]">
+                          <Image src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.png'} alt={product.name} width={150} height={150} className="object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md" />
+                        </div>
+                        <div className={`${color.bg} text-white p-5 mt-auto flex justify-center items-center ${color.hover} transition-colors`}>
+                          <div className="w-full text-center">
+                            <h3 className="font-extrabold text-sm sm:text-base leading-tight tracking-wide line-clamp-1">{product.name}</h3>
+                            <p className="text-xs opacity-90 mt-1 font-medium line-clamp-1">{product.productCategory || 'Wellness Supplement'}</p>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* <section className="py-12 sm:py-16 md:py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -152,70 +339,9 @@ export default function Home() {
             </Link>
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
-      {/* Shop by Category Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300 relative overflow-hidden">
-        {/* Background Decorative Elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-          <div className="absolute top-10 left-10 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-10 w-64 h-64 bg-purple-200/20 rounded-full blur-3xl"></div>
-        </div>
 
-        <div className="container mx-auto px-4 md:px-6 relative">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">Shop by Concern</h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400">Targeted solutions for your pet's specific needs</p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 sm:gap-8">
-            {[
-              { name: 'Dental Health', image: '/category/10.svg', href: '/products' },
-              { name: 'Gut Health', image: '/category/11.svg', href: '/products' },
-              { name: 'Hip & Joint', image: '/category/12.svg', href: '/products' },
-              { name: 'Weight Control', image: '/category/13.svg', href: '/products' },
-              { name: 'Anxiety Relief', image: '/category/14.svg', href: '/products' },
-              { name: 'Skin & Coat', image: '/category/15.svg', href: '/products' }
-            ].map((category, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="group"
-              >
-                <Link href={category.href} className="block flex flex-col items-center">
-                  <div className="relative p-1 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-700 group-hover:from-blue-400 group-hover:to-purple-500 transition-all duration-500 shadow-lg group-hover:shadow-2xl">
-                    <div className="relative overflow-hidden rounded-full w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 border-4 border-white dark:border-slate-900 bg-white dark:bg-slate-800">
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        fill
-                        className="object-cover group-hover:scale-110 transition duration-700"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 text-center">
-                    <h3 className="text-sm sm:text-base font-bold text-gray-800 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-                      {category.name}
-                    </h3>
-                    <div className="h-1 w-0 bg-blue-500 mx-auto mt-1 group-hover:w-1/2 transition-all duration-300 rounded-full"></div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section className="relative py-24 bg-gradient-to-b from-orange-50 via-yellow-50 to-orange-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 overflow-hidden">
 
@@ -476,117 +602,15 @@ export default function Home() {
         <TestimonialSlider />
       </section>
 
-      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-pink-50/50 via-white to-purple-50/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden">
-        {/* Abstract Background Shapes */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-24 -left-24 w-96 h-96 bg-pink-200/20 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="container mx-auto px-4 md:px-6 relative">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-              Want to Get Featured?
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Share your pet's BFAB journey and get featured on our page! Follow these amazing pets already loving BFAB
-            </p>
-          </motion.div>
-
-          {/* Scrollable Pet Gallery */}
-          <div className="relative mt-12">
-            {/* Profile Card Grid */}
-            <div className="flex flex-row overflow-x-auto pb-8 gap-6 px-4 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-              {[
-                {
-                  name: "Buddy",
-                  breed: "Golden Retriever • 50k",
-                  followers: 50400,
-                  following: 120,
-                  image: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=800",
-                  isVerified: true
-                },
-                {
-                  name: "Luna",
-                  breed: "Husky • 32k",
-                  followers: 32100,
-                  following: 450,
-                  image: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=800",
-                  isVerified: true
-                },
-                {
-                  name: "Charlie",
-                  breed: "Poodle • 28k",
-                  followers: 28900,
-                  following: 89,
-                  image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=800",
-                  isVerified: false
-                },
-                {
-                  name: "Max",
-                  breed: "Beagle • 45k",
-                  followers: 45200,
-                  following: 230,
-                  image: "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&q=80&w=800",
-                  isVerified: true
-                },
-                {
-                  name: "Daisy",
-                  breed: "Border Collie • 12k",
-                  followers: 12500,
-                  following: 56,
-                  image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=800",
-                  isVerified: false
-                },
-                {
-                  name: "Rocky",
-                  breed: "German Shepherd • 67k",
-                  followers: 67800,
-                  following: 112,
-                  image: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?auto=format&fit=crop&q=80&w=800",
-                  isVerified: true
-                },
-                {
-                  name: "Milo",
-                  breed: "French Bulldog • 89k",
-                  followers: 89200,
-                  following: 15,
-                  image: "https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?auto=format&fit=crop&q=80&w=800",
-                  isVerified: true
-                },
-                {
-                  name: "Bella",
-                  breed: "Labrador • 34k",
-                  followers: 34500,
-                  following: 340,
-                  image: "https://images.unsplash.com/photo-1591769225440-811ad7d6eca6?auto=format&fit=crop&q=80&w=800",
-                  isVerified: false
-                }
-              ].map((pet, index) => (
-                <div
-                  key={index}
-                  className="flex-shrink-0 snap-center"
-                >
-                  <ProfileCard
-                    name={pet.name}
-                    description={pet.breed}
-                    image={pet.image}
-                    isVerified={pet.isVerified}
-                    followers={pet.followers}
-                    following={pet.following}
-                    className=""
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
+      <section className="py-12 bg-white dark:bg-slate-900 border-y border-gray-100 dark:border-slate-800 text-center">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center justify-center gap-3">
+            <span className="text-yellow-400">★★★★★</span>
+            Rated 4.8 by Verified Buyers
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
+            Trusted by pet parents everywhere for vet-formulated, zero-filler nutrition.
+          </p>
         </div>
       </section>
 

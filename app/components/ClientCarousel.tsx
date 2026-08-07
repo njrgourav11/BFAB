@@ -93,62 +93,8 @@ export default function ClientCarousel({ clients = defaultClients }: ClientCarou
   return (
 
     <div className="container mx-auto px-4 sm:px-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16"
-      >
-        <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-3 sm:mb-4">As Promoted On</h3>
-        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-2">Trusted by leading brands and media outlets</p>
-      </motion.div>
+      
 
-      <div
-        className="flex justify-center items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 px-2 sm:px-4 md:px-6 overflow-hidden relative py-6 sm:py-8 md:py-10 cursor-grab active:cursor-grabbing"
-        onMouseEnter={() => setIsAutoPlay(false)}
-        onMouseLeave={() => setIsAutoPlay(true)}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        {displayedClients.map((client, index) => (
-          <motion.div
-            key={`${client.id}-${index}`}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            viewport={{ once: true }}
-
-            className="flex-shrink-0 w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 flex items-center justify-center rounded-full transition-all duration-300 p-2 sm:p-3 md:p-4 lg:p-5 overflow-hidden"
-          >
-            <Image
-              src={client.logo}
-              alt={client.name}
-              width={200}
-              height={200}
-              className="object-cover w-full h-full filter grayscale hover:grayscale-0 transition-all duration-300 rounded-full"
-            />
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Indicator dots - Hidden on very small screens */}
-      <div className="hidden sm:flex justify-center gap-2 sm:gap-3 mt-6 sm:mt-8 md:mt-10 lg:mt-12">
-        {clients.map((_, index) => (
-          <motion.button
-            key={index}
-            onClick={() => setCurrent(index)}
-            className={`h-2 sm:h-3 rounded-full transition-all duration-300 ${index === current % clients.length
-                ? 'bg-blue-600 w-6 sm:w-8'
-                : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 w-2 sm:w-3'
-              }`}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
 
       {/* Navigation buttons - Smaller on mobile */}
       <div className="flex justify-center gap-4 sm:gap-6 mt-4 sm:mt-6 md:mt-8 lg:mt-10">
