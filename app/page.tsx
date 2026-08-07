@@ -281,6 +281,73 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Product Feature Showcase Section */}
+      <section className="py-24 md:py-32 bg-white dark:bg-[#0a1512] overflow-hidden">
+        <div className="container mx-auto px-4 md:px-8 max-w-[1200px]">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-16 md:gap-8">
+            
+            {/* Left Features */}
+            <div className="flex flex-col gap-16 md:w-[28%] order-2 md:order-1 md:mt-8">
+              <div className="flex items-start gap-4">
+                <div className="relative text-[#1A3B34] dark:text-emerald-400 shrink-0 mt-1">
+                  <div className="absolute -top-1 -left-1 w-2.5 h-2.5 bg-orange-500 rounded-full opacity-80"></div>
+                  <div className="absolute -bottom-1 -right-2 w-1.5 h-1.5 bg-orange-400 rounded-full opacity-60"></div>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M17 10c.7-.7 1.69 0 2.5 0a2.5 2.5 0 1 0 0-5 .5.5 0 0 1-.5-.5 2.5 2.5 0 1 0-5 0c0 .81.7 1.8 0 2.5l-4.6 4.6c-.7.7-1.69 0-2.5 0a2.5 2.5 0 1 0 0 5 .5.5 0 0 1 .5.5 2.5 2.5 0 1 0 5 0c0-.81-.7-1.8 0-2.5Z"/></svg>
+                </div>
+                <div>
+                  <h3 className="text-[22px] font-bold text-[#1A3B34] dark:text-white tracking-tight mb-2">Real food</h3>
+                  <p className="text-[#1A3B34]/80 dark:text-gray-300 text-base leading-relaxed">Human-grade meat and veggies in simple recipes, made for dogs</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="relative text-[#1A3B34] dark:text-emerald-400 shrink-0 mt-1">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                  <div className="absolute top-0 right-0 w-8 h-8 rounded-full border border-orange-500/30 scale-125"></div>
+                </div>
+                <div>
+                  <h3 className="text-[22px] font-bold text-[#1A3B34] dark:text-white tracking-tight mb-2">Human grade safety</h3>
+                  <p className="text-[#1A3B34]/80 dark:text-gray-300 text-base leading-relaxed">Our food is made to human-grade safety and quality standards</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Center Image */}
+            <div className="md:w-[44%] flex justify-center order-1 md:order-2 relative">
+              <div className="w-[300px] h-[300px] md:w-[450px] md:h-[450px] bg-white dark:bg-slate-800 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.05)] flex items-center justify-center relative overflow-hidden group">
+                <div className="absolute inset-2 md:inset-4 rounded-full border-[1px] border-gray-200 dark:border-slate-700 z-20 pointer-events-none"></div>
+                <Image src="/products/1/20.png" alt="Product Pack" fill className="object-cover z-10 group-hover:scale-105 transition-transform duration-700" />
+              </div>
+            </div>
+
+            {/* Right Features */}
+            <div className="flex flex-col gap-16 md:w-[28%] order-3 md:order-3 md:mt-8">
+              <div className="flex items-start gap-4">
+                <div className="relative text-[#1A3B34] dark:text-emerald-400 shrink-0 mt-1">
+                  <div className="absolute -top-2 left-2 w-1.5 h-1.5 bg-orange-400 rounded-full opacity-60"></div>
+                  <div className="absolute -top-3 left-4 w-2 h-2 bg-orange-500 rounded-sm opacity-80 rotate-45"></div>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M2 12h20"/><path d="M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8"/><path d="m4 8 16-4"/><path d="m8.86 6.78-.45-1.81a2 2 0 0 1 1.45-2.43l1.94-.48a2 2 0 0 1 2.43 1.46l.45 1.8"/></svg>
+                </div>
+                <div>
+                  <h3 className="text-[22px] font-bold text-[#1A3B34] dark:text-white tracking-tight mb-2">Gently cooked</h3>
+                  <p className="text-[#1A3B34]/80 dark:text-gray-300 text-base leading-relaxed">Maintain whole food and nutritional integrity</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="relative text-[#1A3B34] dark:text-emerald-400 shrink-0 mt-1">
+                  <div className="absolute top-2 -right-3 w-4 h-4 bg-orange-100 dark:bg-orange-900/30 rounded-full z-0"></div>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
+                </div>
+                <div>
+                  <h3 className="text-[22px] font-bold text-[#1A3B34] dark:text-white tracking-tight mb-2">Vet developed</h3>
+                  <p className="text-[#1A3B34]/80 dark:text-gray-300 text-base leading-relaxed">Nutrition that exceeds industry standards (AAFCO)</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* <section className="py-12 sm:py-16 md:py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
