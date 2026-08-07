@@ -221,11 +221,11 @@ export default function Home() {
 
             {/* Right Content (Text) */}
             <div className="w-full lg:w-1/3 pl-0 lg:pl-4">
-              <h2 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-[#0B1527] dark:text-white leading-[1] tracking-tight mb-8">
-                We make <br /> real food.
+              <h2 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-[#113A2E] dark:text-emerald-100 font-serif leading-[1] tracking-tight mb-8">
+                We make <br /> treats that care.
               </h2>
-              <div className="text-lg sm:text-xl text-[#2D3748] dark:text-gray-300 leading-relaxed font-semibold">
-                Food so clean, we declare each and every ingredient, <span className="border-b-4 border-[#8B234D] pb-1">proudly, upfront.</span>
+              <div className="text-lg sm:text-xl text-[#113A2E]/90 dark:text-emerald-50/80 leading-relaxed font-medium">
+                Not just Delicious . <br /> Naturally Nutritious , <br /> made with Real Ingredients , <br /> for Healthier, Happier companions .
               </div>
             </div>
 
@@ -263,6 +263,21 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Healthy Eating Banner Section */}
+      <section className="py-20 md:py-28 bg-[#F9F8F3] dark:bg-[#11241f] overflow-hidden text-center border-y border-gray-100 dark:border-transparent">
+        <div className="container mx-auto px-4 md:px-8 max-w-4xl flex flex-col items-center">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#113A2E] dark:text-emerald-50 font-serif leading-[1.15] tracking-tight mb-6">
+            You shouldn’t be the only <br className="hidden sm:block" /> one eating healthy
+          </h2>
+          <p className="text-lg sm:text-xl text-[#113A2E] dark:text-emerald-100/90 leading-relaxed max-w-3xl mb-10 font-medium">
+            Like you, we love our pets and care about their health. That’s why we created BFAB – a service that delivers freshly made pet food with balanced recipes, guided by science, and driven by love.
+          </p>
+          <Link href="/products" className="inline-flex items-center justify-center bg-[#3B6B5A] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#2C5244] dark:bg-[#2C5244] dark:hover:bg-[#3B6B5A] transition-colors shadow-sm hover:shadow-md">
+            Build personalized plan
+          </Link>
         </div>
       </section>
 
