@@ -169,7 +169,7 @@ export default function Home() {
 
             {/* Left Content */}
             <div className="w-full lg:w-1/3 pr-0 lg:pr-4">
-              <h2 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-[#0B1527] dark:text-white leading-[1] tracking-tight mb-8">
+              <h2 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-[#11241f] dark:text-white leading-[1] tracking-tight mb-8">
                 We create <br /> pet wellness.
               </h2>
               <div className="text-lg sm:text-xl text-[#2D3748] dark:text-gray-300 leading-relaxed font-semibold">
@@ -221,10 +221,10 @@ export default function Home() {
 
             {/* Right Content (Text) */}
             <div className="w-full lg:w-1/3 pl-0 lg:pl-4">
-              <h2 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-[#113A2E] dark:text-emerald-100 font-serif leading-[1] tracking-tight mb-8">
+              <h2 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-[#11241f] dark:text-emerald-100 font-serif leading-[1] tracking-tight mb-8">
                 We make <br /> treats that care.
               </h2>
-              <div className="text-lg sm:text-xl text-[#113A2E]/90 dark:text-emerald-50/80 leading-relaxed font-medium">
+              <div className="text-lg sm:text-xl text-[#11241f]/90 dark:text-emerald-50/80 leading-relaxed font-medium">
                 Not just Delicious . <br /> Naturally Nutritious , <br /> made with Real Ingredients , <br /> for Healthier, Happier companions .
               </div>
             </div>
@@ -267,12 +267,12 @@ export default function Home() {
       </section>
 
       {/* Healthy Eating Banner Section */}
-      <section className="py-20 md:py-28 bg-[#F9F8F3] dark:bg-[#11241f] overflow-hidden text-center border-y border-gray-100 dark:border-transparent">
+      <section className="py-20 md:py-28 bg-[#fef6eb] dark:bg-[#11241f] overflow-hidden text-center border-y border-gray-100 dark:border-transparent">
         <div className="container mx-auto px-4 md:px-8 max-w-4xl flex flex-col items-center">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#113A2E] dark:text-emerald-50 font-serif leading-[1.15] tracking-tight mb-6">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#11241f] dark:text-emerald-50 font-serif leading-[1.15] tracking-tight mb-6">
             You shouldn’t be the only <br className="hidden sm:block" /> one eating healthy
           </h2>
-          <p className="text-lg sm:text-xl text-[#113A2E] dark:text-emerald-100/90 leading-relaxed max-w-3xl mb-10 font-medium">
+          <p className="text-lg sm:text-xl text-[#11241f] dark:text-emerald-100/90 leading-relaxed max-w-3xl mb-10 font-medium">
             Like you, we love our pets and care about their health. That’s why we created BFAB – a service that delivers freshly made pet food with balanced recipes, guided by science, and driven by love.
           </p>
           <Link href="/products" className="inline-flex items-center justify-center bg-[#3B6B5A] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#2C5244] dark:bg-[#2C5244] dark:hover:bg-[#3B6B5A] transition-colors shadow-sm hover:shadow-md">
@@ -282,31 +282,31 @@ export default function Home() {
       </section>
 
       {/* Product Feature Showcase Section */}
-      <section className="py-24 md:py-32 bg-white dark:bg-[#0a1512] overflow-hidden">
+      <section className="py-24 md:py-32 bg-[#fef6eb] dark:bg-[#0a1512] overflow-hidden">
         <div className="container mx-auto px-4 md:px-8 max-w-[1200px]">
           <div className="flex flex-col md:flex-row items-center justify-between gap-16 md:gap-8">
             
             {/* Left Features */}
             <div className="flex flex-col gap-16 md:w-[28%] order-2 md:order-1 md:mt-8">
               <div className="flex items-start gap-4">
-                <div className="relative text-[#1A3B34] dark:text-emerald-400 shrink-0 mt-1">
+                <div className="relative text-[#11241f] dark:text-emerald-400 shrink-0 mt-1">
                   <div className="absolute -top-1 -left-1 w-2.5 h-2.5 bg-orange-500 rounded-full opacity-80"></div>
                   <div className="absolute -bottom-1 -right-2 w-1.5 h-1.5 bg-orange-400 rounded-full opacity-60"></div>
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M17 10c.7-.7 1.69 0 2.5 0a2.5 2.5 0 1 0 0-5 .5.5 0 0 1-.5-.5 2.5 2.5 0 1 0-5 0c0 .81.7 1.8 0 2.5l-4.6 4.6c-.7.7-1.69 0-2.5 0a2.5 2.5 0 1 0 0 5 .5.5 0 0 1 .5.5 2.5 2.5 0 1 0 5 0c0-.81-.7-1.8 0-2.5Z"/></svg>
                 </div>
                 <div>
-                  <h3 className="text-[22px] font-bold text-[#1A3B34] dark:text-white tracking-tight mb-2">Real food</h3>
-                  <p className="text-[#1A3B34]/80 dark:text-gray-300 text-base leading-relaxed">Human-grade meat and veggies in simple recipes, made for dogs</p>
+                  <h3 className="text-[22px] font-bold text-[#11241f] dark:text-white tracking-tight mb-2">Real food</h3>
+                  <p className="text-[#11241f]/80 dark:text-gray-300 text-base leading-relaxed">Human-grade meat and veggies in simple recipes, made for dogs</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="relative text-[#1A3B34] dark:text-emerald-400 shrink-0 mt-1">
+                <div className="relative text-[#11241f] dark:text-emerald-400 shrink-0 mt-1">
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
                   <div className="absolute top-0 right-0 w-8 h-8 rounded-full border border-orange-500/30 scale-125"></div>
                 </div>
                 <div>
-                  <h3 className="text-[22px] font-bold text-[#1A3B34] dark:text-white tracking-tight mb-2">Human grade safety</h3>
-                  <p className="text-[#1A3B34]/80 dark:text-gray-300 text-base leading-relaxed">Our food is made to human-grade safety and quality standards</p>
+                  <h3 className="text-[22px] font-bold text-[#11241f] dark:text-white tracking-tight mb-2">Human grade safety</h3>
+                  <p className="text-[#11241f]/80 dark:text-gray-300 text-base leading-relaxed">Our food is made to human-grade safety and quality standards</p>
                 </div>
               </div>
             </div>
@@ -322,24 +322,24 @@ export default function Home() {
             {/* Right Features */}
             <div className="flex flex-col gap-16 md:w-[28%] order-3 md:order-3 md:mt-8">
               <div className="flex items-start gap-4">
-                <div className="relative text-[#1A3B34] dark:text-emerald-400 shrink-0 mt-1">
+                <div className="relative text-[#11241f] dark:text-emerald-400 shrink-0 mt-1">
                   <div className="absolute -top-2 left-2 w-1.5 h-1.5 bg-orange-400 rounded-full opacity-60"></div>
                   <div className="absolute -top-3 left-4 w-2 h-2 bg-orange-500 rounded-sm opacity-80 rotate-45"></div>
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M2 12h20"/><path d="M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8"/><path d="m4 8 16-4"/><path d="m8.86 6.78-.45-1.81a2 2 0 0 1 1.45-2.43l1.94-.48a2 2 0 0 1 2.43 1.46l.45 1.8"/></svg>
                 </div>
                 <div>
-                  <h3 className="text-[22px] font-bold text-[#1A3B34] dark:text-white tracking-tight mb-2">Gently cooked</h3>
-                  <p className="text-[#1A3B34]/80 dark:text-gray-300 text-base leading-relaxed">Maintain whole food and nutritional integrity</p>
+                  <h3 className="text-[22px] font-bold text-[#11241f] dark:text-white tracking-tight mb-2">Gently cooked</h3>
+                  <p className="text-[#11241f]/80 dark:text-gray-300 text-base leading-relaxed">Maintain whole food and nutritional integrity</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="relative text-[#1A3B34] dark:text-emerald-400 shrink-0 mt-1">
+                <div className="relative text-[#11241f] dark:text-emerald-400 shrink-0 mt-1">
                   <div className="absolute top-2 -right-3 w-4 h-4 bg-orange-100 dark:bg-orange-900/30 rounded-full z-0"></div>
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
                 </div>
                 <div>
-                  <h3 className="text-[22px] font-bold text-[#1A3B34] dark:text-white tracking-tight mb-2">Vet developed</h3>
-                  <p className="text-[#1A3B34]/80 dark:text-gray-300 text-base leading-relaxed">Nutrition that exceeds industry standards (AAFCO)</p>
+                  <h3 className="text-[22px] font-bold text-[#11241f] dark:text-white tracking-tight mb-2">Vet developed</h3>
+                  <p className="text-[#11241f]/80 dark:text-gray-300 text-base leading-relaxed">Nutrition that exceeds industry standards (AAFCO)</p>
                 </div>
               </div>
             </div>
@@ -347,6 +347,87 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Food Journalism Section */}
+      <section className="py-24 md:py-32 bg-white dark:bg-[#0a1512] overflow-hidden border-t border-gray-100 dark:border-transparent">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-4">
+            
+            {/* Left Content */}
+            <div className="md:w-5/12 flex flex-col gap-6 pt-4">
+              <h2 className="text-[3.5rem] sm:text-6xl md:text-[4.5rem] font-extrabold text-[#11241f] dark:text-emerald-50 leading-[0.95] tracking-tight">
+                We're also<br/>fixing food<br/>journalism.
+              </h2>
+              <p className="font-mono text-[15px] sm:text-base text-gray-800 dark:text-gray-300 leading-relaxed max-w-sm mt-2 font-medium tracking-tight">
+                We can't fix food without fixing food journalism. Because what you read and believe is what you eat and repeat. We're on it.
+              </p>
+            </div>
+            
+            {/* Right Venn Diagram SVG */}
+            <div className="md:w-7/12 w-full flex justify-center">
+              <div className="w-full max-w-[600px] aspect-[4/3] relative">
+                <svg viewBox="0 0 600 400" className="w-full h-full text-[#b23261]">
+                  <defs>
+                    <clipPath id="venn-intersect">
+                      <circle cx="230" cy="220" r="115" />
+                    </clipPath>
+                    <marker id="arrow-line" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                      <path d="M 0 2 L 8 5 L 0 8" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </marker>
+                    <marker id="arrow-line-start" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                      <path d="M 10 2 L 2 5 L 10 8" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </marker>
+                  </defs>
+
+                  {/* Intersection Fill */}
+                  <circle cx="360" cy="220" r="115" fill="currentColor" clipPath="url(#venn-intersect)" />
+                  
+                  {/* Left Circle Outline */}
+                  <circle cx="230" cy="220" r="115" fill="none" stroke="currentColor" strokeWidth="4" />
+                  
+                  {/* Right Circle Outline */}
+                  <circle cx="360" cy="220" r="115" fill="none" stroke="currentColor" strokeWidth="4" />
+
+                  {/* Text inside circles */}
+                  <text x="170" y="210" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">What</text>
+                  <text x="170" y="240" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">you eat</text>
+
+                  <text x="420" y="210" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">What</text>
+                  <text x="420" y="240" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">you know</text>
+
+                  {/* Top Left Text and Arrow */}
+                  <text x="130" y="70" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="20" fontWeight="bold">We're working on</text>
+                  <text x="130" y="100" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="20" fontWeight="bold">closing the gap</text>
+                  
+                  {/* Hand drawn arrow pointing to intersection */}
+                  <path d="M 280 90 Q 315 90 295 130" fill="none" stroke="currentColor" strokeWidth="3" markerEnd="url(#arrow-line)" strokeLinecap="round" />
+
+                  {/* Little Barry Doodle */}
+                  <g transform="translate(480, 230) rotate(15) scale(0.9)">
+                    {/* Jagged body */}
+                    <path d="M 0 0 L 10 -25 L 25 -10 L 40 -35 L 50 -10 L 65 -30 L 70 30 L 50 20 L 45 40 L 25 30 L 15 45 L 0 30 Z" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
+                    {/* Face */}
+                    <path d="M 20 -2 M 22 -2 L 23 -2" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                    <path d="M 40 -2 M 42 -2 L 43 -2" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                    <path d="M 32 5 L 32 12 L 38 12" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
+                    <path d="M 25 20 Q 32 25 40 20" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                    {/* Little hand grabbing the circle */}
+                    <path d="M -5 10 Q -25 10 -10 30" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                  </g>
+
+                  {/* Bottom Right Text and Arrow */}
+                  <text x="500" y="370" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">So is Barry!</text>
+                  {/* Arrow pointing to Barry */}
+                  <path d="M 460 340 Q 470 310 490 310" fill="none" stroke="currentColor" strokeWidth="3" markerStart="url(#arrow-line-start)" strokeLinecap="round" />
+                </svg>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
 
       {/* <section className="py-12 sm:py-16 md:py-20 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
@@ -753,52 +834,136 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Call to Action Section */}
-      <section className="relative py-20 sm:py-24 md:py-32 bg-[#fef6eb] dark:bg-slate-950 transition-colors duration-300 overflow-hidden">
-
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-full h-full opacity-30 dark:opacity-10"
-            style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '30px 30px' }}>
-          </div>
-          <div className="absolute -top-20 -right-20 w-96 h-96 bg-yellow-300/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-orange-300/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-        </div>
-
-        <div className="container mx-auto px-4 md:px-6 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
-              Ready to Transform Your <br className="hidden sm:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-500">
-                Pet&apos;s Health?
-              </span>
-            </h2>
-
-            <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Join thousands of happy pet owners who have already made the switch to premium, science-backed nutrition.
-            </p>
-
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link
-                href="/products"
-                className="inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold py-4 px-10 rounded-full text-lg sm:text-xl shadow-2xl hover:shadow-orange-500/20 transition-all duration-300"
-              >
-                Start Shopping Now
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      {/* Partner/Stars Section */}
+      <section className="py-16 md:py-24 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 overflow-hidden">
+        <div className="container mx-auto px-4 md:px-6 max-w-[1300px]">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+            
+            {/* Left side: Typography & Graphics */}
+            <div className="lg:w-1/3 flex flex-col items-center lg:items-start text-center lg:text-left relative">
+              {/* Burst lines SVG */}
+              <div className="absolute -top-6 -left-6 lg:-left-12 w-48 h-48 pointer-events-none text-[#b23261] opacity-80">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M20 20 L30 30" />
+                  <path d="M10 50 L25 50" />
+                  <path d="M20 80 L30 70" />
+                  <path d="M80 20 L70 30" />
+                  <path d="M90 50 L75 50" />
+                  <path d="M80 80 L70 70" />
                 </svg>
-              </Link>
-            </motion.div>
-          </motion.div>
+              </div>
+              
+              <h2 className="text-[3.5rem] md:text-[4.5rem] font-bold text-[#b23261] leading-none z-10 flex flex-col uppercase" style={{ fontFamily: "cursive, 'Comic Sans MS', sans-serif" }}>
+                <span>Stars</span>
+                <span className="flex items-center gap-3">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-1"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.7 0l-1.1 1-1.1-1a5.5 5.5 0 0 0-7.8 7.8l1 1 7.9 7.9 7.9-7.9 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+                  Us!
+                </span>
+              </h2>
+              <p className="text-[#b23261] text-lg md:text-xl mt-3 font-medium z-10" style={{ fontFamily: "cursive, 'Comic Sans MS', sans-serif" }}>
+                (and we didn't even<br/>have to pay for it)
+              </p>
+            </div>
+
+            {/* Right side: Scrolling Avatars */}
+            <div className="lg:w-2/3 w-full overflow-hidden">
+              {/* Using a horizontal scrolling flex container hiding the scrollbar */}
+              <div className="flex gap-4 md:gap-6 overflow-x-auto pb-6 pt-4 scrollbar-hide snap-x" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                {[
+                  { name: "Sara Ali Khan", img: "/products/1/20.png" },
+                  { name: "Kajal Aggarwal", img: "/products/1/21.png" },
+                  { name: "Soha Ali Khan", img: "/products/1/22.png" },
+                  { name: "Kalki Koechlin", img: "/products/1/24.png" },
+                  { name: "Arjun Kapoor", img: "/products/1/20.png" },
+                  { name: "Malaika Arora", img: "/products/1/21.png" },
+                  { name: "Sophie C...", img: "/products/1/22.png" },
+                ].map((partner, idx) => (
+                  <div key={idx} className="flex flex-col items-center gap-3 snap-start min-w-[120px] md:min-w-[140px]">
+                    <div className="rounded-full p-1 border-[2.5px] border-[#b23261] hover:scale-105 transition-transform duration-300">
+                      <div className="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden relative bg-gray-100">
+                        <Image src={partner.img} alt={partner.name} fill className="object-cover" />
+                      </div>
+                    </div>
+                    <span className="text-[13px] md:text-[15px] font-bold text-[#11241f] dark:text-gray-200 tracking-tight text-center">{partner.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Community / Join the Fam Section */}
+      <section className="py-16 md:py-24 bg-white dark:bg-[#0a1512] overflow-hidden">
+        <div className="container mx-auto px-4 md:px-8 max-w-[1200px]">
+          <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-24">
+            
+            {/* Left Side: Typography and Social Buttons */}
+            <div className="w-full md:w-1/2 flex flex-col justify-center relative">
+              
+              {/* Heading */}
+              <div className="relative inline-block mb-12">
+                <h2 className="text-[4rem] sm:text-[5rem] lg:text-[6rem] font-bold text-[#11241f] dark:text-emerald-50 leading-[0.95] tracking-tight flex flex-col">
+                  <span>Come, join</span>
+                  <span className="relative inline-block pb-2">
+                    the fam!
+                    {/* Underline for 'the fam!' */}
+                    <svg className="absolute bottom-0 left-0 w-full" height="8" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none">
+                      <path d="M2 6 Q 100 2 198 4" stroke="#b23261" strokeWidth="4" strokeLinecap="round" />
+                    </svg>
+                  </span>
+                </h2>
+                
+                {/* Tilted 'GO TRUTH SEEKERS!' text */}
+                <div 
+                  className="absolute -right-8 sm:-right-24 top-16 sm:top-20 transform -rotate-12 text-[#b23261] font-bold text-3xl sm:text-4xl leading-tight uppercase flex flex-col items-center"
+                  style={{ fontFamily: "cursive, 'Comic Sans MS', sans-serif" }}
+                >
+                  <span>GO</span>
+                  <span>TRUTH</span>
+                  <span>SEEKERS!</span>
+                </div>
+              </div>
+
+              {/* Social Buttons */}
+              <div className="flex flex-col gap-4 max-w-[400px]">
+                {/* Instagram */}
+                <Link href="#" className="flex items-center gap-3 w-full py-3 px-6 rounded-full border-[2.5px] border-[#b23261] text-[#b23261] hover:bg-[#b23261] hover:text-white transition-colors duration-300 group">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  <span className="font-semibold text-[17px] font-mono">Join our Instagram Community <span className="ml-2">→</span></span>
+                </Link>
+
+                <div className="flex gap-4">
+                  {/* YouTube */}
+                  <Link href="#" className="flex items-center justify-center gap-2 flex-1 py-3 px-4 rounded-full border-[2.5px] border-[#b23261] text-[#b23261] hover:bg-[#b23261] hover:text-white transition-colors duration-300">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                    <span className="font-semibold text-[17px] font-mono">YouTube <span className="ml-1">→</span></span>
+                  </Link>
+
+                  {/* LinkedIn */}
+                  <Link href="#" className="flex items-center justify-center gap-2 flex-1 py-3 px-4 rounded-full border-[2.5px] border-[#b23261] text-[#b23261] hover:bg-[#b23261] hover:text-white transition-colors duration-300">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    <span className="font-semibold text-[17px] font-mono">LinkedIn <span className="ml-1">→</span></span>
+                  </Link>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Side: Image */}
+            <div className="w-full md:w-1/2 flex justify-center md:justify-end mt-12 md:mt-0">
+              <div className="relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden shadow-xl bg-gray-100">
+                <Image 
+                  src="/products/1/20.png" 
+                  alt="Community Member" 
+                  fill 
+                  className="object-cover" 
+                />
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
     </div>
