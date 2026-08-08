@@ -41,6 +41,8 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
   const menuItems = [
     { label: 'Home', href: '/' },
     { label: 'Shop Now', href: '/products' },
+    { label: 'Fresh Meal', href: '/fresh' },
+    { label: 'Vet-Professional', href: '/vet-professionals' },
     { label: 'Paw Blog', href: '/blogs' },
     { label: 'Contact Us', href: '/contact-us' },
   ];
@@ -76,7 +78,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
                 className="text-[15px] sm:text-lg md:text-2xl lg:text-[28px] font-display italic font-semibold
                            tracking-tight text-pine dark:text-pine-tint truncate"
               >
-                Beggin&rsquo; for a Bite
+                Beggin for a Bite
               </span>
               <span
                 className="hidden sm:block h-[2px] w-9 md:w-12 mt-1 rounded-full
