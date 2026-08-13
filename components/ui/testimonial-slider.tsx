@@ -38,21 +38,21 @@ export default function TestimonialSlider() {
           
           {/* Card 1 */}
           <div className="border-[3px] border-[#b23261] rounded-[1.25rem] p-6 flex flex-col justify-between min-h-[420px] bg-white shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-xl md:text-[22px] font-bold text-[#11241f] leading-[1.3] tracking-tight">"Finally a truly delicious and quality protein powder."</h3>
+            <h3 className="text-base md:text-lg font-medium text-[#11241f] leading-[1.4] tracking-tight overflow-y-auto max-h-[220px]">"After using Beggin For A Bite’s Hip & Joint Supplement, I’ve seen such a positive difference in my dog. He’s moving easier, seems more comfortable and is back to enjoying playtime again. I’m really happy with how well it’s working and plan to keep it in his routine."</h3>
             <div className="mt-8 rounded-[0.8rem] overflow-hidden h-44 bg-gray-100 relative">
                <Image src="/products/1/20.png" alt="Review" fill className="object-cover" />
             </div>
           </div>
           {/* Card 2 */}
           <div className="border-[3px] border-[#b23261] rounded-[1.25rem] p-6 flex flex-col justify-between min-h-[420px] bg-white shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-xl md:text-[22px] font-bold text-[#11241f] leading-[1.3] tracking-tight">"It's so tasty, I didn't even feel like I was having a protein shake"</h3>
+            <h3 className="text-base md:text-lg font-medium text-[#11241f] leading-[1.4] tracking-tight overflow-y-auto max-h-[220px]">"After starting Beggin For A Bite’s Prebiotic ProTopper, I noticed a big change in my dogs. They’ve stopped the constant paw licking and head shaking, and their appetite has improved so much that they actually look forward to mealtime now. I’m honestly happy with the results and will definitely keep using it."</h3>
             <div className="mt-8 rounded-[0.8rem] overflow-hidden h-44 bg-gray-100 relative">
                <Image src="/products/1/21.png" alt="Review" fill className="object-cover" />
             </div>
           </div>
           {/* Card 3 */}
           <div className="border-[3px] border-[#b23261] rounded-[1.25rem] p-6 flex flex-col justify-between min-h-[420px] bg-white shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-xl md:text-[22px] font-bold text-[#11241f] leading-[1.3] tracking-tight">"Found my go-to Muesli"</h3>
+            <h3 className="text-[13px] md:text-[14px] font-medium text-[#11241f] leading-[1.4] tracking-tight overflow-y-auto max-h-[220px]">"Food with Hemp Seed Oil drops, ever since I started using Hemp Seed Oil of Beggin For A Bite, Noah’s appetite has noticeably increased! She now enjoys her meals with excitement, making mealtime a happy and satisfying moment for both us. A small addition with big benefits - healthy, happy and always ready for her next bite! #NoahEatsbetter, This is not a paid promotion or collaboration, it’s just my genuine review after using Hemp Seed Oil of Beggin For A Bite for Noah. I’ve noticed a real difference in her appetite and it’s been amazing to see her enjoy her meals more."</h3>
             <div className="mt-8 rounded-[0.8rem] overflow-hidden h-44 bg-gray-100 relative">
                <Image src="/products/1/22.png" alt="Review" fill className="object-cover" />
             </div>

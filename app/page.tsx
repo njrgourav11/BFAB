@@ -138,10 +138,20 @@ export default function Home() {
       </section>
 
       {/* Trust & Results Banner Section */}
-      <section className="py-4 bg-white dark:bg-slate-900 border-y border-gray-200 dark:border-slate-800 shadow-sm relative z-10 overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center items-center gap-x-6 md:gap-x-8 gap-y-3">
+      <section className="py-4 bg-[#0B1120] dark:bg-slate-900 border-y border-[#1E293B] dark:border-slate-800 shadow-sm relative z-10 overflow-hidden">
+        <div className="flex overflow-hidden whitespace-nowrap">
+          <motion.div
+            className="flex items-center gap-x-8 md:gap-x-12 min-w-max pr-8 md:pr-12"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ repeat: Infinity, ease: "linear", duration: 30 }}
+          >
             {[
+              { icon: Users, text: '1k+ Pet Parents', color: 'text-blue-500' },
+              { icon: TrendingUp, text: '9 out of 10 Saw Improvement', color: 'text-green-500' },
+              { icon: ShieldCheck, text: 'Vet Formulated', color: 'text-purple-500' },
+              { icon: Leaf, text: 'All Natural', color: 'text-emerald-500' },
+              { icon: Award, text: 'Made in India (GMP)', color: 'text-orange-500' },
+              { icon: RotateCcw, text: '90-Day Guarantee', color: 'text-pink-500' },
               { icon: Users, text: '1k+ Pet Parents', color: 'text-blue-500' },
               { icon: TrendingUp, text: '9 out of 10 Saw Improvement', color: 'text-green-500' },
               { icon: ShieldCheck, text: 'Vet Formulated', color: 'text-purple-500' },
@@ -151,14 +161,14 @@ export default function Home() {
             ].map((item, idx) => {
               const Icon = item.icon;
               return (
-                <div key={idx} className="flex items-center gap-2">
-                  <Icon size={16} className={item.color} />
-                  <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">{item.text}</span>
-                  {idx < 5 && <span className="hidden lg:inline-block text-gray-300 dark:text-gray-600 ml-4 lg:ml-6">•</span>}
+                <div key={idx} className="flex items-center gap-3">
+                  <Icon size={18} className={item.color} />
+                  <span className="text-sm font-semibold text-gray-100 whitespace-nowrap">{item.text}</span>
+                  <span className="text-[#334155] ml-5 md:ml-9">•</span>
                 </div>
               )
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -173,7 +183,7 @@ export default function Home() {
                 We create <br /> pet wellness.
               </h2>
               <div className="text-lg sm:text-xl text-[#2D3748] dark:text-gray-300 leading-relaxed font-semibold">
-                Formulated with clinically supported ingredients to help dogs & cats <span className="border-b-4 border-[#8B234D] pb-1">live healthier, happier lives.</span>
+                Formulated with <span className="border-b-4 border-[#8B234D] pb-1">clinically supported </span> ingredients to help dogs & cats <span className="border-b-4 border-[#8B234D] pb-1">live healthier, happier lives.</span>
               </div>
             </div>
 
@@ -186,12 +196,20 @@ export default function Home() {
                   ))
                 ) : (
                   featuredProducts.slice(0, 3).map((product, idx) => {
-                    const colors = [
-                      { bg: 'bg-[#781B43]', hover: 'group-hover:bg-[#5C1533]' },
-                      { bg: 'bg-[#4F46E5]', hover: 'group-hover:bg-[#4338CA]' },
-                      { bg: 'bg-[#5A942F]', hover: 'group-hover:bg-[#487824]' }
-                    ];
-                    const color = colors[idx % colors.length];
+                    const lowerName = product.name.toLowerCase();
+                    let color = { bg: 'bg-[#781B43]', hover: 'group-hover:bg-[#5C1533]' }; // Fallback
+                    let displayName = product.name;
+                    
+                    if (lowerName.includes('prebiotic')) {
+                      color = { bg: 'bg-[#28676b]', hover: 'group-hover:bg-[#1e5053]' };
+                      displayName = 'Prebiotic ProTopper Supplement';
+                    } else if (lowerName.includes('hip') || lowerName.includes('joint')) {
+                      color = { bg: 'bg-[#459fb9]', hover: 'group-hover:bg-[#337a91]' };
+                      displayName = 'Hip & Joint Supplement';
+                    } else if (lowerName.includes('hemp') || lowerName.includes('anxiety')) {
+                      color = { bg: 'bg-[#b5cb7f]', hover: 'group-hover:bg-[#9db468]' };
+                      displayName = 'Hemp Seed Oil Anxiety Supplement';
+                    }
 
                     return (
                       <Link href={`/product/${product.id}`} key={product.id} className="group rounded-xl overflow-hidden bg-[#F8F9FA] dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer">
@@ -200,8 +218,7 @@ export default function Home() {
                         </div>
                         <div className={`${color.bg} text-white p-5 mt-auto flex justify-center items-center ${color.hover} transition-colors`}>
                           <div className="w-full text-center">
-                            <h3 className="font-extrabold text-sm sm:text-base leading-tight tracking-wide line-clamp-1">{product.name}</h3>
-                            <p className="text-xs opacity-90 mt-1 font-medium line-clamp-1">{product.productCategory || 'Wellness Supplement'}</p>
+                            <h3 className="font-extrabold text-sm sm:text-base leading-tight tracking-wide line-clamp-1">{displayName}</h3>
                           </div>
                         </div>
                       </Link>
@@ -225,7 +242,7 @@ export default function Home() {
                 We make <br /> treats that care.
               </h2>
               <div className="text-lg sm:text-xl text-[#11241f]/90 dark:text-emerald-50/80 leading-relaxed font-medium">
-                Not just Delicious . <br /> Naturally Nutritious , <br /> made with Real Ingredients , <br /> for Healthier, Happier companions .
+                Not just <span className="border-b-4 border-[#8B234D] pb-1">Delicious</span> <br /> <span className="border-b-4 border-[#8B234D] pb-1">Naturally Nutritious</span> , <br /> made with <span className="border-b-4 border-[#8B234D] pb-1">Real Ingredients</span> , <br />for <span className="border-b-4 border-[#8B234D] pb-1"> Healthier, Happier companions</span> .
               </div>
             </div>
 
@@ -238,12 +255,19 @@ export default function Home() {
                   ))
                 ) : (
                   featuredProducts.slice(1, 4).map((product, idx) => {
-                    const colors = [
-                      { bg: 'bg-[#5A942F]', hover: 'group-hover:bg-[#487824]' },
-                      { bg: 'bg-[#781B43]', hover: 'group-hover:bg-[#5C1533]' },
-                      { bg: 'bg-[#4F46E5]', hover: 'group-hover:bg-[#4338CA]' }
-                    ];
-                    const color = colors[idx % colors.length];
+                    let color = { bg: 'bg-[#5A942F]', hover: 'group-hover:bg-[#487824]' }; // Fallback
+                    let displayName = product.name;
+                    
+                    if (idx === 0) {
+                      color = { bg: 'bg-[#ff5757]', hover: 'group-hover:bg-[#e64e4e]' };
+                      displayName = 'Chicken Breast Jerky';
+                    } else if (idx === 1) {
+                      color = { bg: 'bg-[#4c74b1]', hover: 'group-hover:bg-[#3d5d8e]' };
+                      displayName = 'Yak-Yak Dental Chews';
+                    } else if (idx === 2) {
+                      color = { bg: 'bg-[#94463c]', hover: 'group-hover:bg-[#763830]' };
+                      displayName = 'Peanut Butter for Dogs';
+                    }
 
                     return (
                       <Link href={`/product/${product.id}`} key={product.id} className="group rounded-xl overflow-hidden bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer">
@@ -252,8 +276,7 @@ export default function Home() {
                         </div>
                         <div className={`${color.bg} text-white p-5 mt-auto flex justify-center items-center ${color.hover} transition-colors`}>
                           <div className="w-full text-center">
-                            <h3 className="font-extrabold text-sm sm:text-base leading-tight tracking-wide line-clamp-1">{product.name}</h3>
-                            <p className="text-xs opacity-90 mt-1 font-medium line-clamp-1">{product.productCategory || 'Wellness Supplement'}</p>
+                            <h3 className="font-extrabold text-sm sm:text-base leading-tight tracking-wide line-clamp-1">{displayName}</h3>
                           </div>
                         </div>
                       </Link>
@@ -273,7 +296,7 @@ export default function Home() {
             You shouldn’t be the only <br className="hidden sm:block" /> one eating healthy
           </h2>
           <p className="text-lg sm:text-xl text-[#11241f] dark:text-emerald-100/90 leading-relaxed max-w-3xl mb-10 font-medium">
-            Like you, we love our pets and care about their health. That’s why we created BFAB – a service that delivers freshly made pet food with balanced recipes, guided by science, and driven by love.
+            Like you, we love our pets and care about their health. That’s why we created BFAB – a package that delivers freshly custom meals for dogs with balanced recipes, guided by science and driven by love.
           </p>
           <Link href="/products" className="inline-flex items-center justify-center bg-[#3B6B5A] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#2C5244] dark:bg-[#2C5244] dark:hover:bg-[#3B6B5A] transition-colors shadow-sm hover:shadow-md">
             Build personalized plan
@@ -356,11 +379,16 @@ export default function Home() {
             {/* Left Content */}
             <div className="md:w-5/12 flex flex-col gap-6 pt-4">
               <h2 className="text-[3.5rem] sm:text-6xl md:text-[4.5rem] font-extrabold text-[#11241f] dark:text-emerald-50 leading-[0.95] tracking-tight">
-                We're also<br/>fixing food<br/>journalism.
+                We're also<br/>fixing pet<br/>food myths.
               </h2>
               <p className="font-mono text-[15px] sm:text-base text-gray-800 dark:text-gray-300 leading-relaxed max-w-sm mt-2 font-medium tracking-tight">
-                We can't fix food without fixing food journalism. Because what you read and believe is what you eat and repeat. We're on it.
+                From healthy eating habits and ingredients to portion sizes, treats, supplements, and everyday nutrition, our blog helps pet parents make better, informed choices for their pets.
               </p>
+              <div className="mt-4">
+                <Link href="/blog" className="inline-flex items-center justify-center bg-[#b23261] text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-[#91284f] transition-colors shadow-sm hover:shadow-md">
+                  Blog
+                </Link>
+              </div>
             </div>
             
             {/* Right Venn Diagram SVG */}
@@ -389,36 +417,20 @@ export default function Home() {
                   <circle cx="360" cy="220" r="115" fill="none" stroke="currentColor" strokeWidth="4" />
 
                   {/* Text inside circles */}
-                  <text x="170" y="210" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">What</text>
-                  <text x="170" y="240" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">you eat</text>
+                  <text x="180" y="210" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">What</text>
+                  <text x="180" y="240" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">you feed them</text>
 
-                  <text x="420" y="210" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">What</text>
-                  <text x="420" y="240" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">you know</text>
+                  <text x="410" y="210" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">What</text>
+                  <text x="410" y="240" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">they actually need</text>
 
                   {/* Top Left Text and Arrow */}
-                  <text x="130" y="70" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="20" fontWeight="bold">We're working on</text>
-                  <text x="130" y="100" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="20" fontWeight="bold">closing the gap</text>
+                  <text x="110" y="60" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="22" fontWeight="bold">We're working on</text>
+                  <text x="110" y="90" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="22" fontWeight="bold">closing the gap</text>
                   
                   {/* Hand drawn arrow pointing to intersection */}
-                  <path d="M 280 90 Q 315 90 295 130" fill="none" stroke="currentColor" strokeWidth="3" markerEnd="url(#arrow-line)" strokeLinecap="round" />
+                  <path d="M 280 85 Q 310 90 295 115" fill="none" stroke="currentColor" strokeWidth="3" markerEnd="url(#arrow-line)" strokeLinecap="round" />
 
-                  {/* Little Barry Doodle */}
-                  <g transform="translate(480, 230) rotate(15) scale(0.9)">
-                    {/* Jagged body */}
-                    <path d="M 0 0 L 10 -25 L 25 -10 L 40 -35 L 50 -10 L 65 -30 L 70 30 L 50 20 L 45 40 L 25 30 L 15 45 L 0 30 Z" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
-                    {/* Face */}
-                    <path d="M 20 -2 M 22 -2 L 23 -2" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-                    <path d="M 40 -2 M 42 -2 L 43 -2" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-                    <path d="M 32 5 L 32 12 L 38 12" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
-                    <path d="M 25 20 Q 32 25 40 20" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                    {/* Little hand grabbing the circle */}
-                    <path d="M -5 10 Q -25 10 -10 30" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                  </g>
 
-                  {/* Bottom Right Text and Arrow */}
-                  <text x="500" y="370" fill="currentColor" fontFamily="cursive, 'Comic Sans MS', sans-serif" fontSize="18" fontWeight="bold" textAnchor="middle">So is Barry!</text>
-                  {/* Arrow pointing to Barry */}
-                  <path d="M 460 340 Q 470 310 490 310" fill="none" stroke="currentColor" strokeWidth="3" markerStart="url(#arrow-line-start)" strokeLinecap="round" />
                 </svg>
               </div>
             </div>
@@ -528,15 +540,14 @@ export default function Home() {
                 </svg>
               </div>
               
-              <h2 className="text-[3.5rem] md:text-[4.5rem] font-bold text-[#b23261] leading-none z-10 flex flex-col uppercase" style={{ fontFamily: "cursive, 'Comic Sans MS', sans-serif" }}>
-                <span>Stars</span>
+              <h2 className="text-[2.5rem] md:text-[3.5rem] font-bold text-[#b23261] leading-none z-10 flex flex-col uppercase" style={{ fontFamily: "cursive, 'Comic Sans MS', sans-serif" }}>
+                <span>Trusted By Pet</span>
                 <span className="flex items-center gap-3">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-1"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.7 0l-1.1 1-1.1-1a5.5 5.5 0 0 0-7.8 7.8l1 1 7.9 7.9 7.9-7.9 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-                  Us!
+                  Professionals
                 </span>
               </h2>
               <p className="text-[#b23261] text-lg md:text-xl mt-3 font-medium z-10" style={{ fontFamily: "cursive, 'Comic Sans MS', sans-serif" }}>
-                (and we didn't even<br/>have to pay for it)
+                Together, creating healthier pets.
               </p>
             </div>
 

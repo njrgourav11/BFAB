@@ -17,16 +17,13 @@ export default function FreshMealPage() {
                   It's time for a fresh approach to pet food
                 </h1>
                 <p className="text-lg md:text-xl text-white font-medium mb-12 max-w-lg leading-relaxed">
-                  By sending food directly to you, we can invest in better ingredients and fresher food. <Link href="#" className="underline decoration-2 underline-offset-4 hover:text-gray-300 transition-colors">Learn more about the importance of real food.</Link>
+                  By bringing fresh, wholesome food to your pet’s bowl, we’re making everyday nutrition better. Made with carefully selected ingredients and prepared with your pet’s health in mind, our fresh meals are packed with goodness, flavour, and real nourishment.
                 </p>
               </div>
               
-              {/* Pouch Image sticking up */}
+              {/* Product Image */}
               <div className="relative h-[250px] md:h-[300px] w-[90%] mx-auto md:mx-0 -mb-4 mt-auto">
-                 {/* Placeholder for pouch */}
-                 <div className="absolute bottom-0 left-0 w-full h-full bg-white/5 rounded-t-2xl border-t-2 border-x-2 border-white/20 flex items-center justify-center overflow-hidden">
-                   <Image src="/products/1/20.png" alt="Fresh Pet Food Pouch" fill className="object-cover rounded-t-2xl opacity-60" />
-                 </div>
+                 <Image src="/products/1/20.png" alt="Fresh Pet Food Pouch" fill className="object-contain" />
               </div>
             </div>
 
@@ -36,11 +33,11 @@ export default function FreshMealPage() {
               {/* Item 1 */}
               <div>
                 <div className="inline-block relative mb-4">
-                  <h3 className="text-[26px] md:text-3xl font-extrabold text-white relative z-10 font-serif">"Meals"</h3>
+                  <h3 className="text-[26px] md:text-3xl font-extrabold text-white relative z-10 font-serif">"MYSTERY MEAT"</h3>
                   {/* Strike through */}
                   <div className="absolute top-1/2 left-[-10%] w-[120%] h-[3px] bg-[#E76F51] transform -translate-y-1/2 rotate-[-2deg] z-20"></div>
                 </div>
-                <p className="text-white/90 text-[17px] md:text-lg max-w-sm mx-auto font-medium">Powders like "Chicken Meal" can contain meat from diseased livestock.</p>
+                <p className="text-white/90 text-[17px] md:text-lg max-w-sm mx-auto font-medium">Some pet foods use vague ingredient terms like “meat meal” or “animal meal,” making it harder for pet parents to know exactly what goes into the bowl.</p>
               </div>
               
               {/* Item 2 */}
@@ -60,7 +57,7 @@ export default function FreshMealPage() {
                   {/* Strike through */}
                   <div className="absolute top-1/2 left-[-10%] w-[120%] h-[3px] bg-[#E76F51] transform -translate-y-1/2 rotate-[-3deg] z-20"></div>
                 </div>
-                <p className="text-white/90 text-[17px] md:text-lg max-w-sm mx-auto font-medium">Foods can hide behind misleading bags. "Made with beef" can mean just 3% beef.</p>
+                <p className="text-white/90 text-[17px] md:text-lg max-w-sm mx-auto font-medium">Food can hide behind misleading bags. “Made with Chicken” can mean just 3% chicken.</p>
               </div>
 
             </div>
@@ -73,11 +70,11 @@ export default function FreshMealPage() {
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="flex flex-col md:flex-row items-center gap-16 md:gap-24">
             
-            {/* Left side: Images */}
+            {/* Left side: Video */}
             <div className="w-full md:w-1/2 relative flex justify-center">
-              <div className="relative w-[300px] h-[400px] md:w-[420px] md:h-[550px]">
-                 {/* Placeholders for the pouches */}
-                 <Image src="/products/1/20.png" alt="Fresh Food Pack" fill className="object-cover rounded-xl shadow-2xl border-4 border-white" />
+              <div className="relative w-[300px] h-[400px] md:w-[420px] md:h-[550px] bg-gray-200 dark:bg-slate-800 rounded-xl flex items-center justify-center overflow-hidden">
+                 <p className="text-gray-500 font-medium">Video Placeholder</p>
+                 {/* <video src="/path/to/video.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover"></video> */}
               </div>
             </div>
 
@@ -89,18 +86,12 @@ export default function FreshMealPage() {
               
               <div className="flex flex-col gap-10">
                 <div>
-                  <h3 className="text-[22px] font-bold text-[#11241f] dark:text-white mb-3">Human-grade standards</h3>
-                  <p className="text-[17px] text-[#11241f]/90 dark:text-gray-300 font-medium">Every step of our sourcing, cooking, packaging, and storage process meets the same strict safety standards as those for human food.</p>
-                </div>
-                
-                <div>
                   <h3 className="text-[22px] font-bold text-[#11241f] dark:text-white mb-3">Personalized plans</h3>
-                  <p className="text-[17px] text-[#11241f]/90 dark:text-gray-300 font-medium">A vet-designed plan is customized to your dog's individual needs. Meals are pre-made and pre-portioned to their calorie needs <Link href="#" className="underline font-bold decoration-[#11241f] hover:text-black decoration-2 underline-offset-4">based on the profile you create.</Link></p>
+                  <p className="text-[17px] text-[#11241f]/90 dark:text-gray-300 font-medium">A pet-centric meal plan is customized to meet your dog’s individual nutritional and dietary requirements. Meals are pre-prepared and portioned according to their specific calorie needs, based on the details provided about your dog.</p>
                 </div>
 
                 <div>
-                  <h3 className="text-[22px] font-bold text-[#11241f] dark:text-white mb-3">Delivered within days</h3>
-                  <p className="text-[17px] text-[#11241f]/90 dark:text-gray-300 font-medium">Your dog's food is made fresh and quickly frozen or gently dried to lock in nutrients, then delivered right to you.</p>
+                  <p className="text-[17px] text-[#11241f]/90 dark:text-gray-300 font-medium">Our retort-packed meals lock in freshness and nutrition, offering a convenient, shelf-stable way to serve wholesome, ready-to-serve food your pet will love.</p>
                 </div>
               </div>
             </div>
@@ -133,10 +124,10 @@ export default function FreshMealPage() {
                   Free & flexible<br/>deliveries
                 </div>
                 <div className="font-bold text-[#11241f] dark:text-white text-[15px] leading-tight">
-                  Nationwide<br/>shipping
+                  Pan India<br/>shipping
                 </div>
                 <div className="font-bold text-[#11241f] dark:text-white text-[15px] leading-tight">
-                  Eco friendly<br/>packaging
+                  Retort technology<br/>packaging
                 </div>
                 <div className="font-bold text-[#11241f] dark:text-white text-[15px] leading-tight">
                   24-hour<br/>customer service
