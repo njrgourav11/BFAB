@@ -96,12 +96,12 @@ export default function Home() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 sm:gap-8">
             {[
-              { name: 'Dental Health', image: '/category/10.svg', href: '/products' },
-              { name: 'Gut Health', image: '/category/11.svg', href: '/products' },
-              { name: 'Hip & Joint', image: '/category/12.svg', href: '/products' },
-              { name: 'Weight Control', image: '/category/13.svg', href: '/products' },
-              { name: 'Anxiety Relief', image: '/category/14.svg', href: '/products' },
-              { name: 'Skin & Coat', image: '/category/15.svg', href: '/products' }
+              { name: 'Dental Health', image: '/category/6.png', href: '/products' },
+              { name: 'Gut Health', image: '/category/5.png', href: '/products' },
+              { name: 'Hip & Joint', image: '/category/1.png', href: '/products' },
+              { name: 'Weight Control', image: '/category/2.png', href: '/products' },
+              { name: 'Anxiety Relief', image: '/category/3.png', href: '/products' },
+              { name: 'Skin & Coat', image: '/category/4.png', href: '/products' }
             ].map((category, index) => (
               <motion.div
                 key={index}
@@ -112,15 +112,14 @@ export default function Home() {
                 className="group"
               >
                 <Link href={category.href} className="block flex flex-col items-center">
-                  <div className="relative p-1 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-700 group-hover:from-blue-400 group-hover:to-purple-500 transition-all duration-500 shadow-lg group-hover:shadow-2xl">
-                    <div className="relative overflow-hidden rounded-full w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 border-4 border-white dark:border-slate-900 bg-white dark:bg-slate-800">
+                  <div className="relative flex justify-center items-center rounded-full transition-transform duration-500 group-hover:-translate-y-2">
+                    <div className="relative overflow-hidden rounded-full w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 bg-white shadow-md group-hover:shadow-xl transition-shadow duration-500">
                       <Image
                         src={category.image}
                         alt={category.name}
                         fill
-                        className="object-cover group-hover:scale-110 transition duration-700"
+                        className="object-cover scale-125 group-hover:scale-[1.35] transition duration-500"
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
                     </div>
                   </div>
 
