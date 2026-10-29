@@ -54,6 +54,16 @@ service cloud.firestore {
       allow write: if isAdmin(); // Only admins can manage blogs
     }
 
+    // Coupons Collection
+    match /coupons/{couponId} {
+      allow read: if true; // Publicly readable for customer validation
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        isAuthenticated() && 
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usedCount', 'totalSalesAmount', 'totalUnitsSold'])
+      );
+    }
+
     // Orders Collection
     match /orders/{orderId} {
       // Authenticated users can create orders
@@ -63,7 +73,6 @@ service cloud.firestore {
       allow read: if (isAuthenticated() && resource.data.userId == request.auth.uid) || isAdmin();
       
       // Only admins can update orders (e.g., change status)
-      // (Optionally allow users to cancel pending orders if needed, but restricting to admin for now)
       allow update: if isAdmin();
     }
   }

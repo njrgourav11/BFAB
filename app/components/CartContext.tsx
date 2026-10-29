@@ -1,5 +1,7 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { AppliedCoupon } from '@/lib/types';
+import { validateCouponCode } from '@/lib/coupon-utils';
 
 export interface CartItem {
   id: string | number;
@@ -19,6 +21,13 @@ interface CartContextType {
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
+  // Coupon support
+  appliedCoupon: AppliedCoupon | null;
+  couponError: string | null;
+  applyCoupon: (code: string) => Promise<{ success: boolean; message: string; discount?: number }>;
+  removeCoupon: () => void;
+  getDiscountAmount: () => number;
+  getDiscountedSubtotal: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -37,8 +46,10 @@ interface CartProviderProps {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
 
-  // Load cart from localStorage on mount
+  // Load cart and saved coupon from localStorage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
@@ -48,12 +59,54 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         console.error('Error loading cart from localStorage:', error);
       }
     }
+
+    const savedCoupon = localStorage.getItem('bfab_coupon');
+    if (savedCoupon) {
+      try {
+        setAppliedCoupon(JSON.parse(savedCoupon));
+      } catch (error) {
+        console.error('Error loading saved coupon:', error);
+      }
+    }
+
+    // Check URL parameters for ?coupon=CODE
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlCoupon = urlParams.get('coupon') || urlParams.get('code') || urlParams.get('c');
+      if (urlCoupon) {
+        // Auto-attempt coupon application once cart is loaded
+        validateCouponCode(urlCoupon, 1000).then((res) => {
+          if (res.valid && res.coupon) {
+            const couponObj: AppliedCoupon = {
+              code: res.coupon.code,
+              groupName: res.coupon.groupName,
+              discountType: res.coupon.discountType,
+              discountValue: res.coupon.discountValue,
+              discountAmount: res.discountAmount,
+              minOrderValue: res.coupon.minOrderValue,
+              maxDiscount: res.coupon.maxDiscount,
+            };
+            setAppliedCoupon(couponObj);
+            localStorage.setItem('bfab_coupon', JSON.stringify(couponObj));
+          }
+        });
+      }
+    }
   }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
+
+  // Save coupon to localStorage whenever it changes
+  useEffect(() => {
+    if (appliedCoupon) {
+      localStorage.setItem('bfab_coupon', JSON.stringify(appliedCoupon));
+    } else {
+      localStorage.removeItem('bfab_coupon');
+    }
+  }, [appliedCoupon]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
     setCartItems(prevItems => {
@@ -88,14 +141,75 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const clearCart = () => {
     setCartItems([]);
+    setAppliedCoupon(null);
+    localStorage.removeItem('bfab_coupon');
   };
 
   const getTotalItems = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
-  const getTotalPrice = () => {
+  const getTotalPrice = useCallback(() => {
     return cartItems.reduce((total, item) => total + parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.quantity, 0);
+  }, [cartItems]);
+
+  const getDiscountAmount = useCallback((): number => {
+    if (!appliedCoupon) return 0;
+    const subtotal = getTotalPrice();
+    if (subtotal <= 0) return 0;
+
+    if (appliedCoupon.minOrderValue && subtotal < appliedCoupon.minOrderValue) {
+      return 0;
+    }
+
+    let discount = 0;
+    if (appliedCoupon.discountType === 'percentage') {
+      discount = (subtotal * appliedCoupon.discountValue) / 100;
+      if (appliedCoupon.maxDiscount && appliedCoupon.maxDiscount > 0) {
+        discount = Math.min(discount, appliedCoupon.maxDiscount);
+      }
+    } else {
+      discount = appliedCoupon.discountValue;
+    }
+
+    return Math.min(discount, subtotal);
+  }, [appliedCoupon, getTotalPrice]);
+
+  const getDiscountedSubtotal = useCallback((): number => {
+    const subtotal = getTotalPrice();
+    const discount = getDiscountAmount();
+    return Math.max(0, subtotal - discount);
+  }, [getTotalPrice, getDiscountAmount]);
+
+  const applyCoupon = async (code: string): Promise<{ success: boolean; message: string; discount?: number }> => {
+    setCouponError(null);
+    const subtotal = getTotalPrice();
+    const result = await validateCouponCode(code, subtotal);
+
+    if (!result.valid || !result.coupon) {
+      setCouponError(result.message);
+      return { success: false, message: result.message };
+    }
+
+    const newApplied: AppliedCoupon = {
+      code: result.coupon.code,
+      groupName: result.coupon.groupName,
+      discountType: result.coupon.discountType,
+      discountValue: result.coupon.discountValue,
+      discountAmount: result.discountAmount,
+      minOrderValue: result.coupon.minOrderValue,
+      maxDiscount: result.coupon.maxDiscount,
+    };
+
+    setAppliedCoupon(newApplied);
+    localStorage.setItem('bfab_coupon', JSON.stringify(newApplied));
+    return { success: true, message: result.message, discount: result.discountAmount };
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponError(null);
+    localStorage.removeItem('bfab_coupon');
   };
 
   const value: CartContextType = {
@@ -106,6 +220,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     clearCart,
     getTotalItems,
     getTotalPrice,
+    appliedCoupon,
+    couponError,
+    applyCoupon,
+    removeCoupon,
+    getDiscountAmount,
+    getDiscountedSubtotal,
   };
 
   return (
