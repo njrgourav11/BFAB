@@ -131,8 +131,9 @@ const CheckoutPage = () => {
         userId: user?.uid || 'guest',
         userEmail: user?.email || billingInfo.email || '',
         items: cartItems,
-        amount: Math.round(total * 100), // in paise
+        amount: total, // in INR (Rupees)
         totalAmount: total,
+        amountInPaise: Math.round(total * 100),
         subtotal: subtotal,
         discountAmount: discount,
         couponCode: appliedCoupon?.code || null,
