@@ -60,7 +60,7 @@ const CheckoutPage = () => {
     country: 'India'
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('razorpay');
+  const paymentMethod = 'razorpay';
   const [processing, setProcessing] = useState(false);
 
   // Auth Check
@@ -123,7 +123,7 @@ const CheckoutPage = () => {
     }
   };
 
-  const saveOrder = async (paymentId: string, orderId: string, status: 'paid' | 'pending' | 'cod') => {
+  const saveOrder = async (paymentId: string, orderId: string, status: 'paid' | 'pending') => {
     try {
       const unitsCount = cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0);
 
@@ -170,12 +170,6 @@ const CheckoutPage = () => {
     e.preventDefault();
     if (!user) return;
     setProcessing(true);
-
-    if (paymentMethod === 'cod') {
-      await saveOrder('COD', `ORD-${Date.now()}`, 'cod');
-      setProcessing(false);
-      return;
-    }
 
     // Razorpay Flow
     try {
@@ -404,56 +398,20 @@ const CheckoutPage = () => {
               </div>
 
               <div className="space-y-3">
-                <label
-                  htmlFor="razorpay"
-                  className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
-                    paymentMethod === 'razorpay'
-                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/20 dark:border-blue-500'
-                      : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/40'
-                  }`}
+                <div
+                  className="flex items-center justify-between p-4 rounded-2xl border border-blue-600 bg-blue-50/50 dark:bg-blue-900/20 dark:border-blue-500"
                 >
                   <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      id="razorpay"
-                      name="paymentMethod"
-                      value="razorpay"
-                      checked={paymentMethod === 'razorpay'}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-4 h-4 text-blue-600"
-                    />
+                    <div className="w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center">
+                      <div className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                    </div>
                     <div>
-                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">UPI, Cards, NetBanking (Razorpay)</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">Instant confirmation via Google Pay, PhonePe, Paytm, or Credit/Debit card</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">Online Payment via Razorpay</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Instant & secure checkout via UPI (GPay, PhonePe, Paytm), Cards & NetBanking</p>
                     </div>
                   </div>
-                  <span className="text-xs font-semibold px-2.5 py-1 bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-200 rounded-lg">Recommended</span>
-                </label>
-
-                <label
-                  htmlFor="cod"
-                  className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
-                    paymentMethod === 'cod'
-                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/20 dark:border-blue-500'
-                      : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/40'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      id="cod"
-                      name="paymentMethod"
-                      value="cod"
-                      checked={paymentMethod === 'cod'}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-4 h-4 text-blue-600"
-                    />
-                    <div>
-                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">Cash on Delivery (COD)</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">Pay cash upon package arrival at your doorstep</p>
-                    </div>
-                  </div>
-                </label>
+                  <span className="text-xs font-semibold px-2.5 py-1 bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-200 rounded-lg">100% Secure</span>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -609,7 +567,7 @@ const CheckoutPage = () => {
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 px-6 rounded-xl font-bold mt-6 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 shadow-lg shadow-blue-600/20"
                 >
                   {processing ? <Loader2 className="animate-spin" size={18} /> : <ShieldCheck size={18} />}
-                  {processing ? 'Processing Payment...' : paymentMethod === 'cod' ? 'Confirm Cash on Delivery Order' : `Pay ₹${total.toFixed(2)} with Razorpay`}
+                  {processing ? 'Processing Payment...' : `Pay ₹${total.toFixed(2)} with Razorpay`}
                 </motion.button>
 
                 <div className="mt-4 text-[11px] text-gray-500 dark:text-gray-400 text-center flex items-center justify-center gap-1.5">

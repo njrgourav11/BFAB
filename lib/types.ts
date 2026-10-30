@@ -125,7 +125,7 @@ export interface Order {
     currency?: string;
     status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Paid'; // Match Firestore values (Capitalized?)
     paymentStatus?: 'pending' | 'paid' | 'failed';
-    paymentMethod: 'razorpay' | 'cod';
+    paymentMethod: 'razorpay' | string;
     razorpayOrderId?: string;
     razorpayPaymentId?: string;
     billingInfo: Address;
