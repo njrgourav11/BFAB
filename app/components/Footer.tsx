@@ -47,17 +47,16 @@ const Footer = () => {
             viewport={{ once: true }}
             className="lg:col-span-2"
           >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="relative w-10 h-10 bg-white rounded-xl p-1 shadow-sm">
+            <Link href="/" className="inline-block mb-4 group" aria-label="Beggin For A Bite Home">
+              <div className="relative w-44 sm:w-52 aspect-[1400/993] transition-transform duration-300 group-hover:scale-105">
                 <Image
-                  src="/cat.svg"
-                  alt="BFAB Logo"
+                  src="/1.svg"
+                  alt="Beggin For A Bite"
                   fill
-                  className="object-contain p-1"
+                  className="object-contain object-left"
                 />
               </div>
-              <h2 className="text-2xl font-extrabold tracking-tight">Beggin For A Bite</h2>
-            </div>
+            </Link>
             <p className="text-white/90 leading-relaxed mb-6 max-w-md text-sm sm:text-base font-medium">
               Dedicated to providing the best nutrition and wellness solutions to help every pet live a healthy, happy life from first bite to forever.
             </p>

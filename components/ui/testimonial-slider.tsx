@@ -2,11 +2,11 @@ import Image from 'next/image';
 
 export default function TestimonialSlider() {
   return (
-    <section className="py-20 md:py-28 bg-white dark:bg-[#0a1512] overflow-hidden border-t border-gray-100 dark:border-transparent">
+    <section className="py-10 sm:py-12 md:py-14 bg-white dark:bg-[#0a1512] overflow-hidden border-t border-gray-100 dark:border-transparent">
       <div className="container mx-auto px-4 md:px-8 max-w-[1300px]">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-10 gap-6 md:gap-8">
           <div className="relative md:w-3/4">
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#D95D39] leading-[1.05] tracking-tight flex flex-wrap items-baseline gap-x-4">
               <span>Real people.</span>

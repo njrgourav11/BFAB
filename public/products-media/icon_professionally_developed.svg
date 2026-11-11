@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- 4 Toes -->
+  <circle cx="14" cy="15" r="4" stroke="#D95D39" stroke-width="2.5" fill="none"/>
+  <circle cx="21" cy="10" r="4.2" stroke="#D95D39" stroke-width="2.5" fill="none"/>
+  <circle cx="29" cy="10" r="4.2" stroke="#D95D39" stroke-width="2.5" fill="none"/>
+  <circle cx="36" cy="15" r="4" stroke="#D95D39" stroke-width="2.5" fill="none"/>
+  <!-- Palm pad -->
+  <path d="M16 26 C12 28 12 34 16 38 C20 42 28 42 32 38 C36 34 36 28 32 26 C28 22 20 22 16 26 Z" 
+    stroke="#D95D39" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Medical Cross (+) inside palm -->
+  <path d="M24 27 L24 35 M20 31 L28 31" 
+    stroke="#D95D39" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

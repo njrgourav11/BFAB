@@ -58,31 +58,25 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
       <div className="container mx-auto px-3 sm:px-4">
         <div className="flex justify-between items-center h-16 gap-2">
 
-          {/* Logo / Wordmark */}
+          {/* Brand Dog Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-opacity min-w-0 shrink"
+            className="flex items-center hover:opacity-90 transition-opacity min-w-0 shrink-0"
+            aria-label="Beggin for a Bite"
           >
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="relative w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 shrink-0"
+              className="relative h-11 sm:h-12 md:h-[50px] aspect-[1400/993]"
             >
-              <Image src="/cat.svg" alt="BFAB Logo" fill className="object-contain" />
-            </motion.div>
-
-            <span className="flex flex-col justify-center leading-none min-w-0">
-              <span
-                className="text-[15px] sm:text-lg md:text-2xl lg:text-[28px] font-display italic font-semibold
-                           tracking-tight text-pine dark:text-pine-tint truncate"
-              >
-                Beggin for a Bite
-              </span>
-              <span
-                className="hidden sm:block h-[2px] w-9 md:w-12 mt-1 rounded-full
-                           bg-gradient-to-r from-pine/70 to-pine/10 dark:from-pine-tint/70 dark:to-pine-tint/10"
+              <Image
+                src="/1.svg"
+                alt="Beggin for a Bite"
+                fill
+                priority
+                className="object-contain"
               />
-            </span>
+            </motion.div>
           </Link>
 
           {/* Desktop Menu (lg and up only) */}

@@ -20,6 +20,8 @@ module.exports = {
         display: ['var(--font-display)', 'serif'],
         body: ['var(--font-body)', 'sans-serif'],
         mono: ['var(--font-mono)', 'monospace'],
+        fredoka: ['var(--font-fredoka)', 'system-ui', 'sans-serif'],
+        caveat: ['var(--font-caveat)', 'cursive', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Rounded shield outline -->
+  <path d="M24 6 L38 11 C38 24 33 34 24 41 C15 34 10 24 10 11 L24 6 Z" 
+    stroke="#D95D39" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Thick bold checkmark inside -->
+  <path d="M17 23 L22.5 28.5 L31.5 18" 
+    stroke="#D95D39" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Bowl base -->
+  <path d="M10 22 C10 32 16 38 24 38 C32 38 38 32 38 22 L10 22 Z" 
+    stroke="#D95D39" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Bowl rim -->
+  <path d="M8 22 C8 21 15 20 24 20 C33 20 40 21 40 22 C40 23 33 24 24 24 C15 24 8 23 8 22 Z" 
+    stroke="#D95D39" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Food inside -->
+  <path d="M14 22 C15 25 19 26 24 26 C28 26 31 25 33 22" 
+    stroke="#D95D39" stroke-width="1.8" stroke-dasharray="2 3" stroke-linecap="round"/>
+  <!-- Spoon -->
+  <path d="M28 22 L39 9 C40 7.8 41.5 7.8 42.2 8.6 C43 9.4 43 10.8 41.8 11.8 L33 22" 
+    stroke="#D95D39" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Steam waves -->
+  <path d="M17 16 C16 14 16 12 18 10 C19 8.5 19 7 18 5" 
+    stroke="#D95D39" stroke-width="2" stroke-linecap="round"/>
+  <path d="M24 16 C23 13.5 23 11.5 25 9.5 C26 8 26 6.5 25 4" 
+    stroke="#D95D39" stroke-width="2" stroke-linecap="round"/>
+</svg>

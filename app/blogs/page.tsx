@@ -1,265 +1,381 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Search, X, Clock } from 'lucide-react';
+import { Newsreader } from 'next/font/google';
 import { getAllBlogs } from '@/lib/blog-utils';
 import { BlogPost } from '@/lib/types';
-import Link from 'next/link';
-import { Search, Sparkles, Clock, User, ArrowRight, Heart, MessageCircle } from 'lucide-react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { Skeleton } from '@/components/ui/skeleton';
+
+// Serif for headlines (editorial feel), your site's sans for everything else.
+const serif = Newsreader({ subsets: ['latin'], display: 'swap' });
+
+const PAGE_SIZE = 9;
+
+/* ---------- helpers ---------- */
+
+const formatDate = (value: string | number | Date) =>
+    new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+// Uses `content` if your BlogPost has it; otherwise falls back to the excerpt.
+const readingTime = (blog: BlogPost) => {
+    const text = (blog as BlogPost & { content?: string }).content ?? blog.excerpt ?? '';
+    const words = text.replace(/<[^>]+>/g, ' ').trim().split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.round(words / 220));
+};
+
+/* ---------- small pieces ---------- */
+
+function Meta({ blog, className = '' }: { blog: BlogPost; className?: string }) {
+    return (
+        <p className={`flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-stone-500 dark:text-stone-400 ${className}`}>
+            <span className="font-medium text-stone-700 dark:text-stone-300">{blog.author}</span>
+            <time dateTime={new Date(blog.createdAt).toISOString()}>{formatDate(blog.createdAt)}</time>
+            <span className="inline-flex items-center gap-1">
+                <Clock size={13} aria-hidden /> {readingTime(blog)} min read
+            </span>
+        </p>
+    );
+}
+
+function Cover({ blog, sizes, className = '' }: { blog: BlogPost; sizes: string; className?: string }) {
+    return (
+        <div className={`relative overflow-hidden rounded-md bg-stone-200 dark:bg-stone-800 ${className}`}>
+            <Image
+                src={blog.coverImage || '/placeholder.svg'}
+                alt=""
+                fill
+                sizes={sizes}
+                className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+            />
+        </div>
+    );
+}
+
+function Category({ children }: { children: React.ReactNode }) {
+    if (!children) return null;
+    return <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">{children}</span>;
+}
+
+/* ---------- loading skeleton (mirrors the real layout) ---------- */
+
+function PageSkeleton() {
+    return (
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+            <Skeleton className="h-12 w-72 mb-3" />
+            <Skeleton className="h-5 w-96 max-w-full mb-12" />
+            <div className="grid lg:grid-cols-3 gap-10 mb-16">
+                <div className="lg:col-span-2 space-y-4">
+                    <Skeleton className="aspect-[16/9] w-full" />
+                    <Skeleton className="h-9 w-3/4" />
+                    <Skeleton className="h-5 w-full" />
+                </div>
+                <div className="space-y-6">
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="flex gap-4">
+                            <Skeleton className="h-24 w-28 flex-shrink-0" />
+                            <div className="flex-1 space-y-2">
+                                <Skeleton className="h-4 w-20" />
+                                <Skeleton className="h-5 w-full" />
+                                <Skeleton className="h-4 w-2/3" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+                {[1, 2, 3].map((i) => (
+                    <div key={i} className="space-y-3">
+                        <Skeleton className="aspect-[3/2] w-full" />
+                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="h-6 w-full" />
+                        <Skeleton className="h-4 w-2/3" />
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+/* ---------- page ---------- */
 
 export default function BlogsPage() {
     const [blogs, setBlogs] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
     useEffect(() => {
-        const fetchBlogs = async () => {
-            const data = await getAllBlogs(true); // Only published
-            setBlogs(data);
-            setLoading(false);
-        };
-        fetchBlogs();
+        (async () => {
+            try {
+                const data = await getAllBlogs(true); // published only
+                setBlogs(data);
+            } catch {
+                setError(true);
+            } finally {
+                setLoading(false);
+            }
+        })();
     }, []);
 
-    // Extract categories
-    const categories = ['All', ...Array.from(new Set(blogs.map(b => b.category).filter(Boolean)))];
+    // Reset pagination whenever the filters change
+    useEffect(() => {
+        setVisibleCount(PAGE_SIZE);
+    }, [searchTerm, selectedCategory]);
 
-    const filteredBlogs = blogs.filter((blog) => {
-        const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            blog.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || blog.category === selectedCategory;
-        return matchesSearch && matchesCategory;
-    });
+    const sorted = useMemo(
+        () => [...blogs].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+        [blogs]
+    );
 
-    const featuredBlogs = blogs.filter(b => b.featured).slice(0, 3);
+    const categories = useMemo(
+        () => ['All', ...Array.from(new Set(blogs.map((b) => b.category).filter(Boolean))).sort()],
+        [blogs]
+    );
+
+    const query = searchTerm.trim().toLowerCase();
+    const isFiltering = query !== '' || selectedCategory !== 'All';
+
+    const filtered = useMemo(
+        () =>
+            sorted.filter((b) => {
+                const matchesSearch =
+                    !query || b.title.toLowerCase().includes(query) || (b.excerpt ?? '').toLowerCase().includes(query);
+                const matchesCategory = selectedCategory === 'All' || b.category === selectedCategory;
+                return matchesSearch && matchesCategory;
+            }),
+        [sorted, query, selectedCategory]
+    );
+
+    // Lead story + side stories (only on the unfiltered view)
+    const lead = sorted.find((b) => b.featured) ?? sorted[0];
+    const side = useMemo(() => {
+        if (!lead) return [];
+        const rest = sorted.filter((b) => b.id !== lead.id);
+        return [...rest.filter((b) => b.featured), ...rest.filter((b) => !b.featured)].slice(0, 3);
+    }, [sorted, lead]);
+
+    const gridSource = isFiltering
+        ? filtered
+        : sorted.filter((b) => b.id !== lead?.id && !side.some((s) => s.id === b.id));
+    const visible = gridSource.slice(0, visibleCount);
+
+    const clearFilters = () => {
+        setSearchTerm('');
+        setSelectedCategory('All');
+    };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 dark:bg-slate-950 font-sans">
-                {/* Hero Skeleton */}
-                <section className="bg-slate-900 py-24 relative overflow-hidden">
-                    <div className="container mx-auto px-4 relative z-10 text-center">
-                        <Skeleton className="h-16 w-1/2 mx-auto bg-slate-800 mb-6" />
-                        <Skeleton className="h-6 w-1/3 mx-auto bg-slate-800" />
-                    </div>
-                </section>
-
-                {/* Content Skeleton */}
-                <div className="container mx-auto px-4 py-12">
-                    <div className="flex flex-col md:flex-row gap-6 mb-12">
-                        <Skeleton className="h-12 w-full md:w-1/3" />
-                        <div className="flex gap-2 w-full overflow-hidden">
-                            {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-10 w-24 rounded-lg flex-shrink-0" />)}
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[1, 2, 3, 4, 5, 6].map((i) => (
-                            <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 space-y-4">
-                                <Skeleton className="h-56 w-full" />
-                                <div className="p-6 space-y-4">
-                                    <div className="flex justify-between">
-                                        <Skeleton className="h-4 w-20" />
-                                        <Skeleton className="h-4 w-20" />
-                                    </div>
-                                    <Skeleton className="h-8 w-full" />
-                                    <Skeleton className="h-4 w-full" />
-                                    <Skeleton className="h-4 w-2/3" />
-                                    <div className="pt-4 flex justify-between">
-                                        <Skeleton className="h-4 w-16" />
-                                        <Skeleton className="h-4 w-16" />
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+            <div className="min-h-screen bg-[#F7F8F5] dark:bg-[#0E1412]">
+                <PageSkeleton />
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 font-sans">
-            {/* Hero Section */}
-            <section className="bg-slate-900 text-white py-24 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-                <div className="container mx-auto px-4 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center max-w-3xl mx-auto"
-                    >
-                        <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">Our Blog</h1>
-                        <p className="text-xl text-gray-400 leading-relaxed">
-                            Expert advice, nutrition tips, and health guides to help you give your pet the best life possible.
-                        </p>
-                    </motion.div>
-                </div>
-            </section>
+        <div className="min-h-screen bg-[#F7F8F5] dark:bg-[#0E1412] text-stone-900 dark:text-stone-100">
+            {/* ---------- Masthead ---------- */}
+            <header className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-14 pb-10">
+                <h1 className={`${serif.className} text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight`}>
+                    The pet care journal
+                </h1>
+                <p className="mt-4 max-w-xl text-lg leading-relaxed text-stone-600 dark:text-stone-400">
+                    Vet-reviewed advice on nutrition, health and everyday life with your pet.
+                </p>
+            </header>
 
-            {/* Search & Filters */}
-            <section className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-800 py-6">
-                <div className="container mx-auto px-4">
-                    <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
-                        {/* Categories */}
-                        <div className="flex overflow-x-auto pb-2 md:pb-0 gap-2 w-full md:w-auto no-scrollbar">
-                            {categories.map((category) => (
-                                <button
-                                    key={category}
-                                    onClick={() => setSelectedCategory(category)}
-                                    className={`px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all duration-300 ${selectedCategory === category
-                                        ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
-                                        : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-slate-700'
-                                        }`}
-                                >
-                                    {category}
-                                </button>
-                            ))}
-                        </div>
+            {/* ---------- Sticky filter bar ---------- */}
+            <div className="sticky top-0 z-30 border-y border-stone-200 dark:border-stone-800 bg-[#F7F8F5]/90 dark:bg-[#0E1412]/90 backdrop-blur">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center gap-3 md:gap-8">
+                    <nav aria-label="Categories" className="flex-1 min-w-0">
+                        <ul className="flex gap-6 overflow-x-auto no-scrollbar">
+                            {categories.map((category) => {
+                                const active = selectedCategory === category;
+                                return (
+                                    <li key={category} className="flex-shrink-0">
+                                        <button
+                                            onClick={() => setSelectedCategory(category)}
+                                            aria-pressed={active}
+                                            className={`relative py-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:text-emerald-700 ${
+                                                active
+                                                    ? 'text-stone-900 dark:text-white'
+                                                    : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white'
+                                            }`}
+                                        >
+                                            {category}
+                                            {active && (
+                                                <span className="absolute inset-x-0 -bottom-px h-0.5 bg-emerald-700 dark:bg-emerald-400" />
+                                            )}
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </nav>
 
-                        {/* Search */}
-                        <div className="relative w-full md:w-80">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                            <input
-                                type="text"
-                                placeholder="Search articles..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-11 pr-4 py-2.5 bg-gray-100 dark:bg-slate-800 border-none rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Featured Section (if any and filtering is clear) */}
-            {featuredBlogs.length > 0 && selectedCategory === 'All' && !searchTerm && (
-                <section className="py-16 border-b border-gray-200 dark:border-slate-800">
-                    <div className="container mx-auto px-4">
-                        <div className="flex items-center gap-3 mb-10">
-                            <Sparkles className="text-yellow-500" size={24} />
-                            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Featured Stories</h2>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {featuredBlogs.map((blog, index) => (
-                                <Link href={`/blogs/${blog.slug}`} key={blog.id}>
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                                        viewport={{ once: true }}
-                                        className="group cursor-pointer"
-                                    >
-                                        <div className="relative h-64 rounded-2xl overflow-hidden mb-6">
-                                            <Image
-                                                src={blog.coverImage || '/placeholder.svg'}
-                                                alt={blog.title}
-                                                fill
-                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                            />
-                                            <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
-                                                {blog.category}
-                                            </div>
-                                        </div>
-                                        <div className="space-y-3">
-                                            <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                                                <span className="flex items-center gap-1"><Clock size={14} /> {new Date(blog.createdAt).toLocaleDateString()}</span>
-                                                <span className="flex items-center gap-1"><User size={14} /> {blog.author}</span>
-                                            </div>
-                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                                                {blog.title}
-                                            </h3>
-                                            <p className="text-gray-600 dark:text-gray-400 line-clamp-2">
-                                                {blog.excerpt}
-                                            </p>
-                                            <span className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold hover:gap-3 transition-all">
-                                                Read Article <ArrowRight size={16} />
-                                            </span>
-                                        </div>
-                                    </motion.div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
-
-            {/* All Posts Grid */}
-            <section className="py-16">
-                <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold mb-10 text-gray-900 dark:text-white">
-                        {selectedCategory === 'All' ? 'Latest Articles' : `${selectedCategory} Articles`}
-                    </h2>
-
-                    {filteredBlogs.length === 0 ? (
-                        <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800">
-                            <div className="inline-flex p-4 bg-gray-100 dark:bg-slate-800 rounded-full mb-4">
-                                <Search size={32} className="text-gray-400" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No articles found</h3>
-                            <p className="text-gray-500 dark:text-gray-400">Try adjusting your filters.</p>
+                    <div className="relative w-full md:w-72 pb-3 md:pb-0">
+                        <Search
+                            className="pointer-events-none absolute left-3 top-[calc(50%-6px)] md:top-1/2 -translate-y-1/2 text-stone-400"
+                            size={16}
+                            aria-hidden
+                        />
+                        <input
+                            type="search"
+                            aria-label="Search articles"
+                            placeholder="Search articles"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full rounded-md border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 py-2 pl-9 pr-9 text-sm placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                        />
+                        {searchTerm && (
                             <button
-                                onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }}
-                                className="mt-6 text-blue-600 dark:text-blue-400 font-semibold hover:underline"
+                                onClick={() => setSearchTerm('')}
+                                aria-label="Clear search"
+                                className="absolute right-2 top-[calc(50%-6px)] md:top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"
                             >
-                                Clear all filters
+                                <X size={14} />
                             </button>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {filteredBlogs.map((blog, index) => (
-                                <Link href={`/blogs/${blog.slug}`} key={blog.id}>
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                                        viewport={{ once: true }}
-                                        className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md transition-all group flex flex-col h-full"
-                                    >
-                                        <div className="relative h-48 overflow-hidden bg-gray-100 dark:bg-slate-800">
-                                            <Image
-                                                src={blog.coverImage || '/placeholder.svg'}
-                                                alt={blog.title}
-                                                fill
-                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                            />
-                                        </div>
-                                        <div className="p-6 flex flex-col flex-grow">
-                                            <div className="flex items-center justify-between mb-4">
-                                                <span className="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-full">
-                                                    {blog.category}
-                                                </span>
-                                                <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                    {new Date(blog.createdAt).toLocaleDateString()}
-                                                </span>
-                                            </div>
-                                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                                                {blog.title}
-                                            </h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 line-clamp-3 flex-grow">
-                                                {blog.excerpt}
-                                            </p>
-                                            <div className="pt-6 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between mt-auto">
-                                                <div className="flex items-center gap-4 text-gray-500 dark:text-gray-400 text-sm">
-                                                    {/* Placeholders for likes/comments if not available in data */}
-                                                    <span className="flex items-center gap-1.5"><Heart size={16} /> 24</span>
-                                                    <span className="flex items-center gap-1.5"><MessageCircle size={16} /> 5</span>
-                                                </div>
-                                                <span className="text-slate-900 dark:text-white font-semibold text-sm hover:underline">
-                                                    Read More
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
-            </section>
+            </div>
+
+            <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+                {error && (
+                    <div role="alert" className="rounded-md border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/40 p-6 text-center">
+                        <p className="font-semibold">We couldn’t load the articles.</p>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="mt-3 text-sm font-semibold text-emerald-700 dark:text-emerald-400 underline underline-offset-4"
+                        >
+                            Reload the page
+                        </button>
+                    </div>
+                )}
+
+                {/* ---------- Lead story + side stories ---------- */}
+                {!error && !isFiltering && lead && (
+                    <section aria-label="Top stories" className="grid lg:grid-cols-3 gap-10 lg:gap-12 pb-14 mb-14 border-b border-stone-200 dark:border-stone-800">
+                        <Link href={`/blogs/${lead.slug}`} className="group lg:col-span-2 block">
+                            <Cover blog={lead} sizes="(min-width: 1024px) 66vw, 100vw" className="aspect-[16/9] mb-6" />
+                            <Category>{lead.category}</Category>
+                            <h2 className={`${serif.className} mt-2 text-3xl sm:text-4xl font-semibold leading-tight tracking-tight group-hover:underline decoration-2 underline-offset-4 decoration-emerald-700/60`}>
+                                {lead.title}
+                            </h2>
+                            <p className="mt-3 max-w-2xl text-lg leading-relaxed text-stone-600 dark:text-stone-400 line-clamp-3">
+                                {lead.excerpt}
+                            </p>
+                            <Meta blog={lead} className="mt-4" />
+                        </Link>
+
+                        {side.length > 0 && (
+                            <div>
+                                <h2 className="text-sm font-semibold text-stone-500 dark:text-stone-400 pb-3 mb-6 border-b border-stone-200 dark:border-stone-800">
+                                    More to read
+                                </h2>
+                                <ul className="space-y-7">
+                                    {side.map((blog) => (
+                                        <li key={blog.id}>
+                                            <Link href={`/blogs/${blog.slug}`} className="group flex gap-4">
+                                                <Cover blog={blog} sizes="120px" className="h-24 w-28 flex-shrink-0" />
+                                                <div className="min-w-0">
+                                                    <Category>{blog.category}</Category>
+                                                    <h3 className={`${serif.className} mt-0.5 text-lg font-semibold leading-snug line-clamp-3 group-hover:underline underline-offset-4`}>
+                                                        {blog.title}
+                                                    </h3>
+                                                    <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
+                                                        {formatDate(blog.createdAt)} · {readingTime(blog)} min read
+                                                    </p>
+                                                </div>
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                    </section>
+                )}
+
+                {/* ---------- Article grid ---------- */}
+                {!error && (
+                    <section aria-label="Articles">
+                        <div className="flex items-baseline justify-between mb-8">
+                            <h2 className={`${serif.className} text-2xl sm:text-3xl font-semibold`}>
+                                {query
+                                    ? `Results for “${searchTerm.trim()}”`
+                                    : selectedCategory === 'All'
+                                    ? 'Latest articles'
+                                    : selectedCategory}
+                            </h2>
+                            {isFiltering && (
+                                <p className="text-sm text-stone-500 dark:text-stone-400" aria-live="polite">
+                                    {filtered.length} {filtered.length === 1 ? 'article' : 'articles'}
+                                </p>
+                            )}
+                        </div>
+
+                        {gridSource.length === 0 ? (
+                            <div className="py-20 text-center">
+                                <p className={`${serif.className} text-2xl font-semibold`}>
+                                    {isFiltering ? 'No articles match your search' : 'No articles yet'}
+                                </p>
+                                {isFiltering && (
+                                    <>
+                                        <p className="mt-2 text-stone-500 dark:text-stone-400">
+                                            Try a different keyword or pick another category.
+                                        </p>
+                                        <button
+                                            onClick={clearFilters}
+                                            className="mt-5 rounded-md bg-stone-900 dark:bg-white px-4 py-2 text-sm font-semibold text-white dark:text-stone-900 hover:opacity-90"
+                                        >
+                                            Clear filters
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        ) : (
+                            <>
+                                <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+                                    {visible.map((blog) => (
+                                        <li key={blog.id}>
+                                            <Link href={`/blogs/${blog.slug}`} className="group flex h-full flex-col">
+                                                <Cover blog={blog} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="aspect-[3/2] mb-5" />
+                                                <Category>{blog.category}</Category>
+                                                <h3 className={`${serif.className} mt-1.5 text-xl sm:text-[22px] font-semibold leading-snug line-clamp-2 group-hover:underline decoration-2 underline-offset-4 decoration-emerald-700/60`}>
+                                                    {blog.title}
+                                                </h3>
+                                                <p className="mt-2 text-[15px] leading-relaxed text-stone-600 dark:text-stone-400 line-clamp-3 flex-grow">
+                                                    {blog.excerpt}
+                                                </p>
+                                                <Meta blog={blog} className="mt-4" />
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                {visibleCount < gridSource.length && (
+                                    <div className="mt-16 flex flex-col items-center gap-2">
+                                        <button
+                                            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                                            className="rounded-md border border-stone-900 dark:border-stone-200 px-6 py-2.5 text-sm font-semibold hover:bg-stone-900 hover:text-white dark:hover:bg-white dark:hover:text-stone-900 transition-colors"
+                                        >
+                                            Show more articles
+                                        </button>
+                                        <p className="text-xs text-stone-500 dark:text-stone-400">
+                                            Showing {visible.length} of {gridSource.length}
+                                        </p>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </section>
+                )}
+            </main>
         </div>
     );
 }
