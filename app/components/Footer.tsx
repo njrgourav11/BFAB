@@ -13,17 +13,17 @@ const Footer = () => {
   ];
 
   const quickLinks = [
-    // { label: 'About Us', href: '/about-us' },
     { label: 'Contact Us', href: '/contact-us' },
-    { label: 'Paw Blog', href: '/paw-blog' },
+    { label: 'Paw Blog', href: '/blogs' },
     { label: 'Feeding Guide', href: '/feeding-guide' },
+    { label: 'About Us', href: '/about-us' },
   ];
 
   const productLinks = [
     { label: 'All Products', href: '/products' },
-    { label: 'Shop Now', href: '/products' },
+    { label: 'Fresh Meals', href: '/products' },
+    { label: 'Pet Wellness', href: '/products' },
     { label: 'Saver Packs', href: '/ultimate-saver-packs' },
-    { label: 'BFAB Cares', href: '/bfab-cares' },
   ];
 
   const legalLinks = [
@@ -34,12 +34,12 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-slate-900 text-white pt-16 pb-8 border-t border-slate-800">
-      <div className="container mx-auto px-4">
+    <footer className="bg-[#FA6338] text-white pt-16 pb-8 border-t border-[#e2552d]">
+      <div className="container mx-auto px-4 md:px-8 max-w-7xl">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
 
-          {/* Brand Section - Takes 2 columns on large screens */}
+          {/* Brand Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -48,18 +48,18 @@ const Footer = () => {
             className="lg:col-span-2"
           >
             <div className="flex items-center gap-3 mb-4">
-              <div className="relative w-10 h-10">
+              <div className="relative w-10 h-10 bg-white rounded-xl p-1 shadow-sm">
                 <Image
                   src="/cat.svg"
                   alt="BFAB Logo"
                   fill
-                  className="object-contain"
+                  className="object-contain p-1"
                 />
               </div>
-              <h2 className="text-2xl font-bold">BFAB Pet Food</h2>
+              <h2 className="text-2xl font-extrabold tracking-tight">Beggin For A Bite</h2>
             </div>
-            <p className="text-gray-400 leading-relaxed mb-6 max-w-md">
-              Dedicated to providing the best nutrition for your beloved pets. We believe in healthy, happy lives for all animals.
+            <p className="text-white/90 leading-relaxed mb-6 max-w-md text-sm sm:text-base font-medium">
+              Dedicated to providing the best nutrition and wellness solutions to help every pet live a healthy, happy life from first bite to forever.
             </p>
 
             {/* Social Links */}
@@ -70,7 +70,7 @@ const Footer = () => {
                   href={social.href}
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-gray-400 ${social.color} hover:text-white transition-all`}
+                  className="w-10 h-10 rounded-xl bg-white/20 hover:bg-white text-white hover:text-[#FA6338] flex items-center justify-center transition-all shadow-sm"
                   aria-label={social.label}
                 >
                   <social.icon size={18} />
@@ -86,15 +86,15 @@ const Footer = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
           >
-            <h3 className="font-bold text-lg mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+            <h3 className="font-extrabold text-base uppercase tracking-wider mb-4 text-white">Quick Links</h3>
+            <ul className="space-y-2.5">
               {quickLinks.map((link, index) => (
                 <li key={index}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors inline-flex items-center gap-2 group"
+                    className="text-white/80 hover:text-white transition-colors inline-flex items-center gap-2 text-sm font-medium group"
                   >
-                    <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 -ml-5 group-hover:ml-0 transition-all" />
+                    <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all" />
                     {link.label}
                   </Link>
                 </li>
@@ -109,15 +109,15 @@ const Footer = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h3 className="font-bold text-lg mb-4">Products</h3>
-            <ul className="space-y-2">
+            <h3 className="font-extrabold text-base uppercase tracking-wider mb-4 text-white">Products</h3>
+            <ul className="space-y-2.5">
               {productLinks.map((link, index) => (
                 <li key={index}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors inline-flex items-center gap-2 group"
+                    className="text-white/80 hover:text-white transition-colors inline-flex items-center gap-2 text-sm font-medium group"
                   >
-                    <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 -ml-5 group-hover:ml-0 transition-all" />
+                    <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all" />
                     {link.label}
                   </Link>
                 </li>
@@ -132,74 +132,51 @@ const Footer = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            <h3 className="font-bold text-lg mb-4">Contact Info</h3>
-            <div className="space-y-3">
+            <h3 className="font-extrabold text-base uppercase tracking-wider mb-4 text-white">Contact Us</h3>
+            <div className="space-y-3 text-sm">
               <a
                 href="mailto:paw.support@begginforabite.in"
-                className="flex items-start gap-3 text-gray-400 hover:text-white transition-colors group"
+                className="flex items-start gap-3 text-white/80 hover:text-white transition-colors group"
               >
-                <Mail size={18} className="text-blue-400 mt-0.5 flex-shrink-0" />
-                <span className="text-sm">paw.support@begginforabite.in</span>
+                <Mail size={18} className="text-white mt-0.5 flex-shrink-0" />
+                <span>paw.support@begginforabite.in</span>
               </a>
               <a
                 href="tel:+918480320158"
-                className="flex items-start gap-3 text-gray-400 hover:text-white transition-colors group"
+                className="flex items-start gap-3 text-white/80 hover:text-white transition-colors group"
               >
-                <Phone size={18} className="text-green-400 mt-0.5 flex-shrink-0" />
-                <span className="text-sm">+91 8480-320158</span>
+                <Phone size={18} className="text-white mt-0.5 flex-shrink-0" />
+                <span>+91 8480-320158</span>
               </a>
-              <div className="flex items-start gap-3 text-gray-400">
-                <MapPin size={18} className="text-red-400 mt-0.5 flex-shrink-0" />
-                <span className="text-sm">Taksh Apartment, Bhubaneswar, Odisha - 752050</span>
+              <div className="flex items-start gap-3 text-white/80">
+                <MapPin size={18} className="text-white mt-0.5 flex-shrink-0" />
+                <span>Taksh Apartment, Bhubaneswar, Odisha - 752050</span>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Newsletter Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-slate-800 rounded-2xl p-8 mb-12"
-        >
-          <div className="max-w-2xl mx-auto text-center">
-            <h3 className="text-2xl font-bold mb-2">Stay Updated</h3>
-            <p className="text-gray-400 mb-6">Subscribe to our newsletter for pet care tips and exclusive offers</p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors whitespace-nowrap">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </motion.div>
-
         {/* Bottom Bar */}
-        <div className="border-t border-slate-800 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm text-center md:text-left">
-              © {new Date().getFullYear()} BFAB Pet Food Store. All rights reserved.
+        <div className="border-t border-white/20 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-medium text-white/80">
+            <p className="text-center md:text-left">
+              © {new Date().getFullYear()} Beggin For A Bite (BFAB). All rights reserved.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <div className="flex flex-wrap justify-center gap-5">
               {legalLinks.map((link, index) => (
                 <Link
                   key={index}
                   href={link.href}
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="hover:text-white transition-colors"
                 >
                   {link.label}
                 </Link>
               ))}
             </div>
 
-            <p className="text-gray-400 text-sm flex items-center gap-2">
-              Made with <Heart size={14} className="text-red-500 fill-current" /> for pet lovers
+            <p className="flex items-center gap-1.5">
+              Made with <Heart size={14} className="text-white fill-current" /> for pet lovers
             </p>
           </div>
         </div>

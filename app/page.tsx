@@ -1,520 +1,574 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Instrument_Serif, Hanken_Grotesk } from 'next/font/google';
-import { ArrowRight, Check, Minus, Star, Leaf, FlaskConical, Flame, ShieldCheck } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import {
+  CheckCircle2,
+  Leaf,
+  ShieldCheck,
+  Stethoscope,
+  UtensilsCrossed,
+  Flame,
+  Award,
+  Building2,
+  Instagram,
+  Youtube,
+  Linkedin,
+  Check,
+  Ticket
+} from 'lucide-react';
 import { useCart } from './components/CartContext';
-import { Product } from '@/lib/types';
-import { getAllProducts } from '@/lib/product-utils';
+import { getAllCoupons } from '@/lib/coupon-utils';
+import { Coupon } from '@/lib/types';
 
-const serif = Instrument_Serif({ subsets: ['latin'], weight: '400', style: ['normal', 'italic'], variable: '--f-serif', display: 'swap' });
-const sans = Hanken_Grotesk({ subsets: ['latin'], variable: '--f-sans', display: 'swap' });
-
-const S = 'font-[family-name:var(--f-serif)] font-normal';
-
-const pillars = [
-  { icon: Leaf, title: 'Whole ingredients', text: 'Real muscle meat, organs and fruit.' },
-  { icon: Flame, title: 'Gently cooked', text: 'Low heat keeps nutrients intact.' },
-  { icon: FlaskConical, title: 'Vet formulated', text: 'Meets AAFCO and FEDIAF profiles.' },
-  { icon: ShieldCheck, title: 'Nothing artificial', text: 'No dyes, fillers or by-products.' },
-];
-
-const concerns = [
-  { name: 'Gut & digestion', image: '/category/5.png', desc: 'Prebiotics and gentle fibre' },
-  { name: 'Hip & joint', image: '/category/1.png', desc: 'Glucosamine and chondroitin' },
-  { name: 'Skin & coat', image: '/category/4.png', desc: 'Omega-3s and coconut oil' },
-  { name: 'Calm & anxiety', image: '/category/3.png', desc: 'Hemp seed and chamomile' },
-  { name: 'Dental care', image: '/category/6.png', desc: 'Yak milk tartar defence' },
-  { name: 'Weight & energy', image: '/category/2.png', desc: 'Lean human-grade protein' },
-];
-
-const compareRows = [
-  { topic: 'Protein', bfab: 'Whole muscle meat and organs', usual: 'Rendered meal, unnamed sources' },
-  { topic: 'Cooking', bfab: 'Low-temperature, slow cooked', usual: 'High-heat extrusion above 200°C' },
-  { topic: 'Gut support', bfab: 'Prebiotic FOS included', usual: 'Starch-heavy fillers' },
-  { topic: 'Formulation', bfab: 'Written by vets and nutritionists', usual: 'Vague proprietary blends' },
-  { topic: 'Additives', bfab: 'None. No dyes or stabilisers', usual: 'Synthetic colours and preservatives' },
-];
-
-const reviews = [
-  { pet: 'Simba, Golden Retriever', parent: 'Ananya S., Bangalore', text: 'Simba had sensitive skin and scratched constantly. Two weeks into the Prebiotic Topper his coat turned silky and the scratching stopped.' },
-  { pet: 'Rocky, German Shepherd', parent: 'Karan M., Mumbai', text: 'He was stiff in his back legs after walks. After switching to the Hip & Joint formula he is chasing tennis balls again.' },
-  { pet: 'Milo & Cleo, Indie cats', parent: 'Pooja V., Delhi', text: 'Fussy eaters who refused every other topper. Now they lick the bowl clean, and their energy is through the roof.' },
-];
-
-const inr = (n: number) => '₹' + n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
-
-const container = 'mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10';
+const TestimonialSlider = dynamic(() => import('@/components/ui/testimonial-slider'), {
+  ssr: false,
+  loading: () => <div className="h-80 animate-pulse rounded-2xl bg-gray-100 dark:bg-slate-800" />,
+});
 
 export default function Home() {
-  const { addToCart, cartItems } = useCart();
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const [calcPet, setCalcPet] = useState<'dog' | 'cat'>('dog');
-  const [calcWeight, setCalcWeight] = useState<number>(12);
+  const { appliedCoupon, applyCoupon } = useCart();
+  const [activeCoupons, setActiveCoupons] = useState<Coupon[]>([]);
+  const [couponInput, setCouponInput] = useState('');
+  const [promoSuccess, setPromoSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        const data = await getAllProducts();
-        if (mounted) setFeaturedProducts(data.slice(0, 6));
-      } catch (error) {
-        console.error('Failed to fetch products', error);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    })();
-    return () => {
-      mounted = false;
-    };
+    getAllCoupons().then(list => {
+      setActiveCoupons(list.filter(c => c.isActive).slice(0, 4));
+    }).catch(err => {
+      console.warn("Could not load coupons:", err);
+    });
   }, []);
 
-  const totalCartCount = cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0);
-  const portion = calcPet === 'dog' ? Math.round(calcWeight * 2.5) : Math.round(calcWeight * 2);
+  const handleApplyPromo = async (codeToUse?: string) => {
+    const code = (codeToUse || couponInput).trim();
+    if (!code) return;
+    const res = await applyCoupon(code);
+    if (res.success) {
+      setPromoSuccess(res.message);
+      setCouponInput('');
+      setTimeout(() => setPromoSuccess(null), 4000);
+    }
+  };
 
   return (
-    <div
-      className={`${serif.variable} ${sans.variable} min-h-screen overflow-x-clip bg-white pb-20 font-[family-name:var(--f-sans)] text-[#0B1F3A] antialiased selection:bg-[#0B1F3A] selection:text-white sm:pb-0 dark:bg-[#0A1220] dark:text-[#EEF1F6]`}
-    >
-      {/* HERO */}
-      <section className="bg-[#F4F6F9] dark:bg-[#0D1626]">
-        <div className={`${container} grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-12 lg:gap-12 lg:py-24`}>
-          <div className="lg:col-span-6">
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              className="mb-6 text-sm font-medium text-[#0B1F3A]/70 dark:text-white/70"
-            >
-              Human-grade nutrition for dogs and cats
-            </motion.p>
+    <div className="bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100 transition-colors">
+      
+      {/* Partner Promo Strip (If Coupon is Active or Shared) */}
+      {appliedCoupon && (
+        <div className="bg-[#FAF7F2] border-b border-orange-200/60 py-2.5 px-4 text-center text-xs sm:text-sm font-semibold text-[#D95D39] flex items-center justify-center gap-2">
+          <Ticket size={16} />
+          <span>Partner Discount Active: <strong>{appliedCoupon.code}</strong> ({appliedCoupon.discountType === 'percentage' ? `${appliedCoupon.discountValue}% OFF` : `₹${appliedCoupon.discountValue} OFF`}) • {appliedCoupon.groupName}</span>
+        </div>
+      )}
 
-            <motion.h1
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}
-              className={`${S} text-[clamp(2.9rem,8vw,6rem)] leading-[0.98] tracking-[-0.02em]`}
-            >
-              Food your pet deserves, <em className="italic">written by vets.</em>
-            </motion.h1>
+      {/* 1. HERO SECTION */}
+      <section className="relative w-full bg-[#FAF7F2] dark:bg-[#0a1512] overflow-hidden">
+        <Link href="/products" className="block w-full cursor-pointer group">
+          {/* Desktop Hero - matches hero.svg natural aspect ratio 1440x540 (2.67:1) */}
+          <div className="hidden md:block w-full relative aspect-[1440/540] max-w-[1440px] mx-auto">
+            <Image
+              src="/hero.svg"
+              alt="PetCare Prescribed by Vets and Delivered to You"
+              fill
+              priority
+              className="object-contain"
+            />
+          </div>
+          {/* Mobile Hero - matches mobile.png natural aspect ratio 375x540 */}
+          <div className="block md:hidden w-full relative aspect-[375/540] max-w-[480px] mx-auto">
+            <Image
+              src="/images/mobile.png"
+              alt="PetCare Prescribed by Vets and Delivered to You"
+              fill
+              priority
+              className="object-contain"
+            />
+          </div>
+        </Link>
+      </section>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.25 }}
-              className="mt-6 max-w-md text-[17px] leading-relaxed text-[#0B1F3A]/75 dark:text-white/75"
-            >
-              Slow-cooked whole meats, real fruit and prebiotic fibre. No mystery meal and no artificial preservatives.
-            </motion.p>
+      {/* 2. SHOP BY CONCERN SECTION */}
+      <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-slate-950 transition-colors">
+        <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#D95D39] mb-3 tracking-tight">
+              Shop By Concern
+            </h2>
+            <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 font-medium">
+              Targeted solutions for your pet's specific needs
+            </p>
+          </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="mt-9 flex flex-col gap-3 sm:flex-row"
-            >
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 justify-items-center">
+            {[
+              { name: 'Dental Health', image: '/category/10.svg', href: '/products?category=Dental%20Health' },
+              { name: 'Hip & Joint', image: '/category/12.svg', href: '/products?category=Hip%20%26%20Joint' },
+              { name: 'Gut Health', image: '/category/11.svg', href: '/products?category=Gut%20Health' },
+              { name: 'Weight Control', image: '/category/13.svg', href: '/products?category=Weight%20Control' },
+              { name: 'Anxiety & Stress', image: '/category/14.svg', href: '/products?category=Anxiety%20Relief' },
+              { name: 'Skin & Coat', image: '/category/15.svg', href: '/products?category=Skin%20%26%20Coat' }
+            ].map((cat, idx) => (
               <Link
-                href="/products"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0B1F3A] px-8 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-[#16345F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0B1F3A] dark:bg-white dark:text-[#0B1F3A] dark:hover:bg-white/90"
+                key={idx}
+                href={cat.href}
+                className="group flex flex-col items-center text-center w-full max-w-[150px] transition-transform duration-300 hover:-translate-y-1.5"
               >
-                Shop best sellers <ArrowRight size={17} />
-              </Link>
-              <a
-                href="#calculator"
-                className="inline-flex items-center justify-center rounded-full border border-[#0B1F3A]/25 px-8 py-4 text-[15px] font-semibold transition-colors hover:border-[#0B1F3A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0B1F3A] dark:border-white/30 dark:hover:border-white"
-              >
-                Find the right portion
-              </a>
-            </motion.div>
-
-            <dl className="mt-12 grid max-w-md grid-cols-3 gap-4 border-t border-[#0B1F3A]/15 pt-6 dark:border-white/15">
-              <div>
-                <dd className={`${S} text-4xl`}>15,000+</dd>
-                <dt className="mt-0.5 text-[13px] text-[#0B1F3A]/65 dark:text-white/65">pets fed</dt>
-              </div>
-              <div>
-                <dd className={`${S} flex items-center gap-1 text-4xl`}>
-                  4.9 <Star size={18} className="fill-[#B8893B] text-[#B8893B]" />
-                </dd>
-                <dt className="mt-0.5 text-[13px] text-[#0B1F3A]/65 dark:text-white/65">verified reviews</dt>
-              </div>
-              <div>
-                <dd className={`${S} text-4xl`}>14 days</dd>
-                <dt className="mt-0.5 text-[13px] text-[#0B1F3A]/65 dark:text-white/65">to see a change</dt>
-              </div>
-            </dl>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, ease: [0.2, 0.7, 0.2, 1] }}
-            className="lg:col-span-6"
-          >
-            <div className="relative mx-auto aspect-[5/6] w-full max-w-[560px] overflow-hidden rounded-[2rem] bg-white shadow-[0_30px_80px_-30px_rgba(11,31,58,0.35)] dark:bg-[#15213A]">
-              <Image
-                src="/products/1/20.png"
-                alt="BFAB vet-formulated pet nutrition"
-                fill
-                priority
-                sizes="(max-width: 1024px) 92vw, 45vw"
-                className="object-contain p-8 sm:p-12"
-              />
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* PILLARS */}
-      <section className="border-b border-[#0B1F3A]/10 dark:border-white/10">
-        <div className={`${container} grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`}>
-          {pillars.map(({ icon: Icon, title, text }, i) => (
-            <div
-              key={title}
-              className={`flex items-start gap-4 py-7 sm:py-9 ${i > 0 ? 'border-t border-[#0B1F3A]/10 sm:border-t-0 dark:border-white/10' : ''} ${i % 2 === 1 ? 'sm:border-l sm:border-[#0B1F3A]/10 dark:sm:border-white/10' : ''} ${i >= 2 ? 'sm:border-t sm:border-[#0B1F3A]/10 lg:border-t-0 dark:sm:border-white/10' : ''} ${i > 0 ? 'lg:border-l lg:border-[#0B1F3A]/10 dark:lg:border-white/10' : ''} sm:px-6 lg:px-8 ${i === 0 ? 'lg:pl-0' : ''}`}
-            >
-              <Icon size={24} strokeWidth={1.5} className="mt-0.5 shrink-0 text-[#B8893B]" />
-              <div>
-                <h3 className="text-base font-semibold">{title}</h3>
-                <p className="mt-1 text-[15px] leading-snug text-[#0B1F3A]/70 dark:text-white/70">{text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* SHOP BY CONCERN */}
-      <section className="py-16 sm:py-24">
-        <div className={container}>
-          <div className="mb-10 flex items-end justify-between gap-6">
-            <h2 className={`${S} text-4xl leading-[1.02] tracking-[-0.01em] sm:text-6xl`}>Shop by concern</h2>
-            <Link href="/products" className="hidden items-center gap-1.5 text-[15px] font-semibold underline-offset-4 hover:underline sm:inline-flex">
-              View all products <ArrowRight size={16} />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-6">
-            {concerns.map((cat) => (
-              <Link key={cat.name} href="/products" className="group block">
-                <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#F4F6F9] dark:bg-[#15213A]">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-3 drop-shadow-sm group-hover:drop-shadow-md transition-all">
                   <Image
                     src={cat.image}
-                    alt=""
+                    alt={cat.name}
                     fill
-                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 16vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-contain"
                   />
                 </div>
-                <h3 className="mt-3 text-[15px] font-semibold">{cat.name}</h3>
-                <p className="text-[13px] leading-snug text-[#0B1F3A]/65 dark:text-white/65">{cat.desc}</p>
+                <span className="text-xs sm:text-sm font-bold text-gray-800 dark:text-gray-100 group-hover:text-[#D95D39] transition-colors leading-tight">
+                  {cat.name}
+                </span>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* BEST SELLERS */}
-      <section className="bg-[#F4F6F9] py-16 sm:py-24 dark:bg-[#0D1626]">
-        <div className={container}>
-          <div className="mb-12 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <h2 className={`${S} text-4xl leading-[1.02] tracking-[-0.01em] sm:text-6xl`}>Best sellers</h2>
-            <p className="max-w-sm text-[17px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">
-              The first things most new customers try.
+      {/* 3. TRUST & QUALITY BADGES BAR */}
+      <section className="py-5 bg-[#FAF7F2] dark:bg-slate-900 border-y border-orange-100/80 dark:border-slate-800">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="flex flex-wrap items-center justify-center md:justify-between gap-6 md:gap-4 text-xs sm:text-sm font-bold text-gray-800 dark:text-gray-200">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-[#D95D39]" />
+              <span>100% Formulation</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Leaf className="w-5 h-5 text-emerald-600" />
+              <span>All Natural</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-base">🇮🇳</span>
+              <span>Proudly Made in India</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Stethoscope className="w-5 h-5 text-[#D95D39]" />
+              <span>In-house vet crafted</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-blue-600" />
+              <span>Non-GMO verified</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. WE CREATE PET WELLNESS */}
+      <section className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden">
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-14">
+            {/* Left Text */}
+            <div className="w-full lg:w-5/12">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#D95D39] leading-[1.05] tracking-tight mb-6">
+                We<br />Create<br />Pet<br />Wellness.
+              </h2>
+              <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium leading-relaxed max-w-md">
+                Formulated with <span className="border-b-2 border-[#D95D39] pb-0.5">clinically supported</span> ingredients to help dogs & cats <span className="border-b-2 border-[#D95D39] pb-0.5">live healthier, happier lives.</span>
+              </p>
+            </div>
+
+            {/* Right 3 Product Cards */}
+            <div className="w-full lg:w-7/12">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                {/* Card 1: Prebiotic ProTopper */}
+                <Link href="/products" className="group rounded-2xl overflow-hidden bg-[#FAF7F2] dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+                  <div className="relative p-6 flex-grow flex items-center justify-center min-h-[200px] bg-white dark:bg-slate-900">
+                    <Image src="/products/1/20.png" alt="Prebiotic ProTopper Supplement" width={160} height={160} className="object-contain group-hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div className="bg-[#28676b] text-white p-4 text-center mt-auto">
+                    <h3 className="font-extrabold text-xs sm:text-sm line-clamp-1">Pyrodex Probiotics Supplement</h3>
+                  </div>
+                </Link>
+
+                {/* Card 2: Hip & Joint */}
+                <Link href="/products" className="group rounded-2xl overflow-hidden bg-[#FAF7F2] dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+                  <div className="relative p-6 flex-grow flex items-center justify-center min-h-[200px] bg-white dark:bg-slate-900">
+                    <Image src="/products/1/21.png" alt="Hip & Joint Supplement" width={160} height={160} className="object-contain group-hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div className="bg-[#459fb9] text-white p-4 text-center mt-auto">
+                    <h3 className="font-extrabold text-xs sm:text-sm line-clamp-1">Hip & Joint Supplement</h3>
+                  </div>
+                </Link>
+
+                {/* Card 3: Recovery / Relief */}
+                <Link href="/products" className="group rounded-2xl overflow-hidden bg-[#FAF7F2] dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+                  <div className="relative p-6 flex-grow flex items-center justify-center min-h-[200px] bg-white dark:bg-slate-900">
+                    <Image src="/products/1/22.png" alt="Recovery/Relief Supplement" width={160} height={160} className="object-contain group-hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div className="bg-[#6b8e4e] text-white p-4 text-center mt-auto">
+                    <h3 className="font-extrabold text-xs sm:text-sm line-clamp-1">Recovery/Relief Supplement</h3>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. WE MAKE TREATS THAT CARE */}
+      <section className="py-16 md:py-24 bg-[#FAF7F2]/60 dark:bg-slate-900/40 overflow-hidden">
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <div className="flex flex-col-reverse lg:flex-row items-center gap-10 lg:gap-14">
+            {/* Left 3 Treat Cards */}
+            <div className="w-full lg:w-7/12">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                {/* Treat 1: Chicken Breast Jerky */}
+                <Link href="/products" className="group rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+                  <div className="relative p-6 flex-grow flex items-center justify-center min-h-[200px]">
+                    <Image src="/products/2/3.png" alt="Chicken Breast Jerky" width={150} height={150} className="object-contain group-hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div className="bg-[#1d5b54] text-white p-4 text-center mt-auto">
+                    <h3 className="font-extrabold text-xs sm:text-sm line-clamp-1">Chicken Breast Jerky</h3>
+                  </div>
+                </Link>
+
+                {/* Treat 2: Peanut Butter For Dogs */}
+                <Link href="/products" className="group rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+                  <div className="relative p-6 flex-grow flex items-center justify-center min-h-[200px]">
+                    <Image src="/products/2/4.png" alt="Peanut Butter For Dogs" width={150} height={150} className="object-contain group-hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div className="bg-[#1f4863] text-white p-4 text-center mt-auto">
+                    <h3 className="font-extrabold text-xs sm:text-sm line-clamp-1">Peanut Butter For Dogs</h3>
+                  </div>
+                </Link>
+
+                {/* Treat 3: Real Treat Sausages */}
+                <Link href="/products" className="group rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+                  <div className="relative p-6 flex-grow flex items-center justify-center min-h-[200px]">
+                    <Image src="/products/2/5.png" alt="Real Treat Sausages" width={150} height={150} className="object-contain group-hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div className="bg-[#3d5e32] text-white p-4 text-center mt-auto">
+                    <h3 className="font-extrabold text-xs sm:text-sm line-clamp-1">Real Treat Sausages</h3>
+                  </div>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Text */}
+            <div className="w-full lg:w-5/12 text-left">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#D95D39] leading-[1.05] tracking-tight mb-6">
+                We Make<br />Treats<br />That<br />Care.
+              </h2>
+              <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium leading-relaxed max-w-md">
+                Not just delicious naturally nutritious: made with real ingredients, no nasties, veggies & superfoods.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. HEALTHY EATING FEATURE & MEALS */}
+      <section className="py-20 md:py-28 bg-white dark:bg-slate-950 overflow-hidden">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#D95D39] leading-tight mb-4 tracking-tight">
+              You shouldn't be the only <br className="hidden sm:block" /> one eating healthy
+            </h2>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium leading-relaxed mb-6">
+              Give your best friend real human-grade meals crafted from wholesome ingredients and packed with nutrients. Because a fresh dog is a happy dog.
             </p>
+            <Link
+              href="/products"
+              className="inline-flex items-center justify-center bg-[#D95D39] hover:bg-[#c44e2c] text-white px-8 py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition-colors shadow-sm"
+            >
+              OUR MEALS
+            </Link>
           </div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="aspect-[4/5] animate-pulse rounded-2xl bg-white dark:bg-[#15213A]" />
+          {/* Center Circle with Pouches + 4 Callouts */}
+          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-8 md:gap-4 max-w-5xl mx-auto">
+            {/* Left 2 Callouts */}
+            <div className="space-y-12 text-center md:text-right order-2 md:order-1">
+              <div>
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-50 text-[#D95D39] mb-3">
+                  <UtensilsCrossed size={20} />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Real food</h3>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Human-grade meat and veggies in simple recipes, made for dogs</p>
+              </div>
+              <div>
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-50 text-[#D95D39] mb-3">
+                  <ShieldCheck size={20} />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Health focused</h3>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Crafted by veterinary nutritionists for targeted health benefits</p>
+              </div>
+            </div>
+
+            {/* Center Image with Terracotta Circle */}
+            <div className="flex justify-center order-1 md:order-2">
+              <div className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 flex items-center justify-center">
+                {/* Terracotta circle backdrop */}
+                <div className="absolute inset-4 rounded-full bg-[#E0653B]/20 dark:bg-[#E0653B]/10 blur-xl"></div>
+                <div className="absolute inset-8 rounded-full bg-[#E0653B] opacity-90 shadow-lg"></div>
+                {/* Two meal pouches */}
+                <div className="relative z-10 flex items-center justify-center -space-x-8 sm:-space-x-12">
+                  <div className="relative w-36 h-48 sm:w-44 sm:h-56 transform -rotate-6 transition-transform hover:rotate-0 duration-300">
+                    <Image src="/products/1/20.png" alt="Fresh Dog Meal 1" fill className="object-contain drop-shadow-xl" />
+                  </div>
+                  <div className="relative w-36 h-48 sm:w-44 sm:h-56 transform rotate-6 transition-transform hover:rotate-0 duration-300">
+                    <Image src="/products/1/21.png" alt="Fresh Dog Meal 2" fill className="object-contain drop-shadow-xl" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right 2 Callouts */}
+            <div className="space-y-12 text-center md:text-left order-3 md:order-3">
+              <div>
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-50 text-[#D95D39] mb-3">
+                  <Flame size={20} />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Gently cooked</h3>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Retains nutrition, aroma and natural flavor</p>
+              </div>
+              <div>
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-50 text-[#D95D39] mb-3">
+                  <Stethoscope size={20} />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Professionally developed</h3>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Formulated to meet nutritional requirements</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. FIXING PET FOOD MYTHS */}
+      <section className="py-20 md:py-28 bg-[#FAF7F2]/60 dark:bg-slate-900/40 overflow-hidden border-t border-orange-100/60 dark:border-slate-800">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            {/* Left Content */}
+            <div className="md:w-5/12">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#D95D39] leading-[1.05] tracking-tight mb-4">
+                We're also<br />fixing pet<br />food myths.
+              </h2>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 font-medium leading-relaxed max-w-sm mb-6">
+                From mystery fillers to confusing labels, we tackle pet food misconceptions. Read our blog for honest, evidence-backed advice.
+              </p>
+              <Link
+                href="/blogs"
+                className="inline-flex items-center justify-center bg-[#D95D39] hover:bg-[#c44e2c] text-white px-8 py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition-colors"
+              >
+                BLOG
+              </Link>
+            </div>
+
+            {/* Right Venn Diagram SVG */}
+            <div className="md:w-7/12 w-full flex justify-center relative">
+              <div className="w-full max-w-[560px] aspect-[4/3] relative">
+                <svg viewBox="0 0 600 400" className="w-full h-full text-[#D95D39]">
+                  <defs>
+                    <clipPath id="venn-intersect">
+                      <circle cx="230" cy="220" r="115" />
+                    </clipPath>
+                    <marker id="arrow-line" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                      <path d="M 0 2 L 8 5 L 0 8" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </marker>
+                  </defs>
+
+                  {/* Overlapping intersection */}
+                  <circle cx="360" cy="220" r="115" fill="currentColor" opacity="0.85" clipPath="url(#venn-intersect)" />
+
+                  {/* Left and Right Circles */}
+                  <circle cx="230" cy="220" r="115" fill="none" stroke="currentColor" strokeWidth="3" />
+                  <circle cx="360" cy="220" r="115" fill="none" stroke="currentColor" strokeWidth="3" />
+
+                  {/* Text inside circles */}
+                  <text x="180" y="215" fill="currentColor" fontFamily="sans-serif" fontSize="16" fontWeight="bold" textAnchor="middle">What you</text>
+                  <text x="180" y="240" fill="currentColor" fontFamily="sans-serif" fontSize="16" fontWeight="bold" textAnchor="middle">think they need</text>
+
+                  <text x="410" y="215" fill="currentColor" fontFamily="sans-serif" fontSize="16" fontWeight="bold" textAnchor="middle">What your pet</text>
+                  <text x="410" y="240" fill="currentColor" fontFamily="sans-serif" fontSize="16" fontWeight="bold" textAnchor="middle">actually need</text>
+
+                  {/* Top Text & Arrow */}
+                  <text x="120" y="70" fill="currentColor" fontFamily="sans-serif" fontSize="18" fontWeight="bold">And we're working on</text>
+                  <text x="120" y="95" fill="currentColor" fontFamily="sans-serif" fontSize="18" fontWeight="bold">closing the gap</text>
+                  <path d="M 290 90 Q 320 95 300 120" fill="none" stroke="currentColor" strokeWidth="2.5" markerEnd="url(#arrow-line)" strokeLinecap="round" />
+                </svg>
+
+                {/* Cartoon Detective Dog */}
+                <div className="absolute right-4 bottom-2 w-20 h-24 sm:w-28 sm:h-32">
+                  <Image src="/dog.svg" alt="Detective Dog" fill className="object-contain" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. REAL PEOPLE. REAL LOVE. (TESTIMONIALS) */}
+      <TestimonialSlider />
+
+      {/* 9. TRUSTED BY PET PROFESSIONALS */}
+      <section className="py-16 md:py-24 bg-[#FAF7F2]/60 dark:bg-slate-900/40 border-t border-orange-100/60 dark:border-slate-800 overflow-hidden">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+            {/* Left Text */}
+            <div className="md:w-5/12 text-center md:text-left">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#D95D39] leading-tight tracking-tight mb-3">
+                Trusted By<br />Pet<br />Professionals.
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">
+                Together, elevating the standard of pet nutrition & care.
+              </p>
+            </div>
+
+            {/* Right 3 Trust Seals */}
+            <div className="md:w-7/12 flex flex-wrap items-center justify-center md:justify-end gap-6 sm:gap-10">
+              {/* Seal 1 */}
+              <div className="flex flex-col items-center text-center">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-amber-600/60 bg-amber-50/60 dark:bg-slate-800 flex items-center justify-center p-3 mb-2 shadow-sm">
+                  <Building2 className="w-10 h-10 text-amber-700 dark:text-amber-400" />
+                </div>
+                <span className="text-[11px] sm:text-xs font-bold text-gray-700 dark:text-gray-300">In-House Formulated</span>
+              </div>
+
+              {/* Seal 2 */}
+              <div className="flex flex-col items-center text-center">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-yellow-500 bg-yellow-50 dark:bg-slate-800 flex items-center justify-center p-3 mb-2 shadow-sm">
+                  <Award className="w-10 h-10 text-yellow-600 dark:text-yellow-400" />
+                </div>
+                <span className="text-[11px] sm:text-xs font-bold text-gray-700 dark:text-gray-300">Vet Approved</span>
+              </div>
+
+              {/* Seal 3 */}
+              <div className="flex flex-col items-center text-center">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-orange-500 bg-orange-50 dark:bg-slate-800 flex items-center justify-center p-3 mb-2 shadow-sm">
+                  <ShieldCheck className="w-10 h-10 text-orange-600 dark:text-orange-400" />
+                </div>
+                <span className="text-[11px] sm:text-xs font-bold text-gray-700 dark:text-gray-300">100% Pet Safe</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 10. COME, JOIN THE FAM! */}
+      <section className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden border-t border-slate-100 dark:border-slate-800">
+        <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-10">
+            {/* Left Column: Heading & Social Pill Buttons */}
+            <div>
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#D95D39] leading-tight tracking-tight mb-8">
+                Come, join<br />the fam!
+              </h2>
+
+              <div className="space-y-3 max-w-sm">
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between w-full px-5 py-3 rounded-full border-2 border-[#D95D39] text-[#D95D39] hover:bg-[#D95D39] hover:text-white transition-all text-xs sm:text-sm font-bold shadow-sm"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Instagram size={18} />
+                    <span>Join our Instagram Community</span>
+                  </div>
+                  <span>→</span>
+                </a>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <a
+                    href="https://youtube.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between px-5 py-3 rounded-full border-2 border-[#D95D39] text-[#D95D39] hover:bg-[#D95D39] hover:text-white transition-all text-xs sm:text-sm font-bold shadow-sm"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Youtube size={18} />
+                      <span>YouTube</span>
+                    </div>
+                    <span>→</span>
+                  </a>
+
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between px-5 py-3 rounded-full border-2 border-[#D95D39] text-[#D95D39] hover:bg-[#D95D39] hover:text-white transition-all text-xs sm:text-sm font-bold shadow-sm"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Linkedin size={18} />
+                      <span>LinkedIn</span>
+                    </div>
+                    <span>→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Green Hill & Clouds Landscape Illustration */}
+            <div className="flex justify-center md:justify-end">
+              <div className="relative w-full max-w-[460px] aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border-2 border-orange-100 bg-gradient-to-b from-sky-200 via-sky-100 to-emerald-100">
+                <svg viewBox="0 0 400 300" className="w-full h-full" preserveAspectRatio="none">
+                  {/* Sky */}
+                  <rect width="400" height="300" fill="#BAE6FD" />
+                  {/* Sun Glow */}
+                  <circle cx="340" cy="60" r="40" fill="#FEF08A" opacity="0.8" />
+                  {/* Fluffy Clouds */}
+                  <path d="M 120 70 q 15 -20 35 -15 q 20 -15 40 5 q 20 -5 25 15 q 15 15 -5 25 q -10 10 -90 0 q -15 -10 -5 -30 z" fill="#FFFFFF" opacity="0.95" />
+                  <path d="M 260 110 q 10 -15 25 -10 q 15 -10 30 5 q 15 -5 20 10 q 10 10 -5 20 q -10 5 -65 0 q -10 -10 -5 -25 z" fill="#FFFFFF" opacity="0.85" />
+                  {/* Rolling Green Hills */}
+                  <path d="M 0 190 Q 100 150 220 180 T 400 160 L 400 300 L 0 300 Z" fill="#65A30D" />
+                  <path d="M 0 210 Q 150 170 280 200 T 400 190 L 400 300 L 0 300 Z" fill="#4D7C0F" />
+                  <path d="M 0 240 Q 180 210 320 230 T 400 220 L 400 300 L 0 300 Z" fill="#3F6212" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partner Promo Code Bottom Box */}
+      <section className="py-8 bg-[#FAF7F2] border-t border-orange-100 dark:border-slate-800">
+        <div className="container mx-auto px-4 max-w-3xl text-center">
+          <p className="text-xs uppercase font-bold tracking-wider text-[#D95D39] mb-1">Got a Partner or Team Code?</p>
+          <div className="flex gap-2 max-w-md mx-auto mt-2">
+            <input
+              type="text"
+              placeholder="ENTER PROMO CODE"
+              value={couponInput}
+              onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+              className="flex-1 px-4 py-2.5 text-xs uppercase font-mono font-bold tracking-wider border border-orange-200 rounded-xl bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#D95D39]"
+            />
+            <button
+              onClick={() => handleApplyPromo()}
+              disabled={!couponInput.trim()}
+              className="px-5 py-2.5 bg-[#D95D39] hover:bg-[#c44e2c] disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-colors"
+            >
+              Apply
+            </button>
+          </div>
+          {promoSuccess && (
+            <p className="text-xs text-emerald-600 font-bold mt-2 flex items-center justify-center gap-1">
+              <Check size={14} /> {promoSuccess}
+            </p>
+          )}
+          {activeCoupons.length > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-3">
+              <span className="text-[11px] text-gray-500 font-medium">Active Partner Codes:</span>
+              {activeCoupons.map(c => (
+                <button
+                  key={c.code}
+                  onClick={() => handleApplyPromo(c.code)}
+                  className="px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono bg-white border border-orange-200 text-[#D95D39] hover:bg-orange-50 transition-colors"
+                >
+                  {c.code}
+                </button>
               ))}
             </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-              {featuredProducts.slice(0, 6).map((product) => {
-                const priceNum = typeof product.price === 'number' ? product.price : parseFloat(String(product.price).replace(/[^0-9.]/g, '')) || 299;
-                const originalPriceNum = product.originalPrice
-                  ? typeof product.originalPrice === 'number'
-                    ? product.originalPrice
-                    : parseFloat(String(product.originalPrice).replace(/[^0-9.]/g, ''))
-                  : Math.round(priceNum * 1.25);
-                const discountPercent = Math.round(((originalPriceNum - priceNum) / originalPriceNum) * 100);
-                const img = product.images && product.images[0] ? product.images[0] : '/placeholder.png';
-
-                return (
-                  <article key={product.id} className="group flex flex-col">
-                    <Link
-                      href={`/products/${product.id}`}
-                      className="relative block aspect-[4/5] overflow-hidden rounded-2xl bg-white dark:bg-[#15213A]"
-                    >
-                      {discountPercent > 0 && (
-                        <span className="absolute left-4 top-4 z-10 rounded-full bg-[#0B1F3A] px-3 py-1 text-xs font-semibold text-white">
-                          {discountPercent}% off
-                        </span>
-                      )}
-                      <Image
-                        src={img}
-                        alt={product.name}
-                        fill
-                        sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
-                        className="object-contain p-8 transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </Link>
-
-                    <div className="mt-5 flex items-start justify-between gap-4">
-                      <div className="min-w-0">
-                        <p className="text-[13px] capitalize text-[#0B1F3A]/60 dark:text-white/60">{product.petType}</p>
-                        <Link href={`/products/${product.id}`}>
-                          <h3 className="mt-0.5 text-lg font-semibold leading-snug hover:underline">{product.name}</h3>
-                        </Link>
-                      </div>
-                      <div className="shrink-0 text-right">
-                        <div className="text-lg font-semibold">{inr(priceNum)}</div>
-                        {originalPriceNum > priceNum && (
-                          <div className="text-[13px] text-[#0B1F3A]/45 line-through dark:text-white/45">{inr(originalPriceNum)}</div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="mt-2 flex items-center gap-1.5 text-[13px] text-[#0B1F3A]/65 dark:text-white/65">
-                      <Star size={13} className="fill-[#B8893B] text-[#B8893B]" />
-                      {product.reviews || 120}+ reviews
-                    </div>
-
-                    <p className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">{product.description}</p>
-
-                    <div className="mt-5 grid grid-cols-2 gap-3">
-                      <Link
-                        href={`/products/${product.id}`}
-                        className="rounded-full border border-[#0B1F3A]/25 py-3 text-center text-[15px] font-semibold transition-colors hover:border-[#0B1F3A] dark:border-white/30 dark:hover:border-white"
-                      >
-                        Details
-                      </Link>
-                      <button
-                        onClick={() =>
-                          addToCart({
-                            id: product.id,
-                            name: product.name,
-                            price: String(priceNum),
-                            image: img,
-                            petType: product.petType,
-                            productCategory: product.productCategory || 'Treats',
-                          })
-                        }
-                        className="rounded-full bg-[#0B1F3A] py-3 text-[15px] font-semibold text-white transition-colors hover:bg-[#16345F] active:scale-[0.98] dark:bg-white dark:text-[#0B1F3A]"
-                      >
-                        Add to cart
-                      </button>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
           )}
-
-          <div className="mt-14 text-center">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 rounded-full border border-[#0B1F3A] px-8 py-3.5 text-[15px] font-semibold transition-colors hover:bg-[#0B1F3A] hover:text-white dark:border-white dark:hover:bg-white dark:hover:text-[#0B1F3A]"
-            >
-              Browse the full range <ArrowRight size={16} />
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* COMPARISON */}
-      <section className="py-16 sm:py-24">
-        <div className={`${container} grid gap-10 lg:grid-cols-12 lg:gap-16`}>
-          <div className="lg:col-span-4">
-            <h2 className={`${S} text-4xl leading-[1.02] tracking-[-0.01em] sm:text-6xl`}>How we compare</h2>
-            <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">
-              Most commercial pet food is heavily processed. BFAB is made from fresh whole food and guided by veterinary science.
-            </p>
-          </div>
-
-          <div className="lg:col-span-8">
-            <div className="hidden grid-cols-12 gap-6 border-b border-[#0B1F3A] pb-3 text-sm font-semibold sm:grid dark:border-white">
-              <div className="col-span-3" />
-              <div className="col-span-5">BFAB</div>
-              <div className="col-span-4 text-[#0B1F3A]/55 dark:text-white/55">Typical commercial food</div>
-            </div>
-            {compareRows.map((r) => (
-              <div key={r.topic} className="grid grid-cols-1 gap-2 border-b border-[#0B1F3A]/12 py-5 sm:grid-cols-12 sm:gap-6 dark:border-white/15">
-                <h3 className="text-[15px] font-semibold sm:col-span-3">{r.topic}</h3>
-                <p className="flex gap-2.5 text-[15px] leading-snug sm:col-span-5">
-                  <Check size={18} strokeWidth={2.5} className="mt-px shrink-0 text-[#1E7A5A]" />
-                  {r.bfab}
-                </p>
-                <p className="flex gap-2.5 text-[15px] leading-snug text-[#0B1F3A]/55 sm:col-span-4 dark:text-white/55">
-                  <Minus size={18} className="mt-px shrink-0" />
-                  {r.usual}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CALCULATOR */}
-      <section id="calculator" className="scroll-mt-24 bg-[#0B1F3A] py-16 text-white sm:py-24">
-        <div className={`${container} grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20`}>
-          <div>
-            <h2 className={`${S} text-4xl leading-[1.02] tracking-[-0.01em] sm:text-6xl`}>How much should they eat?</h2>
-            <p className="mt-5 max-w-md text-[17px] leading-relaxed text-white/75">
-              Choose your pet and set their weight for a suggested daily topper portion. This is a guide only, so ask your vet about specific dietary needs.
-            </p>
-
-            <div className="mt-9 space-y-8">
-              <div role="group" aria-label="Pet type" className="inline-flex rounded-full border border-white/25 p-1">
-                {(['dog', 'cat'] as const).map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    aria-pressed={calcPet === p}
-                    onClick={() => {
-                      setCalcPet(p);
-                      setCalcWeight((w) => Math.min(w, p === 'cat' ? 15 : 60));
-                    }}
-                    className={`rounded-full px-8 py-2.5 text-[15px] font-semibold transition-colors ${
-                      calcPet === p ? 'bg-white text-[#0B1F3A]' : 'text-white/80 hover:text-white'
-                    }`}
-                  >
-                    {p === 'dog' ? 'Dog' : 'Cat'}
-                  </button>
-                ))}
-              </div>
-
-              <div>
-                <div className="mb-3 flex items-baseline justify-between">
-                  <label htmlFor="weight" className="text-[15px] font-medium">Weight</label>
-                  <span className={`${S} text-3xl`}>{calcWeight} kg</span>
-                </div>
-                <input
-                  id="weight"
-                  type="range"
-                  min={1}
-                  max={calcPet === 'dog' ? 60 : 15}
-                  value={calcWeight}
-                  onChange={(e) => setCalcWeight(Number(e.target.value))}
-                  className="h-2 w-full cursor-pointer accent-[#B8893B]"
-                />
-                <div className="mt-1.5 flex justify-between text-xs text-white/55">
-                  <span>1 kg</span>
-                  <span>{calcPet === 'dog' ? '60 kg' : '15 kg'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-[2rem] bg-white p-7 text-[#0B1F3A] sm:p-10">
-            <p className="text-sm text-[#0B1F3A]/65">Suggested daily portion</p>
-            <p className={`${S} mt-1 text-[clamp(4.5rem,15vw,8rem)] leading-none`}>
-              {portion}
-              <span className="ml-2 text-4xl text-[#B8893B]">g</span>
-            </p>
-            <dl className="mt-7 space-y-3 border-t border-[#0B1F3A]/12 pt-6 text-[15px]">
-              <div className="flex justify-between gap-4">
-                <dt className="text-[#0B1F3A]/65">Start with</dt>
-                <dd className="text-right font-semibold">{calcWeight > 20 ? 'Hip & Joint Pro Formula' : 'Natural Prebiotic ProTopper'}</dd>
-              </div>
-              <div className="flex justify-between gap-4">
-                <dt className="text-[#0B1F3A]/65">You may notice</dt>
-                <dd className="text-right font-semibold">Firmer stool, glossier coat</dd>
-              </div>
-            </dl>
-            <Link
-              href="/products"
-              className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-[#0B1F3A] py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#16345F]"
-            >
-              See products for your {calcPet} <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* VET */}
-      <section className="py-16 sm:py-28">
-        <div className={`${container} grid items-center gap-10 md:grid-cols-12 md:gap-16`}>
-          <div className="md:col-span-4">
-            <div className="relative mx-auto aspect-[4/5] w-56 overflow-hidden rounded-2xl bg-[#F4F6F9] md:w-full dark:bg-[#15213A]">
-              <Image src="/vet.png" alt="Dr. Arvind Rao, veterinary nutrition consultant" fill sizes="(max-width: 768px) 224px, 30vw" className="object-cover" />
-            </div>
-          </div>
-          <figure className="md:col-span-8">
-            <blockquote className={`${S} text-[clamp(1.75rem,4vw,3rem)] leading-[1.15] tracking-[-0.01em]`}>
-              “Most canine and feline health starts in the gut. Remove inflammatory meat meals, feed whole meats with prebiotic fibre, and you help prevent chronic allergies.”
-            </blockquote>
-            <figcaption className="mt-7 border-t border-[#0B1F3A]/15 pt-5 dark:border-white/15">
-              <p className="text-base font-semibold">Dr. Arvind Rao, BVSc & AH, MVSc</p>
-              <p className="text-[15px] text-[#0B1F3A]/65 dark:text-white/65">Senior veterinary nutrition consultant, 14+ years in clinical practice</p>
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-
-      {/* REVIEWS */}
-      <section className="bg-[#F4F6F9] py-16 sm:py-24 dark:bg-[#0D1626]">
-        <div className={container}>
-          <h2 className={`${S} max-w-2xl text-4xl leading-[1.02] tracking-[-0.01em] sm:text-6xl`}>Loved by pet families</h2>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {reviews.map((r) => (
-              <figure key={r.pet} className="flex flex-col justify-between rounded-2xl bg-white p-7 dark:bg-[#15213A]">
-                <div>
-                  <div className="mb-4 flex gap-0.5" role="img" aria-label="5 out of 5 stars">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={15} className="fill-[#B8893B] text-[#B8893B]" />
-                    ))}
-                  </div>
-                  <blockquote className="text-[16px] leading-relaxed">{r.text}</blockquote>
-                </div>
-                <figcaption className="mt-6 border-t border-[#0B1F3A]/10 pt-4 dark:border-white/10">
-                  <p className="text-[15px] font-semibold">{r.pet}</p>
-                  <p className="text-[13px] text-[#0B1F3A]/60 dark:text-white/60">{r.parent}</p>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CLOSING CTA */}
-      <section className="py-20 sm:py-32">
-        <div className={`${container} text-center`}>
-          <h2 className={`${S} mx-auto max-w-4xl text-[clamp(2.8rem,8vw,6.5rem)] leading-[0.98] tracking-[-0.02em]`}>
-            Give them <em className="italic">better</em> every day.
-          </h2>
-          <p className="mx-auto mt-6 max-w-md text-[17px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">
-            Real ingredients, formulated by vets, delivered to your door.
-          </p>
-          <Link
-            href="/products"
-            className="mt-9 inline-flex items-center gap-2 rounded-full bg-[#0B1F3A] px-9 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-[#16345F] dark:bg-white dark:text-[#0B1F3A]"
-          >
-            Shop all products <ArrowRight size={17} />
-          </Link>
-        </div>
-      </section>
-
-      {/* MOBILE ACTION BAR */}
-      <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-[#0B1F3A]/10 bg-white/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:hidden dark:border-white/10 dark:bg-[#0A1220]/95">
-        <Link href="/products" className="flex-1 rounded-full bg-[#0B1F3A] py-3.5 text-center text-sm font-semibold text-white dark:bg-white dark:text-[#0B1F3A]">
-          Shop now
-        </Link>
-        <Link href="/cart" className="flex items-center gap-2 rounded-full border border-[#0B1F3A]/30 px-5 py-3 text-sm font-semibold dark:border-white/30">
-          Cart
-          {totalCartCount > 0 && (
-            <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#B8893B] px-1 text-[11px] font-bold text-white">
-              {totalCartCount}
-            </span>
-          )}
-        </Link>
-      </div>
     </div>
   );
 }
