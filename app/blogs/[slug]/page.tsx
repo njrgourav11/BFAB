@@ -1,57 +1,89 @@
-import { getAllBlogs, getBlogBySlug } from '@/lib/blog-utils';
+import { cache } from 'react';
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronRight, Clock } from 'lucide-react';
 import { notFound } from 'next/navigation';
-import { Newsreader } from 'next/font/google';
+import { ArrowLeft, ArrowRight, ChevronRight, Clock, CalendarDays } from 'lucide-react';
+import { getAllBlogs, getBlogBySlug } from '@/lib/blog-utils';
+import { autoExcerpt, formatDate, prepareBlogHtml, readingTime } from '@/lib/blog-content';
+import BlogContent from '@/components/blog/BlogContent';
+import BlogCover from '@/components/blog/BlogCover';
+import BlogCard, { CategoryTag } from '@/components/blog/BlogCard';
+import ReadingProgress from '@/components/blog/ReadingProgress';
+import ShareButtons from '@/components/blog/ShareButtons';
+import TableOfContents from '@/components/blog/TableOfContents';
 
-import 'react-quill-new/dist/quill.snow.css';
-
-const serif = Newsreader({ subsets: ['latin'], display: 'swap' });
+// metadata + page share one Firestore read per request
+const getPost = cache(getBlogBySlug);
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const blog = await getBlogBySlug(slug);
+    const blog = await getPost(slug);
+    if (!blog) return { title: 'Article not found' };
 
-    if (!blog) return { title: 'Blog Not Found' };
+    const title = blog.seoTitle || blog.title;
+    const description = blog.seoDescription || blog.excerpt || autoExcerpt(blog.content);
+    const isUrlImage = blog.coverImage?.startsWith('http');
 
     return {
-        title: blog.seoTitle || blog.title,
-        description: blog.seoDescription || blog.excerpt,
+        title,
+        description,
         keywords: blog.seoKeywords,
+        alternates: { canonical: `/blogs/${blog.slug}` },
         openGraph: {
-            title: blog.seoTitle || blog.title,
-            description: blog.seoDescription || blog.excerpt,
-            images: blog.coverImage ? [blog.coverImage] : undefined,
+            title,
+            description,
             type: 'article',
+            publishedTime: blog.createdAt,
+            modifiedTime: blog.updatedAt,
+            authors: [blog.author],
+            images: isUrlImage ? [blog.coverImage] : undefined,
         },
+        twitter: { card: isUrlImage ? 'summary_large_image' : 'summary', title, description },
     };
 }
 
-const formatDate = (value: string | number | Date) =>
-    new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-const readingTime = (html: string) => {
-    const words = (html || '').replace(/<[^>]+>/g, ' ').trim().split(/\s+/).filter(Boolean).length;
-    return Math.max(1, Math.round(words / 220));
-};
+function AuthorAvatar({ name, size = 'md' }: { name: string; size?: 'md' | 'lg' }) {
+    const initials = (name || 'B')
+        .split(/\s+/)
+        .map((p) => p[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase();
+    return (
+        <span
+            aria-hidden
+            className={`inline-flex flex-shrink-0 items-center justify-center rounded-full bg-[#F4623B] font-semibold text-white ${
+                size === 'lg' ? 'h-14 w-14 text-lg' : 'h-10 w-10 text-sm'
+            }`}
+        >
+            {initials}
+        </span>
+    );
+}
 
 export default async function BlogDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const blog = await getBlogBySlug(slug);
+    const blog = await getPost(slug);
+    if (!blog) notFound();
 
-    if (!blog) {
-        notFound();
-    }
+    const { html, headings } = prepareBlogHtml(blog.content);
+    const minutes = readingTime(blog.content);
+    const author = blog.author || 'BFAB Team';
+    const wasUpdated =
+        blog.updatedAt && new Date(blog.updatedAt).getTime() - new Date(blog.createdAt).getTime() > 1000 * 60 * 60 * 24;
 
-    // Related articles: same category first, then latest. Never blocks the page if it fails.
+    // Related: same category first, then newest. Never blocks the page.
     let related: Awaited<ReturnType<typeof getAllBlogs>> = [];
+    let newer: (typeof related)[number] | undefined;
+    let older: (typeof related)[number] | undefined;
     try {
-        const all = await getAllBlogs(true);
-        const others = all
-            .filter((b) => b.id !== blog.id)
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        const all = (await getAllBlogs(true)).sort(
+            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        const index = all.findIndex((b) => b.id === blog.id);
+        newer = index > 0 ? all[index - 1] : undefined;
+        older = index >= 0 ? all[index + 1] : undefined;
+        const others = all.filter((b) => b.id !== blog.id);
         related = [
             ...others.filter((b) => b.category === blog.category),
             ...others.filter((b) => b.category !== blog.category),
@@ -60,134 +92,233 @@ export default async function BlogDetail({ params }: { params: Promise<{ slug: s
         related = [];
     }
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: blog.title,
+        description: blog.seoDescription || blog.excerpt,
+        datePublished: blog.createdAt,
+        dateModified: blog.updatedAt || blog.createdAt,
+        author: { '@type': 'Person', name: author },
+        image: blog.coverImage?.startsWith('http') ? blog.coverImage : undefined,
+        keywords: blog.seoKeywords?.join(', '),
+    };
+
     return (
-        <div className="min-h-screen pt-24 pb-24 bg-[#F7F8F5] dark:bg-[#0E1412] text-stone-900 dark:text-stone-100">
+        <div className="bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+            <ReadingProgress targetId="article-body" />
+
             <article>
                 {/* ---------- Header ---------- */}
-                <header className="mx-auto max-w-3xl px-4 sm:px-6">
-                    <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400 mb-8">
-                        <Link href="/blogs" className="hover:text-emerald-700 dark:hover:text-emerald-400 underline-offset-4 hover:underline">
-                            Blog
-                        </Link>
-                        {blog.category && (
-                            <>
-                                <ChevronRight size={14} aria-hidden />
-                                <span>{blog.category}</span>
-                            </>
+                <header className="bg-[#fef6eb] dark:bg-stone-900/60 border-b border-[#f3e6d3] dark:border-stone-800">
+                    <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-8 sm:pt-12 pb-10 sm:pb-14">
+                        <nav aria-label="Breadcrumb">
+                            <ol className="flex flex-wrap items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400">
+                                <li>
+                                    <Link href="/" className="hover:text-stone-900 dark:hover:text-white">
+                                        Home
+                                    </Link>
+                                </li>
+                                <li aria-hidden>
+                                    <ChevronRight size={14} />
+                                </li>
+                                <li>
+                                    <Link href="/blogs" className="hover:text-stone-900 dark:hover:text-white">
+                                        Blog
+                                    </Link>
+                                </li>
+                                {blog.category && (
+                                    <>
+                                        <li aria-hidden>
+                                            <ChevronRight size={14} />
+                                        </li>
+                                        <li>
+                                            <Link
+                                                href={`/blogs?category=${encodeURIComponent(blog.category)}`}
+                                                className="hover:text-stone-900 dark:hover:text-white"
+                                            >
+                                                {blog.category}
+                                            </Link>
+                                        </li>
+                                    </>
+                                )}
+                            </ol>
+                        </nav>
+
+                        <CategoryTag className="mt-8">{blog.category}</CategoryTag>
+
+                        <h1 className="mt-4 font-display text-[2rem] sm:text-5xl lg:text-[3.25rem] font-semibold leading-[1.12] tracking-tight text-stone-900 dark:text-white text-balance">
+                            {blog.title}
+                        </h1>
+
+                        {blog.excerpt && (
+                            <p className="mt-5 text-lg sm:text-xl leading-relaxed text-stone-600 dark:text-stone-300">{blog.excerpt}</p>
                         )}
-                    </nav>
 
-                    <h1 className={`${serif.className} text-4xl sm:text-5xl lg:text-[56px] font-semibold leading-[1.1] tracking-tight`}>
-                        {blog.title}
-                    </h1>
-
-                    {blog.excerpt && (
-                        <p className="mt-6 text-xl leading-relaxed text-stone-600 dark:text-stone-400">{blog.excerpt}</p>
-                    )}
-
-                    <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-stone-200 dark:border-stone-800 py-4 text-sm text-stone-500 dark:text-stone-400">
-                        <span className="font-semibold text-stone-800 dark:text-stone-200">{blog.author}</span>
-                        <time dateTime={new Date(blog.createdAt).toISOString()}>{formatDate(blog.createdAt)}</time>
-                        <span className="inline-flex items-center gap-1.5">
-                            <Clock size={14} aria-hidden /> {readingTime(blog.content)} min read
-                        </span>
+                        <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="flex items-center gap-3">
+                                <AuthorAvatar name={author} />
+                                <div className="text-sm">
+                                    <p className="font-semibold text-stone-900 dark:text-white">{author}</p>
+                                    <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-stone-500 dark:text-stone-400">
+                                        <span className="inline-flex items-center gap-1.5">
+                                            <CalendarDays size={14} aria-hidden />
+                                            <time dateTime={blog.createdAt}>{formatDate(blog.createdAt)}</time>
+                                        </span>
+                                        <span className="inline-flex items-center gap-1.5">
+                                            <Clock size={14} aria-hidden /> {minutes} min read
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <ShareButtons title={blog.title} path={`/blogs/${blog.slug}`} />
+                        </div>
                     </div>
                 </header>
 
-                {/* ---------- Cover (wider than the text column) ---------- */}
+                {/* ---------- Cover ---------- */}
                 {blog.coverImage && (
-                    <div className="mx-auto max-w-5xl px-4 sm:px-6 mt-10">
-                        <div className="relative aspect-[16/9] overflow-hidden rounded-md bg-stone-200 dark:bg-stone-800">
-                            <Image
-                                src={blog.coverImage}
-                                alt={blog.title}
-                                fill
-                                priority
-                                sizes="(min-width: 1024px) 960px, 100vw"
-                                className="object-cover"
-                            />
-                        </div>
+                    <div className="mx-auto max-w-5xl px-4 sm:px-6 -mb-2 mt-8 sm:mt-12">
+                        <BlogCover
+                            src={blog.coverImage}
+                            alt={blog.title}
+                            priority
+                            zoom={false}
+                            sizes="(min-width: 1024px) 1024px, 100vw"
+                            className="aspect-[16/9] rounded-2xl shadow-sm"
+                        />
                     </div>
                 )}
 
-                {/* ---------- Body ---------- */}
-                <div className="mx-auto max-w-3xl px-4 sm:px-6 mt-12">
-                    <div className="ql-snow">
-                        <div
-                            className={`ql-editor ${serif.className} prose prose-lg dark:prose-invert max-w-none
-                                !h-auto !overflow-visible !p-0 !whitespace-normal
-                                text-stone-800 dark:text-stone-200
-                                prose-p:leading-[1.8] prose-p:text-[19px]
-                                prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-stone-900 dark:prose-headings:text-white
-                                prose-h2:mt-12 prose-h2:mb-4 prose-h3:mt-8
-                                prose-a:text-emerald-700 dark:prose-a:text-emerald-400 prose-a:underline-offset-4
-                                prose-blockquote:border-l-emerald-700 prose-blockquote:font-medium prose-blockquote:not-italic
-                                prose-img:rounded-md
-                                [&_p]:min-h-[1em]`}
-                            dangerouslySetInnerHTML={{ __html: blog.content }}
-                        />
-                    </div>
+                {/* ---------- Body + sidebar ---------- */}
+                <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 sm:py-16 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,720px)_minmax(0,1fr)] lg:gap-10">
+                    <div className="hidden lg:block" aria-hidden />
 
-                    {/* ---------- Tags ---------- */}
-                    {blog.seoKeywords && blog.seoKeywords.length > 0 && (
-                        <div className="mt-14 pt-6 border-t border-stone-200 dark:border-stone-800">
-                            <p className="text-sm font-semibold text-stone-500 dark:text-stone-400 mb-3">Topics</p>
-                            <ul className="flex flex-wrap gap-2">
-                                {blog.seoKeywords.map((keyword, i) => (
-                                    <li
-                                        key={i}
-                                        className="rounded-md border border-stone-300 dark:border-stone-700 px-3 py-1 text-sm text-stone-700 dark:text-stone-300"
+                    <div id="article-body" className="min-w-0">
+                        {headings.length > 1 && (
+                            <details className="group mb-10 rounded-xl border border-stone-200 dark:border-stone-800 lg:hidden">
+                                <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 text-sm font-semibold [&::-webkit-details-marker]:hidden">
+                                    In this article
+                                    <ChevronRight size={16} className="transition-transform group-open:rotate-90" aria-hidden />
+                                </summary>
+                                <ul className="space-y-2 border-t border-stone-200 dark:border-stone-800 px-5 py-4 text-sm">
+                                    {headings.map((h) => (
+                                        <li key={h.id} className={h.level === 3 ? 'pl-4' : ''}>
+                                            <a href={`#${h.id}`} className="text-stone-600 hover:text-[#c2410c] dark:text-stone-300">
+                                                {h.text}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </details>
+                        )}
+
+                        <BlogContent html={html} />
+
+                        {wasUpdated && (
+                            <p className="mt-10 text-sm italic text-stone-500 dark:text-stone-400">
+                                Last updated on {formatDate(blog.updatedAt)}
+                            </p>
+                        )}
+
+                        {/* Tags */}
+                        {blog.seoKeywords && blog.seoKeywords.length > 0 && (
+                            <div className="mt-12 flex flex-wrap items-center gap-2">
+                                <span className="mr-1 text-sm font-semibold text-stone-700 dark:text-stone-300">Topics:</span>
+                                {blog.seoKeywords.map((keyword) => (
+                                    <span
+                                        key={keyword}
+                                        className="rounded-full border border-stone-200 dark:border-stone-700 px-3 py-1 text-sm text-stone-600 dark:text-stone-300"
                                     >
                                         {keyword}
-                                    </li>
+                                    </span>
                                 ))}
-                            </ul>
-                        </div>
-                    )}
+                            </div>
+                        )}
 
-                    {/* ---------- Author ---------- */}
-                    <div className="mt-10 rounded-md bg-stone-100 dark:bg-stone-900 p-6">
-                        <p className="text-sm text-stone-500 dark:text-stone-400">Written by</p>
-                        <p className={`${serif.className} text-xl font-semibold mt-0.5`}>{blog.author}</p>
+                        {/* Share + author */}
+                        <div className="mt-10 flex flex-col gap-4 border-y border-stone-200 dark:border-stone-800 py-6 sm:flex-row sm:items-center sm:justify-between">
+                            <p className="font-semibold text-stone-900 dark:text-white">Found this useful? Share it.</p>
+                            <ShareButtons title={blog.title} path={`/blogs/${blog.slug}`} />
+                        </div>
+
+                        <div className="mt-10 flex items-start gap-4 rounded-2xl bg-[#fef6eb] dark:bg-stone-900 p-6">
+                            <AuthorAvatar name={author} size="lg" />
+                            <div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-stone-500 dark:text-stone-400">Written by</p>
+                                <p className="mt-1 font-display text-xl font-semibold text-stone-900 dark:text-white">{author}</p>
+                                <p className="mt-1 text-sm leading-relaxed text-stone-600 dark:text-stone-400">
+                                    Practical, honest advice from the Beggin for a Bite team to help you feed and care for your pet better.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Previous / next */}
+                        {(newer || older) && (
+                            <nav aria-label="More articles" className="mt-10 grid gap-4 sm:grid-cols-2">
+                                {older ? (
+                                    <Link
+                                        href={`/blogs/${older.slug}`}
+                                        className="group rounded-xl border border-stone-200 dark:border-stone-800 p-5 transition-colors hover:border-[#F4623B]"
+                                    >
+                                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-stone-500">
+                                            <ArrowLeft size={14} aria-hidden /> Previous
+                                        </span>
+                                        <span className="mt-2 block font-display font-semibold leading-snug line-clamp-2 group-hover:text-[#c2410c] dark:group-hover:text-[#fb8a5f]">
+                                            {older.title}
+                                        </span>
+                                    </Link>
+                                ) : (
+                                    <span className="hidden sm:block" />
+                                )}
+                                {newer && (
+                                    <Link
+                                        href={`/blogs/${newer.slug}`}
+                                        className="group rounded-xl border border-stone-200 dark:border-stone-800 p-5 text-right transition-colors hover:border-[#F4623B]"
+                                    >
+                                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-stone-500">
+                                            Next <ArrowRight size={14} aria-hidden />
+                                        </span>
+                                        <span className="mt-2 block font-display font-semibold leading-snug line-clamp-2 group-hover:text-[#c2410c] dark:group-hover:text-[#fb8a5f]">
+                                            {newer.title}
+                                        </span>
+                                    </Link>
+                                )}
+                            </nav>
+                        )}
                     </div>
+
+                    {/* Sticky table of contents (desktop) */}
+                    <aside className="hidden lg:block">
+                        <div className="sticky top-28">
+                            <TableOfContents headings={headings} />
+                        </div>
+                    </aside>
                 </div>
             </article>
 
-            {/* ---------- Related articles ---------- */}
+            {/* ---------- Related ---------- */}
             {related.length > 0 && (
-                <section aria-label="Related articles" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-24 pt-12 border-t border-stone-200 dark:border-stone-800">
-                    <div className="flex items-baseline justify-between mb-8">
-                        <h2 className={`${serif.className} text-2xl sm:text-3xl font-semibold`}>Keep reading</h2>
-                        <Link href="/blogs" className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 underline-offset-4 hover:underline">
-                            All articles
-                        </Link>
+                <section aria-labelledby="related-heading" className="bg-[#fef6eb] dark:bg-stone-900/60 border-t border-[#f3e6d3] dark:border-stone-800">
+                    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
+                        <div className="mb-10 flex items-end justify-between gap-4">
+                            <h2 id="related-heading" className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">
+                                Keep reading
+                            </h2>
+                            <Link
+                                href="/blogs"
+                                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#c2410c] dark:text-[#fb8a5f] hover:underline underline-offset-4"
+                            >
+                                All articles <ArrowRight size={16} aria-hidden />
+                            </Link>
+                        </div>
+                        <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+                            {related.map((post) => (
+                                <BlogCard key={post.id} post={post} />
+                            ))}
+                        </div>
                     </div>
-                    <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-                        {related.map((post) => (
-                            <li key={post.id}>
-                                <Link href={`/blogs/${post.slug}`} className="group block">
-                                    <div className="relative aspect-[3/2] overflow-hidden rounded-md bg-stone-200 dark:bg-stone-800 mb-4">
-                                        <Image
-                                            src={post.coverImage || '/placeholder.svg'}
-                                            alt=""
-                                            fill
-                                            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                                            className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-                                        />
-                                    </div>
-                                    {post.category && (
-                                        <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">{post.category}</span>
-                                    )}
-                                    <h3 className={`${serif.className} mt-1 text-xl font-semibold leading-snug line-clamp-2 group-hover:underline decoration-2 underline-offset-4 decoration-emerald-700/60`}>
-                                        {post.title}
-                                    </h3>
-                                    <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
-                                        {formatDate(post.createdAt)}
-                                    </p>
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
                 </section>
             )}
         </div>
