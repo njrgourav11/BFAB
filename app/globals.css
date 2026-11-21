@@ -303,3 +303,227 @@ html {
 }
 
 
+
+/* ==========================================================================
+   Blog article typography
+   Used by the public article page, the admin editor (.ql-editor) and the
+   admin preview so what the author writes is exactly what readers see.
+   Handles both Quill's semantic HTML (<ul>/<ol>) and its internal list
+   markup (<ol><li data-list="bullet">) used by older posts.
+   ========================================================================== */
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) {
+  --bc-text: #2b2622;
+  --bc-muted: #6b655c;
+  --bc-heading: #1c1917;
+  --bc-accent: #c2410c;
+  --bc-accent-soft: #fff1ea;
+  --bc-rule: #e7e1d6;
+  --bc-code-bg: #f5f1ea;
+  color: var(--bc-text);
+  font-size: 1.125rem;
+  line-height: 1.8;
+  overflow-wrap: break-word;
+  word-break: normal;
+  white-space: normal;
+}
+.dark :is(.blog-content, .blog-editor .ql-snow .ql-editor) {
+  --bc-text: #d6d3d1;
+  --bc-muted: #a8a29e;
+  --bc-heading: #fafaf9;
+  --bc-accent: #fb8a5f;
+  --bc-accent-soft: rgba(244, 98, 59, 0.12);
+  --bc-rule: #292524;
+  --bc-code-bg: #1c1917;
+}
+@media (max-width: 640px) {
+  :is(.blog-content, .blog-editor .ql-snow .ql-editor) { font-size: 1.0625rem; line-height: 1.75; }
+}
+
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) > *:first-child { margin-top: 0 !important; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) > *:last-child { margin-bottom: 0 !important; }
+
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) p { margin: 0 0 1.35em; }
+
+/* Headings (the mobile h1/h2/h3 overrides in this file must not shrink them) */
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) h1,
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) h2,
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) h3,
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) h4 {
+  font-family: var(--font-display), Georgia, serif;
+  color: var(--bc-heading);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  scroll-margin-top: 6rem;
+}
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) h1,
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) h2 { font-size: 1.75em; line-height: 1.25; margin: 2.2em 0 0.7em; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) h3 { font-size: 1.35em; line-height: 1.3; margin: 1.9em 0 0.6em; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) h4 { font-size: 1.1em; line-height: 1.4; margin: 1.6em 0 0.5em; }
+@media (max-width: 640px) {
+  :is(.blog-content, .blog-editor .ql-snow .ql-editor) h1, :is(.blog-content, .blog-editor .ql-snow .ql-editor) h2 { font-size: 1.5em; }
+  :is(.blog-content, .blog-editor .ql-snow .ql-editor) h3 { font-size: 1.25em; }
+}
+
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) strong, :is(.blog-content, .blog-editor .ql-snow .ql-editor) b { color: var(--bc-heading); font-weight: 650; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) a {
+  color: var(--bc-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-thickness .15s;
+}
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) a:hover { text-decoration-thickness: 2px; }
+
+/* Lists */
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) ul,
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) ol { margin: 0 0 1.35em; padding-left: 1.6em; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) ul { list-style: disc; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) ol { list-style: decimal; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) li { margin: 0.4em 0; padding-left: 0.3em; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) li::marker { color: var(--bc-accent); }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) ul ul, :is(.blog-content, .blog-editor .ql-snow .ql-editor) ol ol, :is(.blog-content, .blog-editor .ql-snow .ql-editor) ul ol, :is(.blog-content, .blog-editor .ql-snow .ql-editor) ol ul { margin: 0.4em 0; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) li[data-list="bullet"] { list-style-type: disc; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) li[data-list="ordered"] { list-style-type: decimal; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) li .ql-ui { display: none; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) li.ql-indent-1 { margin-left: 1.6em; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) li.ql-indent-2 { margin-left: 3.2em; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) li.ql-indent-3 { margin-left: 4.8em; }
+
+/* Quote */
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) blockquote {
+  margin: 2em 0;
+  padding: 0.25em 0 0.25em 1.25em;
+  border-left: 3px solid var(--bc-accent);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.2em;
+  line-height: 1.55;
+  color: var(--bc-heading);
+}
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) blockquote + blockquote { margin-top: -1.6em; }
+
+/* Code */
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.88em;
+  background: var(--bc-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) pre {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.85em;
+  line-height: 1.65;
+  background: var(--bc-code-bg);
+  border: 1px solid var(--bc-rule);
+  border-radius: 8px;
+  padding: 1em 1.25em;
+  margin: 0 0 1.5em;
+  overflow-x: auto;
+  white-space: pre;
+}
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) pre code { background: none; padding: 0; }
+
+/* Media */
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 2em auto;
+  border-radius: 10px;
+}
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) p > img { margin: 0.5em auto; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) iframe,
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) .ql-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  border-radius: 10px;
+  margin: 2em 0;
+}
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) hr { border: 0; border-top: 1px solid var(--bc-rule); margin: 3em 0; }
+
+/* Tables (pasted content) */
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) table { width: 100%; border-collapse: collapse; margin: 0 0 1.5em; font-size: 0.92em; display: block; overflow-x: auto; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) th, :is(.blog-content, .blog-editor .ql-snow .ql-editor) td { border: 1px solid var(--bc-rule); padding: 0.6em 0.8em; text-align: left; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) th { background: var(--bc-code-bg); color: var(--bc-heading); }
+
+/* Quill formatting classes */
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) .ql-align-center { text-align: center; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) .ql-align-right { text-align: right; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) .ql-align-justify { text-align: justify; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) p.ql-indent-1 { padding-left: 2em; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) p.ql-indent-2 { padding-left: 4em; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) .ql-size-small { font-size: 0.85em; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) .ql-size-large { font-size: 1.3em; }
+:is(.blog-content, .blog-editor .ql-snow .ql-editor) .ql-size-huge { font-size: 1.7em; }
+
+/* ---------- Same typography inside the admin editor ---------- */
+.blog-editor .ql-toolbar.ql-snow {
+  z-index: 10;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px 10px 0 0;
+  padding: 8px 10px;
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+@media (min-width: 1024px) {
+  .blog-editor .ql-toolbar.ql-snow { position: sticky; top: 61px; }
+}
+.blog-editor .ql-container.ql-snow {
+  border: 1px solid #e2e8f0;
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+  background: #fff;
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+.blog-editor .ql-container.ql-snow .ql-editor {
+  min-height: 520px;
+  padding: 28px 32px 48px;
+  white-space: pre-wrap; /* Quill needs this while editing */
+}
+@media (max-width: 640px) {
+  .blog-editor .ql-container.ql-snow .ql-editor { padding: 20px 16px 40px; }
+}
+.blog-editor .ql-container.ql-snow .ql-editor.ql-blank::before {
+  left: 32px;
+  font-style: normal;
+  color: #a8a29e;
+}
+/* Quill draws its own list markers in the editor */
+.blog-editor .ql-container.ql-snow .ql-editor ol,
+.blog-editor .ql-container.ql-snow .ql-editor ul { padding-left: 0; list-style: none; }
+.blog-editor .ql-container.ql-snow .ql-editor li { padding-left: 1.5em; }
+.blog-editor .ql-container.ql-snow .ql-editor li::marker { content: none; }
+.blog-editor .ql-container.ql-snow .ql-editor li > .ql-ui:before { color: var(--bc-accent); }
+.blog-editor .ql-container.ql-snow .ql-editor li.ql-indent-1 { padding-left: 3em; margin-left: 0; }
+.blog-editor .ql-container.ql-snow .ql-editor li.ql-indent-2 { padding-left: 4.5em; margin-left: 0; }
+.blog-editor .ql-container.ql-snow .ql-editor li.ql-indent-3 { padding-left: 6em; margin-left: 0; }
+.blog-editor .ql-container.ql-snow .ql-editor li .ql-ui { display: inline-block; }
+.blog-editor .ql-snow .ql-tooltip { z-index: 20; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+.blog-editor .ql-snow.ql-toolbar button:hover .ql-stroke,
+.blog-editor .ql-snow.ql-toolbar button.ql-active .ql-stroke { stroke: #c2410c; }
+.blog-editor .ql-snow.ql-toolbar button:hover .ql-fill,
+.blog-editor .ql-snow.ql-toolbar button.ql-active .ql-fill { fill: #c2410c; }
+.blog-editor .ql-snow.ql-toolbar button.ql-active,
+.blog-editor .ql-snow .ql-picker-label.ql-active { color: #c2410c; }
+.blog-editor .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
+.blog-editor .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before { content: 'Heading'; }
+.blog-editor .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="3"]::before,
+.blog-editor .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before { content: 'Subheading'; }
+.blog-editor .ql-snow .ql-picker.ql-header .ql-picker-label:not([data-value])::before,
+.blog-editor .ql-snow .ql-picker.ql-header .ql-picker-item:not([data-value])::before { content: 'Paragraph'; }
+.blog-editor .ql-snow .ql-picker.ql-header { width: 112px; }
+
+.dark .blog-editor .ql-toolbar.ql-snow { background: #0f172a; border-color: #1e293b; }
+.dark .blog-editor .ql-container.ql-snow { background: #020617; border-color: #1e293b; }
+.dark .blog-editor .ql-snow .ql-stroke { stroke: #cbd5e1; }
+.dark .blog-editor .ql-snow .ql-fill { fill: #cbd5e1; }
+.dark .blog-editor .ql-snow .ql-picker { color: #cbd5e1; }
+.dark .blog-editor .ql-snow .ql-picker-options { background: #0f172a; border-color: #1e293b; }
+.dark .blog-editor .ql-snow .ql-tooltip { background: #0f172a; border-color: #1e293b; color: #e2e8f0; box-shadow: none; }
+.dark .blog-editor .ql-snow .ql-tooltip input[type=text] { background: #020617; border-color: #334155; color: #e2e8f0; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

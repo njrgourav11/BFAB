@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 /* eslint-disable @typescript-eslint/no-require-imports */
+const defaultColors = require("tailwindcss/colors");
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -68,7 +69,8 @@ module.exports = {
         marigold: "#E3A438",
         paprika: "#B3552B",
         paper: "#F7F3EA",
-        stone: "#6B655C",
+        // Keep the brand `text-stone` token AND the full stone scale (stone-50 … stone-950)
+        stone: { ...defaultColors.stone, DEFAULT: "#6B655C" },
       },
       borderRadius: {
         lg: "var(--radius)",

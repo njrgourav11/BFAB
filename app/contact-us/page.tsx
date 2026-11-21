@@ -1,10 +1,25 @@
 "use client";
 import React, { useMemo, useState } from 'react';
-import Link from 'next/link';
-import { Mail, Phone, MapPin, Clock, MessageCircle, Plus, Minus, Search, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
+import {
+  Mail, Phone, MapPin, Clock, MessageCircle, Plus, Minus, Search, Heart,
+  ShoppingBag, Truck, RotateCcw, CreditCard, Leaf, UserRound, type LucideIcon,
+} from 'lucide-react';
 
 type Faq = { q: string; a: string };
 type Category = { id: string; label: string; faqs: Faq[] };
+
+// Hero photo – swap for a brand photo (e.g. a pet parent with their dog) any time.
+const HERO_IMAGE = '/review/Golden-Retriever.webp';
+
+const categoryIcons: Record<string, LucideIcon> = {
+  orders: ShoppingBag,
+  shipping: Truck,
+  returns: RotateCcw,
+  payments: CreditCard,
+  products: Leaf,
+  account: UserRound,
+};
 
 const SUPPORT_EMAIL = 'paw.support@begginforabite.in';
 const SUPPORT_PHONE = '+91 8480-320158';
@@ -188,85 +203,77 @@ const ContactUsPage = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900">
-      {/* Breadcrumb */}
-      <div className="border-b border-gray-100">
-        <nav className="container mx-auto px-4 py-3 text-sm text-gray-500 flex items-center gap-1">
-          <Link href="/" className="hover:text-gray-900">Home</Link>
-          <ChevronRight size={14} />
-          <span className="text-gray-900">FAQs &amp; Contact</span>
-        </nav>
-      </div>
+      {/* Hero */}
+      <section className="px-4 pt-6 md:pt-8">
+        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl">
+          <Image
+            src={HERO_IMAGE}
+            alt="A happy golden retriever"
+            fill
+            priority
+            sizes="(min-width: 1152px) 1152px, 100vw"
+            className="origin-bottom-left scale-[1.22] md:scale-100 object-cover object-[25%_35%]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/60" aria-hidden />
 
-      {/* Header */}
-      <section className="bg-paper">
-        <div className="container mx-auto px-4 py-10 md:py-14 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Frequently Asked Questions</h1>
-          <p className="mt-3 text-gray-600 max-w-xl mx-auto">
-            Have a question? We&apos;re here to help. Browse the topics below or search for an answer.
-          </p>
-          <div className="mt-6 max-w-xl mx-auto relative">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search your question"
-              aria-label="Search FAQs"
-              className="w-full rounded-full border border-gray-200 bg-white py-3 pl-11 pr-4 text-sm outline-none focus:border-gray-900"
-            />
+          <div className="relative flex min-h-[340px] md:min-h-[440px] flex-col items-center justify-center px-6 py-14 text-center text-white">
+            <h1 className="font-fredoka text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight drop-shadow-sm">
+              Hi! How can we help you today?
+            </h1>
+            <div className="mt-5 flex w-full max-w-xl items-center gap-3" aria-hidden>
+              <span className="h-px flex-1 bg-white/70" />
+              <Heart size={22} className="fill-white text-white" />
+              <span className="h-px flex-1 bg-white/70" />
+            </div>
+            <p className="mt-5 max-w-xl text-base md:text-xl leading-relaxed text-white/90">
+              Our pet-loving team is here to support you every step of the way.
+            </p>
+            <div className="relative mt-8 w-full max-w-xl">
+              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search your question"
+                aria-label="Search FAQs"
+                className="w-full rounded-full border border-white/40 bg-white py-3.5 pl-11 pr-4 text-sm text-gray-900 shadow-lg outline-none focus:ring-4 focus:ring-[#F4623B]/40"
+              />
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* Browse topics */}
+      <section className="container mx-auto px-4 pt-12 md:pt-16">
+        <h2 className="text-center font-fredoka text-3xl md:text-4xl font-bold tracking-tight">Browse Topics</h2>
+        <div className="mx-auto mt-8 flex max-w-6xl gap-3 overflow-x-auto pb-3 no-scrollbar md:flex-wrap md:justify-center md:overflow-visible">
+          {categories.map((c) => {
+            const Icon = categoryIcons[c.id] ?? MessageCircle;
+            const active = !searchResults && activeCategory === c.id;
+            return (
+              <button
+                key={c.id}
+                onClick={() => selectCategory(c.id)}
+                aria-pressed={active}
+                className={`flex shrink-0 items-center gap-3 rounded-xl border bg-white px-4 py-3.5 text-left text-sm transition-all ${
+                  active
+                    ? 'border-[#F4623B] font-semibold text-gray-900 shadow-[0_8px_20px_-8px_rgba(244,98,59,0.45)]'
+                    : 'border-gray-200 text-gray-700 hover:border-gray-300 hover:shadow-sm'
+                }`}
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F4623B] text-white">
+                  <Icon size={18} aria-hidden />
+                </span>
+                <span className="max-w-[9rem] leading-snug">{c.label}</span>
+              </button>
+            );
+          })}
         </div>
       </section>
 
       {/* FAQ body */}
       <section className="container mx-auto px-4 py-10 md:py-14">
-        {/* Mobile category pills */}
-        <div className="md:hidden -mx-4 px-4 mb-6 flex gap-2 overflow-x-auto pb-2">
-          {categories.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => selectCategory(c.id)}
-              className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                !searchResults && activeCategory === c.id
-                  ? 'border-gray-900 bg-gray-900 text-white'
-                  : 'border-gray-200 bg-white text-gray-700'
-              }`}
-            >
-              {c.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-8 lg:gap-12">
-          {/* Desktop sidebar */}
-          <aside className="hidden md:block">
-            <div className="sticky top-24 rounded-xl border border-gray-200 overflow-hidden">
-              <p className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 bg-gray-50 border-b border-gray-200">
-                Topics
-              </p>
-              <ul>
-                {categories.map((c) => {
-                  const active = !searchResults && activeCategory === c.id;
-                  return (
-                    <li key={c.id}>
-                      <button
-                        onClick={() => selectCategory(c.id)}
-                        className={`w-full flex items-center justify-between px-5 py-3.5 text-left text-sm border-l-4 transition-colors ${
-                          active
-                            ? 'border-marigold bg-paper font-semibold text-gray-900'
-                            : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
-                      >
-                        {c.label}
-                        <ChevronRight size={16} className={active ? 'text-gray-900' : 'text-gray-300'} />
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </aside>
-
+        <div className="mx-auto max-w-3xl">
           {/* Accordion */}
           <div>
             <h2 className="text-xl md:text-2xl font-bold mb-4">
