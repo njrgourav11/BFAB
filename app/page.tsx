@@ -615,22 +615,25 @@ export default function Home() {
       {/* 9. TRUSTED BY PET PROFESSIONALS */}
       <section className="py-8 sm:py-10 md:py-12 bg-white dark:bg-slate-950 overflow-hidden border-t border-orange-100/60 dark:border-slate-800">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-12">
             {/* Left Text */}
             <div className="md:w-5/12 text-center md:text-left">
               <div className="relative inline-block">
-                {/* 5 Radiating Spark Rays */}
+                {/* 4 Radiating Spark Rays */}
                 <svg
-                  className="absolute -top-6 -left-6 sm:-top-7 sm:-left-7 w-12 h-12 sm:w-14 sm:h-14 pointer-events-none select-none"
-                  viewBox="0 0 54 54"
+                  className="absolute -top-5 -left-5 sm:-top-6 sm:-left-6 w-12 h-12 sm:w-14 sm:h-14 pointer-events-none select-none"
+                  viewBox="0 0 50 50"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <line x1="33" y1="21" x2="34" y2="7" stroke="#F4623B" strokeWidth="3.5" strokeLinecap="round" />
-                  <line x1="23" y1="22" x2="13" y2="10" stroke="#F4623B" strokeWidth="3.5" strokeLinecap="round" />
-                  <line x1="17" y1="29" x2="4" y2="27" stroke="#F4623B" strokeWidth="3.5" strokeLinecap="round" />
-                  <line x1="18" y1="39" x2="5" y2="44" stroke="#F4623B" strokeWidth="3.5" strokeLinecap="round" />
-                  <line x1="43" y1="24" x2="51" y2="19" stroke="#F4623B" strokeWidth="3.5" strokeLinecap="round" />
+                  {/* Top ray */}
+                  <line x1="28" y1="20" x2="29" y2="6" stroke="#F4623B" strokeWidth="3.5" strokeLinecap="round" />
+                  {/* Top-left ray */}
+                  <line x1="21" y1="21" x2="11" y2="11" stroke="#F4623B" strokeWidth="3.5" strokeLinecap="round" />
+                  {/* Horizontal left ray */}
+                  <line x1="18" y1="28" x2="5" y2="28" stroke="#F4623B" strokeWidth="3.5" strokeLinecap="round" />
+                  {/* Bottom-left ray */}
+                  <line x1="20" y1="36" x2="9" y2="44" stroke="#F4623B" strokeWidth="3.5" strokeLinecap="round" />
                 </svg>
                 <h2 className="font-fredoka font-black text-4xl sm:text-5xl lg:text-[56px] text-[#F4623B] leading-[1.0] tracking-tight mb-3">
                   Trusted By<br />Pet<br />Professionals.
@@ -642,10 +645,10 @@ export default function Home() {
             </div>
 
             {/* Right 3 Partner Logos */}
-            <div className="md:w-7/12 flex items-start justify-center md:justify-end gap-6 sm:gap-8 lg:gap-10">
+            <div className="md:w-7/12 flex items-start justify-center md:justify-end gap-6 sm:gap-8 lg:gap-12">
               {/* Partner 1: MissEvas PetHouse */}
               <div className="flex flex-col items-center text-center w-24 sm:w-28 md:w-32 group">
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden mb-2.5 transition-transform duration-300 group-hover:scale-105 shadow-sm">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-2.5 transition-transform duration-300 group-hover:scale-105">
                   <Image
                     src="/products-media/partner_misseva.png"
                     alt="MissEvas PetHouse"
@@ -653,14 +656,14 @@ export default function Home() {
                     className="object-contain"
                   />
                 </div>
-                <span className="font-fredoka font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 leading-tight">
+                <span className="font-sans font-medium text-xs sm:text-sm md:text-[15px] text-gray-800 dark:text-gray-200 leading-snug">
                   MissEvas<br />PetHouse
                 </span>
               </div>
 
               {/* Partner 2: Smith N Paw */}
               <div className="flex flex-col items-center text-center w-24 sm:w-28 md:w-32 group">
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden mb-2.5 transition-transform duration-300 group-hover:scale-105 shadow-sm">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-2.5 transition-transform duration-300 group-hover:scale-105">
                   <Image
                     src="/products-media/partner_smithnpaw.png"
                     alt="Smith N Paw"
@@ -668,14 +671,14 @@ export default function Home() {
                     className="object-contain"
                   />
                 </div>
-                <span className="font-fredoka font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 leading-tight">
+                <span className="font-sans font-medium text-xs sm:text-sm md:text-[15px] text-gray-800 dark:text-gray-200 leading-snug">
                   Smith N Paw
                 </span>
               </div>
 
               {/* Partner 3: Pet Parenting */}
               <div className="flex flex-col items-center text-center w-24 sm:w-28 md:w-32 group">
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden mb-2.5 transition-transform duration-300 group-hover:scale-105 shadow-sm">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-2.5 transition-transform duration-300 group-hover:scale-105">
                   <Image
                     src="/products-media/partner_petparenting.png"
                     alt="Pet Parenting"
@@ -683,7 +686,7 @@ export default function Home() {
                     className="object-contain"
                   />
                 </div>
-                <span className="font-fredoka font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 leading-tight">
+                <span className="font-sans font-medium text-xs sm:text-sm md:text-[15px] text-gray-800 dark:text-gray-200 leading-snug">
                   Pet Parenting
                 </span>
               </div>
