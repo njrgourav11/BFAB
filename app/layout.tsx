@@ -1,4 +1,4 @@
-import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
+import { Fraunces, Inter, IBM_Plex_Mono, Fredoka } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import AppShell from "./components/AppShell";
@@ -11,6 +11,12 @@ const fontDisplay = Fraunces({
 
 const fontBody = Inter({
   variable: "--font-body",
+  subsets: ["latin"],
+});
+
+const fontFredoka = Fredoka({
+  variable: "--font-fredoka",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -28,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable} font-body antialiased flex flex-col min-h-screen text-ink bg-paper transition-colors duration-300`}
+        className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable} ${fontFredoka.variable} font-body antialiased flex flex-col min-h-screen text-ink bg-paper transition-colors duration-300`}
       >
         <AppShell>{children}</AppShell>
         <Analytics />

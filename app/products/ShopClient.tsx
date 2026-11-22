@@ -1,5 +1,9 @@
 "use client";
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
+import { useGSAP } from '@gsap/react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,6 +11,8 @@ import { Instrument_Serif, Hanken_Grotesk } from 'next/font/google';
 import { Search, SlidersHorizontal, X, ChevronDown, Grid2x2, Rows3, Star, Plus } from 'lucide-react';
 import { useCart } from '../components/CartContext';
 import { Product } from '@/lib/types';
+
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
 const serif = Instrument_Serif({ subsets: ['latin'], weight: '400', style: ['normal', 'italic'], variable: '--f-serif', display: 'swap' });
 const sans = Hanken_Grotesk({ subsets: ['latin'], variable: '--f-sans', display: 'swap' });
@@ -84,6 +90,26 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
   const [sortBy, setSortBy] = useState<string>('popular');
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Header: GSAP SplitText masked line-rise (keeps the italic <em>)
+  useGSAP(
+    () => {
+      if (reduceMotion()) return;
+      const h1 = rootRef.current?.querySelector('[data-shop-title]');
+      if (!h1) return;
+      let split: SplitText | null = null;
+      document.fonts.ready.then(() => {
+        split = SplitText.create(h1, { type: 'chars', mask: 'chars' });
+        gsap.from(split.chars, { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.03, delay: 0.5 });
+      });
+      gsap.from('[data-shop-sub]', { y: 20, opacity: 0, duration: 0.9, delay: 0.9, ease: 'power3.out' });
+      gsap.from('[data-shop-aside] > *', { x: -30, opacity: 0, duration: 0.8, stagger: 0.08, delay: 0.7, ease: 'power3.out' });
+      return () => split?.revert();
+    },
+    { scope: rootRef }
+  );
 
   useEffect(() => {
     setProducts(initialProducts);
@@ -130,6 +156,36 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
     }
     return result;
   }, [products, selectedCategory, selectedPetType, sortBy, searchQuery]);
+
+  // Product cards: clip-path wipe + image settle as they scroll into view.
+  // Only un-revealed cards are picked up, so filtering never replays the animation.
+  useGSAP(
+    () => {
+      if (reduceMotion()) return;
+      const fresh = gsap.utils.toArray<HTMLElement>('[data-shop-media]:not([data-revealed])', rootRef.current);
+      if (!fresh.length) return;
+      fresh.forEach((el) => {
+        el.dataset.revealed = 'true';
+        gsap.set(el, { clipPath: 'inset(100% 0% 0% 0%)' });
+        gsap.set(el.querySelector('img'), { scale: 1.3 });
+        gsap.set(el.parentElement?.querySelectorAll('[data-shop-body]') ?? [], { y: 30, opacity: 0 });
+      });
+      ScrollTrigger.batch(fresh, {
+        start: 'top 90%',
+        once: true,
+        onEnter: (batch) => {
+          gsap.to(batch, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'power4.out', stagger: 0.12, clearProps: 'clipPath' });
+          gsap.to(batch.map((b) => b.querySelector('img')), { scale: 1, duration: 1.6, ease: 'power3.out', stagger: 0.12 });
+          gsap.to(
+            batch.flatMap((b) => Array.from(b.parentElement?.querySelectorAll('[data-shop-body]') ?? [])),
+            { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.06, delay: 0.2 }
+          );
+        },
+      });
+      ScrollTrigger.refresh();
+    },
+    { scope: rootRef, dependencies: [filteredProducts, viewMode] }
+  );
 
   const activeFilterCount = (selectedCategory !== 'all' ? 1 : 0) + (selectedPetType !== 'all' ? 1 : 0);
   const clearAll = () => {
@@ -182,15 +238,16 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
 
   return (
     <div
+      ref={rootRef}
       className={`${serif.variable} ${sans.variable} min-h-screen overflow-x-clip bg-white font-[family-name:var(--f-sans)] text-[#0B1F3A] antialiased dark:bg-[#0A1220] dark:text-[#EEF1F6]`}
     >
       {/* Page header */}
       <header className="border-b border-[#0B1F3A]/10 bg-[#F4F6F9] dark:border-white/10 dark:bg-[#0D1626]">
         <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16 lg:px-10">
-          <h1 className={`${S} text-[clamp(2.8rem,7vw,5rem)] leading-[1] tracking-[-0.02em]`}>
+          <h1 data-shop-title className={`${S} text-[clamp(2.8rem,7vw,5rem)] leading-[1] tracking-[-0.02em]`}>
             The <em className="italic">full</em> range
           </h1>
-          <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">
+          <p data-shop-sub className="mt-4 max-w-xl text-[17px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">
             Vet-formulated nutrition and supplements for dogs and cats.
           </p>
         </div>
@@ -200,7 +257,7 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
         <div className="flex flex-col gap-10 lg:flex-row lg:gap-14">
           {/* Desktop sidebar */}
           <aside className="hidden w-60 shrink-0 lg:block">
-            <div className="sticky top-24 space-y-8">
+            <div data-shop-aside className="sticky top-24 space-y-8">
               {searchBox}
               <FilterGroup title="Category" items={categories} value={selectedCategory} onChange={setSelectedCategory} />
               <FilterGroup title="Pet" items={petTypes} value={selectedPetType} onChange={setSelectedPetType} />
@@ -289,6 +346,7 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                           className="flex flex-col gap-5 py-6 sm:flex-row sm:items-center sm:gap-8"
                         >
                           <Link
+                            data-shop-media
                             href={`/products/${product.id}`}
                             className="relative block aspect-square w-full shrink-0 overflow-hidden rounded-2xl bg-[#F4F6F9] sm:w-44 dark:bg-[#15213A]"
                           >
@@ -339,6 +397,7 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                         className="group flex flex-col"
                       >
                         <Link
+                          data-shop-media
                           href={`/products/${product.id}`}
                           className="relative block aspect-[4/5] overflow-hidden rounded-2xl bg-[#F4F6F9] dark:bg-[#15213A]"
                         >
@@ -359,7 +418,7 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                           />
                         </Link>
 
-                        <div className="mt-5 flex items-start justify-between gap-4">
+                        <div data-shop-body className="mt-5 flex items-start justify-between gap-4">
                           <div className="min-w-0">
                             <p className="text-[13px] capitalize text-[#0B1F3A]/60 dark:text-white/60">
                               {product.productCategory}
@@ -375,15 +434,16 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                           </div>
                         </div>
 
-                        <div className="mt-2 flex items-center gap-1.5 text-[13px] text-[#0B1F3A]/65 dark:text-white/65">
+                        <div data-shop-body className="mt-2 flex items-center gap-1.5 text-[13px] text-[#0B1F3A]/65 dark:text-white/65">
                           <Star size={13} className="fill-[#B8893B] text-[#B8893B]" />
                           {(product.rating || 0).toFixed(1)} · {product.reviews || 0} reviews
                         </div>
 
-                        <p className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">{product.description}</p>
+                        <p data-shop-body className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">{product.description}</p>
 
                         <button
                           onClick={() => handleAdd(product, priceNum, img)}
+                          data-shop-body
                           className="mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-[#0B1F3A] py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#16345F] active:scale-[0.98] dark:bg-white dark:text-[#0B1F3A]"
                         >
                           <Plus size={17} /> Add to cart

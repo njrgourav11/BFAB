@@ -76,17 +76,34 @@
 }
 
 
-* {
-  scroll-behavior: smooth;
+/* Lenis smooth scroll (https://github.com/darkroomengineering/lenis) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Smooth scroll behavior */
-html {
+/* Native smooth scrolling only when Lenis is not running */
+html:not(.lenis) {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.lenis) {
+    scroll-behavior: auto;
+  }
 }
 
 /* Custom animations */
@@ -527,3 +544,8 @@ html {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@keyframes scrollcue {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -22,6 +22,14 @@ import {
 import { useCart } from './components/CartContext';
 import { getAllCoupons } from '@/lib/coupon-utils';
 import { Coupon } from '@/lib/types';
+import HeroAnimated from '@/components/home/HeroAnimated';
+import ProductShowcase from '@/components/home/ProductShowcase';
+import StatsBand from '@/components/home/StatsBand';
+import ClosingCTA from '@/components/home/ClosingCTA';
+import { useShowcaseProducts } from '@/components/home/useShowcaseProducts';
+import { useAutoReveal } from '@/components/motion/Reveal';
+import ScrollVelocity from '@/components/reactbits/ScrollVelocity';
+import ScrollReveal from '@/components/reactbits/ScrollReveal';
 
 const TestimonialSlider = dynamic(() => import('@/components/ui/testimonial-slider'), {
   ssr: false,
@@ -33,6 +41,9 @@ export default function Home() {
   const [activeCoupons, setActiveCoupons] = useState<Coupon[]>([]);
   const [couponInput, setCouponInput] = useState('');
   const [promoSuccess, setPromoSuccess] = useState<string | null>(null);
+  const showcase = useShowcaseProducts();
+  const pageRef = useRef<HTMLDivElement>(null);
+  useAutoReveal(pageRef);
 
   useEffect(() => {
     getAllCoupons().then(list => {
@@ -54,7 +65,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100 transition-colors">
+    <div ref={pageRef} className="bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100 transition-colors">
       
       {/* Partner Promo Strip (If Coupon is Active or Shared) */}
       {appliedCoupon && (
@@ -64,36 +75,29 @@ export default function Home() {
         </div>
       )}
 
-      {/* 1. HERO SECTION */}
-      <section className="relative w-full bg-[#FAF7F2] dark:bg-[#0a1512] overflow-hidden">
-        <Link href="/products" className="block w-full cursor-pointer group">
-          {/* Desktop Hero - matches hero.svg natural aspect ratio 1440x540 (2.67:1) */}
-          <div className="hidden md:block w-full relative aspect-[1440/540] max-w-[1440px] mx-auto">
-            <Image
-              src="/hero.svg"
-              alt="PetCare Prescribed by Vets and Delivered to You"
-              fill
-              priority
-              className="object-contain"
-            />
-          </div>
-          {/* Mobile Hero - matches mobile.png natural aspect ratio 375x540 */}
-          <div className="block md:hidden w-full relative aspect-[375/540] max-w-[480px] mx-auto">
-            <Image
-              src="/images/mobile.png"
-              alt="PetCare Prescribed by Vets and Delivered to You"
-              fill
-              priority
-              className="object-contain"
-            />
-          </div>
-        </Link>
+      {/* 1. HERO — GSAP intro + scroll-out, react-bits SplitText / ShinyText / Magnet */}
+      <HeroAnimated products={showcase} />
+
+      {/* Velocity marquee (react-bits ScrollVelocity) */}
+      <section className="overflow-hidden border-y border-[#241F1B]/10 bg-[#241F1B] py-6 text-[#FAF7F2] sm:py-8 dark:border-white/10">
+        <ScrollVelocity
+          texts={[
+            'Vet Formulated ✦ All Natural ✦ Made in India ✦ ',
+            'No Nasties ✦ Human-Grade ✦ 90-Day Guarantee ✦ ',
+          ]}
+          velocity={45}
+          numCopies={4}
+          outlineAlternate
+          fadeEdges
+          skewWithVelocity={6}
+          className="font-fredoka !text-[clamp(2.2rem,6vw,4.8rem)] !leading-[1.15] px-4"
+        />
       </section>
 
       {/* 2. SHOP BY CONCERN SECTION */}
       <section className="py-8 sm:py-10 md:py-12 bg-white dark:bg-slate-950 transition-colors">
         <div className="container mx-auto px-4 md:px-6 max-w-7xl">
-          <div className="text-center mb-6 sm:mb-8">
+          <div data-animate="blur" className="text-center mb-6 sm:mb-8">
             <h2 className="font-fredoka font-black text-3xl sm:text-4xl md:text-5xl text-[#F4623B] mb-2 sm:mb-3 tracking-tight">
               Shop By Concern
             </h2>
@@ -102,7 +106,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6 justify-items-center">
+          <div data-animate="scale" data-animate-stagger className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6 justify-items-center">
             {[
               { name: 'Dental Health', image: '/category/6.png', href: '/products?category=Dental%20Health' },
               { name: 'Hip & Joint', image: '/category/1.png', href: '/products?category=Hip%20%26%20Joint' },
@@ -133,12 +137,33 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Manifesto — react-bits ScrollReveal (scrubbed word reveal) */}
+      <section className="bg-[#FAF7F2] py-24 sm:py-32 dark:bg-[#0F0C0A]">
+        <div className="mx-auto max-w-5xl px-5 sm:px-8">
+          <p className="mb-6 text-xs font-bold uppercase tracking-[0.25em] text-[#F4623B]">Our promise</p>
+          <ScrollReveal
+            baseOpacity={0.12}
+            enableBlur
+            blurStrength={6}
+            baseRotation={2}
+            highlightColor="#F4623B"
+            containerClassName="!my-0"
+            textClassName="font-fredoka !text-[clamp(1.7rem,4.2vw,3.4rem)] !leading-[1.2] !font-semibold tracking-[-0.01em] text-[#241F1B] dark:text-[#FAF7F2]"
+          >
+            {"Every bite starts on a vet's notepad and ends in a happy, healthy pet. Real ingredients, clinically backed, gently made in India — and absolutely nothing your dog or cat doesn't need."}
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* THE COLLECTION — every product, pinned horizontal scroll (GSAP ScrollTrigger) */}
+      <ProductShowcase products={showcase} />
+
       {/* 4. WE CREATE PET WELLNESS */}
       <section className="py-8 sm:py-10 md:py-12 bg-white dark:bg-slate-950 overflow-hidden">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-10">
             {/* Left Text */}
-            <div className="w-full lg:w-5/12 max-w-md lg:pl-6 xl:pl-10">
+            <div data-animate="left" className="w-full lg:w-5/12 max-w-md lg:pl-6 xl:pl-10">
               <h2 className="font-fredoka font-black text-5xl sm:text-6xl md:text-7xl text-[#F4623B] leading-[0.98] tracking-tight mb-5 sm:mb-6">
                 We<br />
                 Create<br />
@@ -178,7 +203,7 @@ export default function Home() {
 
             {/* Right 3 Product Cards */}
             <div className="w-full lg:w-7/12">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 lg:gap-6 items-end">
+              <div data-animate="up" data-animate-stagger className="grid grid-cols-1 sm:grid-cols-3 gap-5 lg:gap-6 items-end">
                 {/* Card 1: Prebiotic ProTopper */}
                 <Link
                   href="/products"
@@ -303,7 +328,7 @@ export default function Home() {
           <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-8 lg:gap-10">
             {/* Left 3 Treat Cards */}
             <div className="w-full lg:w-7/12">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 lg:gap-6 items-end">
+              <div data-animate="up" data-animate-stagger className="grid grid-cols-1 sm:grid-cols-3 gap-5 lg:gap-6 items-end">
                 {/* Treat 1: Chicken Breast Jerky */}
                 <Link
                   href="/products"
@@ -367,7 +392,7 @@ export default function Home() {
             </div>
 
             {/* Right Text */}
-            <div className="w-full lg:w-5/12 max-w-md text-left lg:pr-6 xl:pr-10">
+            <div data-animate="right" className="w-full lg:w-5/12 max-w-md text-left lg:pr-6 xl:pr-10">
               <h2 className="font-fredoka font-black text-5xl sm:text-6xl md:text-7xl text-[#F4623B] leading-[0.98] tracking-tight mb-5 sm:mb-6">
                 We Make<br />
                 Treats<br />
@@ -419,7 +444,7 @@ export default function Home() {
       {/* 6. HEALTHY EATING FEATURE & MEALS */}
       <section className="py-10 sm:py-12 md:py-14 bg-white dark:bg-slate-950 overflow-hidden">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
-          <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+          <div data-animate="blur" className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#D95D39] leading-tight mb-3 sm:mb-4 tracking-tight">
               You shouldn't be the only <br className="hidden sm:block" /> one eating healthy
             </h2>
@@ -435,7 +460,7 @@ export default function Home() {
           </div>
 
           {/* Center Graphic + 4 Feature Callouts */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-4 max-w-6xl mx-auto">
+          <div data-animate="up" data-animate-stagger className="grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-4 max-w-6xl mx-auto">
             {/* Left 2 Callouts */}
             <div className="lg:col-span-3 flex flex-col justify-around h-full space-y-8 lg:space-y-16 order-2 lg:order-1">
               {/* Feature 1: Real Food */}
@@ -576,7 +601,7 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
             {/* Left Content */}
-            <div className="md:w-5/12 max-w-lg">
+            <div data-animate="left" className="md:w-5/12 max-w-lg">
               <h2 className="font-fredoka font-black text-5xl sm:text-6xl md:text-7xl text-[#F4623B] leading-[1.0] tracking-tight mb-4 sm:mb-5">
                 We're also<br />
                 fixing pet<br />
@@ -594,7 +619,7 @@ export default function Home() {
             </div>
 
             {/* Right Venn Diagram + Detective Dog */}
-            <div className="md:w-7/12 w-full flex justify-center relative">
+            <div data-animate="scale" className="md:w-7/12 w-full flex justify-center relative">
               <div className="w-full max-w-[500px] aspect-[540/430] relative transition-transform duration-300 hover:scale-[1.02] select-none">
                 <Image
                     src="/products-media/venn.svg"
@@ -609,6 +634,8 @@ export default function Home() {
         </div>
       </section>
 
+      <StatsBand />
+
       {/* 8. REAL PEOPLE. REAL LOVE. (TESTIMONIALS) */}
       <TestimonialSlider />
 
@@ -617,7 +644,7 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-12">
             {/* Left Text */}
-            <div className="md:w-5/12 text-center md:text-left">
+            <div data-animate="left" className="md:w-5/12 text-center md:text-left">
               <div className="relative inline-block">
                 {/* 4 Radiating Spark Rays */}
                 <svg
@@ -645,7 +672,7 @@ export default function Home() {
             </div>
 
             {/* Right 3 Partner Logos */}
-            <div className="md:w-7/12 flex items-start justify-center md:justify-end gap-6 sm:gap-8 lg:gap-12">
+            <div data-animate="right" data-animate-stagger className="md:w-7/12 flex items-start justify-center md:justify-end gap-6 sm:gap-8 lg:gap-12">
               {/* Partner 1: MissEvas PetHouse */}
               <div className="flex flex-col items-center text-center w-24 sm:w-28 md:w-32 group">
                 <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-2.5 transition-transform duration-300 group-hover:scale-105">
@@ -698,7 +725,7 @@ export default function Home() {
       {/* 10. COME, JOIN THE FAM! */}
       <section className="py-8 sm:py-10 md:py-12 bg-white dark:bg-slate-950 overflow-hidden border-t border-slate-100 dark:border-slate-800">
         <div className="container mx-auto px-4 md:px-8 max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-10">
+          <div data-animate="up" data-animate-stagger className="grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-10">
             {/* Left Column: Heading & Social Pill Buttons */}
             <div>
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#D95D39] leading-tight tracking-tight mb-5 sm:mb-6">
@@ -771,6 +798,7 @@ export default function Home() {
         </div>
       </section>
 
+      <ClosingCTA />
     </div>
   );
 }
