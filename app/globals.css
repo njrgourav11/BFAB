@@ -564,3 +564,8 @@ body { background: #FAF7F2; }
 
 /* masked line wrappers created by SplitText */
 .pa-line { padding-bottom: 0.06em; }
+
+/* Home sections: GSAP owns these transforms, so CSS must not tween them too */
+[data-home] [data-h] {
+  transition-property: color, background-color, border-color, box-shadow !important;
+}
