@@ -78,6 +78,11 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Let sticky sub-bars (shop filters, blog categories) follow the navbar as it hides/returns
+  useEffect(() => {
+    document.documentElement.style.setProperty('--nav-offset', hidden && !menuOpen ? '0px' : '4rem');
+  }, [hidden, menuOpen]);
+
   // Close overlays on navigation (adjusting state during render, per React docs)
   const [navPath, setNavPath] = useState(pathname);
   if (navPath !== pathname) {

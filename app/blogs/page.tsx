@@ -201,7 +201,7 @@ export default function BlogsPage() {
 
             {/* ---------- Category bar ---------- */}
             {categories.length > 2 && (
-                <div className="sticky top-16 z-30 border-b border-stone-200 dark:border-stone-800 bg-white/95 dark:bg-stone-950/95 backdrop-blur">
+                <div className="sticky top-[var(--nav-offset,4rem)] z-30 transition-[top] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] border-b border-stone-200 dark:border-stone-800 bg-white/95 dark:bg-stone-950/95 backdrop-blur">
                     <nav aria-label="Categories" className="mx-auto max-w-6xl px-4 sm:px-6">
                         <ul className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto py-3">
                             {categories.map(({ name, count }) => {

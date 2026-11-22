@@ -18,7 +18,7 @@ const REST: Record<string, gsap.TweenValue> = {
  * state from the DOM, which breaks if the element is already hidden (e.g. React's dev
  * double-mount); explicit end values make every entrance land correctly.
  */
-const fx = (vars: gsap.TweenVars): [gsap.TweenVars, gsap.TweenVars] => {
+export const fx = (vars: gsap.TweenVars): [gsap.TweenVars, gsap.TweenVars] => {
   const from: gsap.TweenVars = {};
   const to: gsap.TweenVars = {};
   Object.entries(vars).forEach(([k, v]) => {
@@ -34,7 +34,7 @@ const fx = (vars: gsap.TweenVars): [gsap.TweenVars, gsap.TweenVars] => {
 };
 
 /** Draw an SVG stroke from nothing to full length. */
-const drawPaths = (paths: Element[], vars: gsap.TweenVars = {}) => {
+export const drawPaths = (paths: Element[], vars: gsap.TweenVars = {}) => {
   paths.forEach((p) => {
     const el = p as SVGGeometryElement;
     const len = el.getTotalLength?.() ?? 300;

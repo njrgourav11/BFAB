@@ -128,7 +128,7 @@ const PawBlogPage = () => {
       {/* Hero Section Removed */}
 
       {/* Search Section */}
-      <section className="sticky top-16 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-800 py-6">
+      <section className="sticky top-[var(--nav-offset,4rem)] z-30 transition-[top] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-800 py-6">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
             {/* Category Filters */}

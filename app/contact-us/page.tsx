@@ -1,17 +1,20 @@
 "use client";
 import ParallaxHero from '@/components/motion/ParallaxHero';
-import React, { useMemo, useState } from 'react';
-import Image from 'next/image';
+import FloatingProducts from '@/components/motion/FloatingProducts';
+import React, { useMemo, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
-  Mail, Phone, MapPin, Clock, MessageCircle, Plus, Minus, Search, Heart,
+  Mail, Phone, MapPin, Clock, MessageCircle, Plus, Search, ArrowUpRight, Send, CheckCircle2,
   ShoppingBag, Truck, RotateCcw, CreditCard, Leaf, UserRound, type LucideIcon,
 } from 'lucide-react';
 
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
 type Faq = { q: string; a: string };
 type Category = { id: string; label: string; faqs: Faq[] };
-
-// Hero photo – swap for a brand photo (e.g. a pet parent with their dog) any time.
-const HERO_IMAGE = '/review/Golden-Retriever.webp';
 
 const categoryIcons: Record<string, LucideIcon> = {
   orders: ShoppingBag,
@@ -161,6 +164,7 @@ const contactCards = [
     lines: [SUPPORT_PHONE, 'Mon – Sat, 9 AM – 6 PM'],
     href: `tel:+${SUPPORT_PHONE_RAW}`,
     cta: 'Call now',
+    tone: '#F4623B',
   },
   {
     icon: MessageCircle,
@@ -168,6 +172,7 @@ const contactCards = [
     lines: [SUPPORT_PHONE, 'Quick replies during business hours'],
     href: `https://wa.me/${SUPPORT_PHONE_RAW}`,
     cta: 'Chat on WhatsApp',
+    tone: '#2bbf85',
   },
   {
     icon: Mail,
@@ -175,13 +180,17 @@ const contactCards = [
     lines: [SUPPORT_EMAIL, 'We reply within 24 hours'],
     href: `mailto:${SUPPORT_EMAIL}`,
     cta: 'Send an email',
+    tone: '#E3A438',
   },
 ];
 
 const ContactUsPage = () => {
+  const root = useRef<HTMLDivElement>(null);
   const [activeCategory, setActiveCategory] = useState(categories[0].id);
   const [openKey, setOpenKey] = useState<string | null>(`${categories[0].id}-0`);
   const [query, setQuery] = useState('');
+  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', order: '', topic: categories[0].label, message: '' });
 
   const searchResults = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -202,156 +211,285 @@ const ContactUsPage = () => {
     setOpenKey(`${id}-0`);
   };
 
+  // No backend mailer yet: compose the message in the visitor's own email app
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const subject = `[${form.topic}] ${form.order ? `Order ${form.order} – ` : ''}Message from ${form.name}`;
+    const bodyText = `${form.message}\n\n— ${form.name}\n${form.email}${form.order ? `\nOrder ID: ${form.order}` : ''}`;
+    window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+    setSent(true);
+  };
+
+  useGSAP(
+    () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const q = gsap.utils.selector(root);
+      gsap.fromTo(q('[data-ct-channel]'), { y: 80, opacity: 0, rotate: (i: number) => (i - 1) * 4 }, { y: 0, opacity: 1, rotate: 0, duration: 1, stagger: 0.12, ease: 'back.out(1.4)', delay: 0.9 });
+      const help = q('[data-ct-help]')[0];
+      gsap.timeline({ scrollTrigger: { trigger: help, start: 'top 75%', once: true } })
+        .fromTo(q('[data-ct-help-title]'), { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out' })
+        .fromTo(q('[data-ct-topic]'), { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, stagger: 0.07, ease: 'power3.out' }, '-=0.4')
+        .fromTo(q('[data-ct-faqs]'), { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, '-=0.5');
+      const msg = q('[data-ct-message]')[0];
+      gsap.timeline({ scrollTrigger: { trigger: msg, start: 'top 75%', once: true } })
+        .fromTo(q('[data-ct-info]'), { xPercent: -12, opacity: 0, clipPath: 'inset(0% 100% 0% 0% round 32px)' }, { xPercent: 0, opacity: 1, clipPath: 'inset(0% 0% 0% 0% round 32px)', duration: 1.2, ease: 'expo.out' })
+        .fromTo(q('[data-ct-info-row]'), { y: 20, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.1, duration: 0.6 }, '-=0.6')
+        .fromTo(q('[data-ct-field]'), { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.08, duration: 0.7, ease: 'power3.out' }, 0.2);
+    },
+    { scope: root }
+  );
+
+  const field =
+    'w-full rounded-2xl border border-[#241F1B]/15 bg-white px-4 py-3.5 text-[15px] outline-none transition placeholder:text-[#241F1B]/35 focus:border-[#F4623B] focus:ring-4 focus:ring-[#F4623B]/15 dark:border-white/15 dark:bg-white/5 dark:placeholder:text-white/35';
+
   return (
-    <div className="min-h-screen bg-white font-sans text-gray-900 dark:bg-slate-950 dark:text-white">
+    <div ref={root} data-page-animate="off" className="min-h-screen bg-[#FAF7F2] font-sans text-[#241F1B] dark:bg-[#0F0C0A] dark:text-[#FAF7F2]">
       <ParallaxHero
         eyebrow="Help centre"
-        title="Hi! How can"
-        highlight="we help?"
-        subtitle="Our pet-loving team is here to support you every step of the way."
+        title="We're all ears"
+        highlight="(and paws)."
+        subtitle="Search our answers, browse by topic, or reach the team directly — we usually reply within a day."
         products={['treat', 'peanut', 'hemp', 'meat']}
         size="compact"
       >
         <div className="relative w-full max-w-xl">
-          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden />
+          <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#241F1B]/40" aria-hidden />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search your question"
+            placeholder="Search e.g. “refund”, “delivery time”"
             aria-label="Search FAQs"
-            className="w-full rounded-full border border-[#241F1B]/15 bg-white py-4 pl-11 pr-4 text-[15px] text-gray-900 shadow-[0_20px_40px_-25px_rgba(36,31,27,0.5)] outline-none focus:border-[#F4623B] focus:ring-4 focus:ring-[#F4623B]/20"
+            className="w-full rounded-full border border-[#241F1B]/15 bg-white py-4 pl-12 pr-4 text-[15px] text-[#241F1B] shadow-[0_20px_40px_-25px_rgba(36,31,27,0.5)] outline-none focus:border-[#F4623B] focus:ring-4 focus:ring-[#F4623B]/20"
           />
         </div>
       </ParallaxHero>
 
-      {/* Browse topics */}
-      <section className="container mx-auto px-4 pt-12 md:pt-16">
-        <h2 className="text-center font-fredoka text-3xl md:text-4xl font-bold tracking-tight">Browse Topics</h2>
-        <div className="mx-auto mt-8 flex max-w-6xl gap-3 overflow-x-auto pb-3 no-scrollbar md:flex-wrap md:justify-center md:overflow-visible">
-          {categories.map((c) => {
-            const Icon = categoryIcons[c.id] ?? MessageCircle;
-            const active = !searchResults && activeCategory === c.id;
-            return (
-              <button
-                key={c.id}
-                onClick={() => selectCategory(c.id)}
-                aria-pressed={active}
-                className={`flex shrink-0 items-center gap-3 rounded-xl border bg-white px-4 py-3.5 text-left text-sm transition-all ${
-                  active
-                    ? 'border-[#F4623B] font-semibold text-gray-900 shadow-[0_8px_20px_-8px_rgba(244,98,59,0.45)]'
-                    : 'border-gray-200 text-gray-700 hover:border-gray-300 hover:shadow-sm'
-                }`}
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F4623B] text-white">
-                  <Icon size={18} aria-hidden />
-                </span>
-                <span className="max-w-[9rem] leading-snug">{c.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* FAQ body */}
-      <section className="container mx-auto px-4 py-10 md:py-14">
-        <div className="mx-auto max-w-3xl">
-          {/* Accordion */}
-          <div>
-            <h2 className="text-xl md:text-2xl font-bold mb-4">
-              {searchResults ? `Results for “${query.trim()}”` : current.label}
-            </h2>
-
-            {visible.length === 0 ? (
-              <p className="py-10 text-center text-gray-500">
-                No matching questions found. Try a different search or reach out to us below.
-              </p>
-            ) : (
-              <div className="divide-y divide-gray-200 border-y border-gray-200">
-                {visible.map((item) => {
-                  const open = openKey === item.key;
-                  return (
-                    <div key={item.key}>
-                      <button
-                        onClick={() => setOpenKey(open ? null : item.key)}
-                        aria-expanded={open}
-                        className="w-full flex items-start justify-between gap-6 py-5 text-left"
-                      >
-                        <span className="font-medium md:text-lg">
-                          {item.q}
-                          {searchResults && (
-                            <span className="block mt-1 text-xs font-normal text-gray-400">{item.category}</span>
-                          )}
-                        </span>
-                        <span className="mt-0.5 shrink-0 flex h-7 w-7 items-center justify-center rounded-full border border-gray-300">
-                          {open ? <Minus size={16} /> : <Plus size={16} />}
-                        </span>
-                      </button>
-                      <div
-                        className={`grid transition-all duration-300 ease-out ${
-                          open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                        }`}
-                      >
-                        <div className="overflow-hidden">
-                          <p className="pb-5 pr-12 text-gray-600 leading-relaxed">{item.a}</p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Still need help */}
-      <section className="bg-paper">
-        <div className="container mx-auto px-4 py-12 md:py-16">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold">Still need help?</h2>
-            <p className="mt-2 text-gray-600">Couldn&apos;t find what you were looking for? Our team is happy to help.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
-            {contactCards.map(({ icon: Icon, title, lines, href, cta }) => (
-              <a
-                key={title}
-                href={href}
-                target={href.startsWith('http') ? '_blank' : undefined}
-                rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="group rounded-2xl bg-white border border-gray-200 p-6 text-center hover:shadow-md transition-shadow"
-              >
-                <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-marigold/15 text-gray-900">
+      {/* ── Contact channels ── */}
+      <section className="relative z-10 mx-auto -mt-6 max-w-6xl px-5 sm:px-8">
+        <div className="grid gap-4 md:grid-cols-3">
+          {contactCards.map(({ icon: Icon, title, lines, href, cta, tone }) => (
+            <a
+              key={title}
+              data-ct-channel
+              href={href}
+              target={href.startsWith('http') ? '_blank' : undefined}
+              rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className="group relative overflow-hidden rounded-[28px] border border-[#241F1B]/10 bg-white p-6 shadow-[0_30px_60px_-40px_rgba(36,31,27,0.5)] transition-[box-shadow,border-color] duration-300 hover:border-transparent hover:shadow-[0_40px_70px_-35px_rgba(36,31,27,0.55)] dark:border-white/10 dark:bg-[#1E1813]"
+            >
+              <span aria-hidden className="absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-40" style={{ backgroundColor: tone }} />
+              <div className="flex items-start justify-between">
+                <span className="grid h-12 w-12 place-items-center rounded-2xl text-white transition-transform duration-500 group-hover:-rotate-12 group-hover:scale-110" style={{ backgroundColor: tone }}>
                   <Icon size={22} />
                 </span>
-                <h3 className="mt-4 font-semibold text-lg">{title}</h3>
-                <p className="mt-1 text-sm text-gray-900 font-medium break-all">{lines[0]}</p>
-                <p className="text-sm text-gray-500">{lines[1]}</p>
-                <span className="mt-4 inline-block text-sm font-semibold underline underline-offset-4 group-hover:text-marigold">
-                  {cta}
+                <span className="grid h-10 w-10 place-items-center rounded-full border border-[#241F1B]/10 transition-all duration-300 group-hover:rotate-45 group-hover:bg-[#241F1B] group-hover:text-white dark:border-white/15">
+                  <ArrowUpRight size={18} />
                 </span>
-              </a>
-            ))}
-          </div>
+              </div>
+              <h3 className="mt-6 font-fredoka text-2xl font-bold">{title}</h3>
+              <p className="mt-1 break-all text-[15px] font-semibold">{lines[0]}</p>
+              <p className="text-sm text-[#241F1B]/55 dark:text-white/50">{lines[1]}</p>
+              <span className="mt-5 inline-block text-sm font-semibold" style={{ color: tone }}>{cta} →</span>
+            </a>
+          ))}
+        </div>
+      </section>
 
-          <div className="mt-8 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="flex items-start gap-4 rounded-2xl bg-white border border-gray-200 p-6">
-              <MapPin size={22} className="shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-semibold">Registered Office</h3>
-                <p className="text-sm text-gray-600 mt-1">Taksh Apartment, Bhubaneswar, Odisha - 752050</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4 rounded-2xl bg-white border border-gray-200 p-6">
-              <Clock size={22} className="shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-semibold">Customer Care Hours</h3>
-                <p className="text-sm text-gray-600 mt-1">Monday – Saturday: 9 AM – 6 PM IST</p>
-                <p className="text-sm text-gray-600">Sunday: Closed</p>
-              </div>
-            </div>
+      {/* ── Help centre ── */}
+      <section data-ct-help className="mx-auto max-w-6xl px-5 py-24 sm:px-8">
+        <div data-ct-help-title className="mb-12 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.25em] text-[#F4623B]">FAQs</p>
+            <h2 className="font-fredoka text-[clamp(2.2rem,4.5vw,3.6rem)] font-bold leading-[1] tracking-[-0.02em]">Answers, fetched.</h2>
           </div>
+          {searchResults && (
+            <button type="button" onClick={() => setQuery('')} className="text-sm font-semibold underline underline-offset-4 hover:text-[#F4623B]">
+              Clear search
+            </button>
+          )}
+        </div>
+
+        <div className="grid gap-10 lg:grid-cols-[280px_1fr] lg:gap-14">
+          {/* Topic rail */}
+          <nav aria-label="FAQ topics" className="lg:sticky lg:top-28 lg:self-start">
+            <ul className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-2 lg:flex-col lg:overflow-visible">
+              {categories.map((c) => {
+                const Icon = categoryIcons[c.id] ?? MessageCircle;
+                const active = !searchResults && activeCategory === c.id;
+                return (
+                  <li key={c.id} data-ct-topic className="shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => selectCategory(c.id)}
+                      aria-pressed={active}
+                      className={`relative flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-[15px] font-semibold transition-colors ${active ? 'text-white' : 'text-[#241F1B]/70 hover:bg-[#241F1B]/[0.04] dark:text-white/65 dark:hover:bg-white/5'}`}
+                    >
+                      {active && <motion.span layoutId="ct-topic" className="absolute inset-0 rounded-2xl bg-[#241F1B] dark:bg-[#F4623B]" transition={{ type: 'spring', stiffness: 380, damping: 32 }} />}
+                      <span className={`relative grid h-9 w-9 shrink-0 place-items-center rounded-xl ${active ? 'bg-[#F4623B] text-white dark:bg-white dark:text-[#F4623B]' : 'bg-[#F4623B]/12 text-[#F4623B]'}`}>
+                        <Icon size={17} aria-hidden />
+                      </span>
+                      <span className="relative whitespace-nowrap">{c.label}</span>
+                      <span className={`relative ml-auto hidden text-xs lg:inline ${active ? 'text-white/60' : 'text-[#241F1B]/35 dark:text-white/30'}`}>{c.faqs.length}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          {/* Accordion */}
+          <div data-ct-faqs>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={searchResults ? `search-${query}` : activeCategory}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <h3 className="mb-4 font-fredoka text-2xl font-semibold">
+                  {searchResults ? `Results for “${query.trim()}”` : current.label}
+                </h3>
+                {visible.length === 0 ? (
+                  <p className="rounded-3xl border border-dashed border-[#241F1B]/20 py-12 text-center text-[#241F1B]/55 dark:border-white/15 dark:text-white/50">
+                    No matching questions. Try another word, or message us below.
+                  </p>
+                ) : (
+                  <ul className="space-y-3">
+                    {visible.map((item, i) => {
+                      const open = openKey === item.key;
+                      return (
+                        <motion.li
+                          key={item.key}
+                          initial={{ opacity: 0, y: 16 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.05, duration: 0.4 }}
+                          className={`overflow-hidden rounded-3xl border transition-colors duration-300 ${open ? 'border-[#F4623B]/40 bg-white shadow-[0_20px_40px_-30px_rgba(244,98,59,0.6)] dark:bg-[#1E1813]' : 'border-[#241F1B]/10 bg-white/60 hover:bg-white dark:border-white/10 dark:bg-white/[0.03]'}`}
+                        >
+                          <button type="button" onClick={() => setOpenKey(open ? null : item.key)} aria-expanded={open} className="flex w-full items-start gap-4 px-6 py-5 text-left">
+                            <span className="mt-0.5 font-mono text-xs text-[#F4623B]">{String(i + 1).padStart(2, '0')}</span>
+                            <span className="flex-1 font-semibold md:text-lg">
+                              {item.q}
+                              {searchResults && <span className="mt-1 block text-xs font-normal text-[#241F1B]/45 dark:text-white/40">{item.category}</span>}
+                            </span>
+                            <motion.span animate={{ rotate: open ? 45 : 0 }} className={`grid h-8 w-8 shrink-0 place-items-center rounded-full ${open ? 'bg-[#F4623B] text-white' : 'border border-[#241F1B]/15 dark:border-white/20'}`}>
+                              <Plus size={16} />
+                            </motion.span>
+                          </button>
+                          <AnimatePresence initial={false}>
+                            {open && (
+                              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}>
+                                <p className="px-6 pb-6 pl-[3.25rem] leading-relaxed text-[#241F1B]/70 dark:text-white/65">{item.a}</p>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </motion.li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Message us ── */}
+      <section data-ct-message className="mx-auto max-w-6xl px-5 pb-24 sm:px-8">
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <aside data-ct-info className="relative isolate overflow-hidden rounded-[32px] bg-[#241F1B] p-8 text-white sm:p-10">
+            <div aria-hidden className="absolute -left-20 -top-20 -z-10 h-72 w-72 rounded-full bg-[#F4623B]/35 blur-3xl" />
+            <FloatingProducts
+              className="-z-[1]"
+              items={[
+                { name: 'peanut', className: 'right-[6%] bottom-[6%] w-[28%] max-w-[150px]', rotate: 10, depth: 0.2 },
+                { name: 'hemp', className: 'right-[34%] bottom-[2%] w-[12%] max-w-[64px]', rotate: -12, depth: 0.4 },
+              ]}
+            />
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#E3A438]">Still need help?</p>
+            <h2 className="mt-3 font-fredoka text-[clamp(2rem,3.6vw,3rem)] font-bold leading-[1]">Drop us a line.</h2>
+            <p className="mt-4 max-w-sm text-white/65">Tell us what&apos;s up and include your order ID if it&apos;s about a delivery — it helps us help you faster.</p>
+            <ul className="mt-10 space-y-6 pb-28 sm:pb-20">
+              <li data-ct-info-row className="flex gap-4">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-[#F4623B]"><MapPin size={20} /></span>
+                <div>
+                  <p className="font-semibold">Registered office</p>
+                  <p className="text-sm text-white/60">Taksh Apartment, Bhubaneswar, Odisha - 752050</p>
+                </div>
+              </li>
+              <li data-ct-info-row className="flex gap-4">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-[#F4623B]"><Clock size={20} /></span>
+                <div>
+                  <p className="font-semibold">Customer care hours</p>
+                  <p className="text-sm text-white/60">Monday – Saturday: 9 AM – 6 PM IST</p>
+                  <p className="text-sm text-white/60">Sunday: Closed</p>
+                </div>
+              </li>
+              <li data-ct-info-row className="flex gap-4">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-[#F4623B]"><Mail size={20} /></span>
+                <div>
+                  <p className="font-semibold">Email</p>
+                  <a href={`mailto:${SUPPORT_EMAIL}`} className="break-all text-sm text-white/60 hover:text-white">{SUPPORT_EMAIL}</a>
+                </div>
+              </li>
+            </ul>
+          </aside>
+
+          <form onSubmit={submit} className="rounded-[32px] border border-[#241F1B]/10 bg-white p-8 sm:p-10 dark:border-white/10 dark:bg-[#1E1813]">
+            <AnimatePresence mode="wait">
+              {sent ? (
+                <motion.div key="sent" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex h-full min-h-[420px] flex-col items-center justify-center text-center">
+                  <motion.span initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 14 }} className="grid h-20 w-20 place-items-center rounded-full bg-[#2bbf85] text-white">
+                    <CheckCircle2 size={40} />
+                  </motion.span>
+                  <h3 className="mt-6 font-fredoka text-3xl font-bold">Almost there!</h3>
+                  <p className="mt-3 max-w-sm text-[#241F1B]/65 dark:text-white/60">
+                    Your email app should have opened with the message ready. Hit send there and we&apos;ll reply within 24 hours.
+                  </p>
+                  <button type="button" onClick={() => setSent(false)} className="mt-8 text-sm font-semibold underline underline-offset-4 hover:text-[#F4623B]">
+                    Write another message
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div key="form" exit={{ opacity: 0, y: -10 }} className="grid gap-5 sm:grid-cols-2">
+                  <label data-ct-field className="block">
+                    <span className="mb-2 block text-sm font-semibold">Your name</span>
+                    <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ananya Sharma" className={field} />
+                  </label>
+                  <label data-ct-field className="block">
+                    <span className="mb-2 block text-sm font-semibold">Email</span>
+                    <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" className={field} />
+                  </label>
+                  <label data-ct-field className="block">
+                    <span className="mb-2 block text-sm font-semibold">Topic</span>
+                    <select value={form.topic} onChange={(e) => setForm({ ...form, topic: e.target.value })} className={`${field} cursor-pointer`}>
+                      {categories.map((c) => (
+                        <option key={c.id}>{c.label}</option>
+                      ))}
+                      <option>Something else</option>
+                    </select>
+                  </label>
+                  <label data-ct-field className="block">
+                    <span className="mb-2 block text-sm font-semibold">Order ID <span className="font-normal text-[#241F1B]/45 dark:text-white/40">(optional)</span></span>
+                    <input value={form.order} onChange={(e) => setForm({ ...form, order: e.target.value })} placeholder="BFAB-1234" className={field} />
+                  </label>
+                  <label data-ct-field className="block sm:col-span-2">
+                    <span className="mb-2 block text-sm font-semibold">Message</span>
+                    <textarea required rows={6} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="How can we help?" className={`${field} resize-none`} />
+                  </label>
+                  <div data-ct-field className="flex flex-wrap items-center justify-between gap-4 sm:col-span-2">
+                    <p className="text-xs text-[#241F1B]/50 dark:text-white/45">Opens your email app with everything filled in.</p>
+                    <button type="submit" className="group inline-flex items-center gap-3 rounded-full bg-[#F4623B] py-3.5 pl-6 pr-3.5 font-semibold text-white shadow-[0_20px_40px_-20px_rgba(244,98,59,0.9)] transition-colors hover:bg-[#241F1B]">
+                      Send message
+                      <span className="grid h-8 w-8 place-items-center rounded-full bg-white/20 transition-transform duration-300 group-hover:translate-x-1 group-hover:-rotate-12">
+                        <Send size={15} />
+                      </span>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </form>
         </div>
       </section>
     </div>
