@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { gsap } from 'gsap';
@@ -14,20 +14,26 @@ import type { ShowcaseProduct } from './useShowcaseProducts';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const FAN = [
-  { rotate: -14, x: '-58%', y: '8%', z: 1 },
-  { rotate: 0, x: '0%', y: '-4%', z: 3 },
-  { rotate: 13, x: '58%', y: '10%', z: 2 },
-];
+// Product cutouts from /public/products-media (rasterised to /cutouts), arranged on the orange plate
+const STACK = [
+  { key: 'pre', src: '/products-media/cutouts/pre.webp', match: /prebiotic|topper/i, label: 'Prebiotic ProTopper',
+    pos: 'left-[0%] top-[18%] w-[28%]', rotate: -10, z: 1, out: { xPercent: -45, rotate: -24 } },
+  { key: 'jerky', src: '/products-media/cutouts/jerky.webp', match: /jerky/i, label: 'Chicken Breast Jerky',
+    pos: 'right-[-2%] top-[10%] w-[30%]', rotate: 10, z: 1, out: { xPercent: 45, rotate: 24 } },
+  { key: 'peanut', src: '/products-media/cutouts/peanut.webp', match: /peanut/i, label: 'Peanut Butter for Dogs',
+    pos: 'left-[34%] top-[20%] w-[32%]', rotate: 0, z: 3, out: { yPercent: 14, scale: 1.12 } },
+  { key: 'hemp', src: '/products-media/cutouts/hemp.webp', match: /hemp/i, label: 'Hemp Seed Oil',
+    pos: 'left-[14%] bottom-[4%] w-[14%]', rotate: -14, z: 4, out: { yPercent: -60, xPercent: -30, rotate: -30 } },
+  { key: 'hip', src: '/products-media/cutouts/hip.webp', match: /hip|joint/i, label: 'Hip & Joint Care',
+    pos: 'right-[12%] bottom-[2%] w-[24%]', rotate: 8, z: 4, out: { yPercent: -50, xPercent: 30, rotate: 22 } },
+] as const;
 
 export default function HeroAnimated({ products }: { products: ShowcaseProduct[] }) {
   const root = useRef<HTMLElement>(null);
-  // Lock the three cards in on first render (static catalogue, local packshots) so a later
-  // Firestore refresh — whose images may all be remote — can't empty or re-deal the hand.
-  const [picks] = useState<ShowcaseProduct[]>(() => {
-    const withImage = products.filter((p) => p.image && !p.image.endsWith('bfab icon.png'));
-    const local = withImage.filter((p) => p.image.startsWith('/'));
-    return [...local, ...withImage.filter((p) => !p.image.startsWith('/'))].slice(0, 3);
+  // Link each cutout to its live product (falls back to the shop if it isn't in the catalogue)
+  const items = STACK.map((it) => {
+    const p = products.find((x) => it.match.test(x.name));
+    return { ...it, href: p ? `/products/${p.id}` : '/products', price: p?.price };
   });
 
   useGSAP(
@@ -37,24 +43,27 @@ export default function HeroAnimated({ products }: { products: ShowcaseProduct[]
 
       if (reduce) return;
 
-      // Intro: cards deal in like a hand of cards, chrome fades up
+      // Intro: plate spins in, products drop onto it one after another, chrome fades up
       const intro = gsap.timeline({ defaults: { ease: 'power4.out' }, delay: 0.55 });
       intro
+        .from(q('[data-hero-plate]'), { scale: 0.4, rotate: -90, opacity: 0, duration: 1.6, ease: 'expo.out' }, 0)
         .from(q('[data-hero-card]'), {
-          y: 260,
-          scale: 0.7,
+          y: -220,
+          scale: 0.6,
           opacity: 0,
-          duration: 1.4,
-          stagger: 0.12,
-        })
+          duration: 1.3,
+          stagger: 0.1,
+          ease: 'back.out(1.4)',
+        }, 0.2)
+        .from(q('[data-hero-chip]'), { scale: 0, opacity: 0, duration: 0.7, ease: 'back.out(2)' }, 1.2)
         .from(q('[data-hero-fade]'), { y: 24, opacity: 0, duration: 0.9, stagger: 0.08 }, 0.35)
         .from(q('[data-hero-blob]'), { scale: 0, opacity: 0, duration: 1.6, stagger: 0.15, ease: 'expo.out' }, 0);
 
       // Idle float on each card (on the inner wrapper so it doesn't fight scroll tweens)
       q('[data-hero-float]').forEach((el: Element, i: number) => {
         gsap.to(el, {
-          y: i % 2 ? 14 : -14,
-          rotate: i % 2 ? 1.5 : -1.5,
+          y: i % 2 ? 16 : -16,
+          rotate: i % 2 ? 3 : -3,
           duration: 3 + i * 0.4,
           ease: 'sine.inOut',
           yoyo: true,
@@ -68,10 +77,9 @@ export default function HeroAnimated({ products }: { products: ShowcaseProduct[]
       });
       out
         .to(q('[data-hero-copy]'), { yPercent: -30, opacity: 0, ease: 'none' }, 0)
-        .to(q('[data-hero-scroll="0"]'), { xPercent: -40, rotate: -26, ease: 'none' }, 0)
-        .to(q('[data-hero-scroll="1"]'), { yPercent: 18, scale: 1.08, ease: 'none' }, 0)
-        .to(q('[data-hero-scroll="2"]'), { xPercent: 40, rotate: 26, ease: 'none' }, 0)
+        .to(q('[data-hero-plate]'), { scale: 1.15, rotate: 25, ease: 'none' }, 0)
         .to(q('[data-hero-blob]'), { yPercent: -60, ease: 'none' }, 0);
+      STACK.forEach((it) => out.to(q(`[data-hero-scroll="${it.key}"]`), { ...it.out, ease: 'none' }, 0));
     },
     { scope: root }
   );
@@ -180,46 +188,49 @@ export default function HeroAnimated({ products }: { products: ShowcaseProduct[]
           </div>
         </div>
 
-        {/* Hand of product cards */}
-        <div className="relative mx-auto h-[380px] w-full max-w-[560px] sm:h-[480px] lg:h-[600px]">
-          {picks.map((p, i) => (
-            <div
-              key={p.id}
-              className="absolute left-1/2 top-1/2 w-[46%] sm:w-[42%]"
-              style={{
-                zIndex: FAN[i].z,
-                transform: `translate(-50%, -50%) translate(${FAN[i].x}, ${FAN[i].y}) rotate(${FAN[i].rotate}deg)`,
-              }}
-            >
-              {/* layers: scroll-out → intro → idle float, so tweens never fight */}
-              <div data-hero-scroll={i}>
-              <div data-hero-card={i}>
-              <div data-hero-float>
+        {/* Product cutouts on the brand plate */}
+        <div className="relative mx-auto aspect-square w-full max-w-[400px] sm:max-w-[520px] lg:max-w-[600px]">
+          <div data-hero-plate aria-hidden className="absolute left-1/2 top-1/2 h-[82%] w-[82%] -translate-x-1/2 -translate-y-1/2">
+            <Image src="/products-media/bowl.svg" alt="" fill priority className="object-contain" />
+            <div className="absolute inset-[16%] rounded-full border-2 border-dashed border-white/40" />
+          </div>
+          {items.map((it, i) => (
+            <div key={it.key} className={`absolute ${it.pos}`} style={{ zIndex: it.z }}>
+              {/* layers: scroll-out → intro → idle bob, so tweens never fight */}
+              <div data-hero-scroll={it.key}>
+                <div data-hero-card>
+                  <div data-hero-float style={{ transform: `rotate(${it.rotate}deg)` }}>
+                    <Link href={it.href} aria-label={it.label} className="group block">
+                      <Image
+                        src={it.src}
+                        alt={it.label}
+                        width={640}
+                        height={640}
+                        priority={it.key === 'peanut'}
+                        sizes="(max-width: 1024px) 40vw, 240px"
+                        className="h-auto w-full drop-shadow-[0_30px_30px_rgba(36,31,27,0.35)] transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-105"
+                      />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              {it.key === 'peanut' && (
                 <Link
-                  href={`/products/${p.id}`}
-                  className="group block overflow-hidden rounded-[28px] bg-white p-2 shadow-[0_40px_80px_-30px_rgba(36,31,27,0.55)] ring-1 ring-black/5 transition-transform duration-500 hover:-translate-y-3 dark:bg-white/10 dark:ring-white/10"
+                  href={it.href}
+                  data-hero-chip
+                  className="absolute -right-[42%] top-[8%] hidden whitespace-nowrap rounded-full bg-white/95 px-4 py-2 text-[13px] font-semibold text-[#241F1B] shadow-[0_15px_30px_-15px_rgba(36,31,27,0.5)] backdrop-blur transition-colors hover:bg-[#241F1B] hover:text-white sm:inline-flex sm:items-center sm:gap-2"
+                  style={{ zIndex: 5 }}
                 >
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-[22px]" style={{ backgroundColor: p.accent }}>
-                    <Image
-                      src={p.image}
-                      unoptimized={!p.image.startsWith('/')}
-                      alt={p.name}
-                      fill
-                      priority={i === 1}
-                      sizes="(max-width: 1024px) 45vw, 260px"
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between gap-2 px-2 pb-1 pt-3">
-                    <span className="line-clamp-1 text-[13px] font-semibold text-[#241F1B] dark:text-white">{p.name}</span>
-                    <span className="shrink-0 text-[13px] font-bold" style={{ color: p.accent }}>
-                      ₹{p.price}
-                    </span>
-                  </div>
+                  <span className="h-2 w-2 rounded-full bg-[#2bbf85]" />
+                  {it.label}
+                  {it.price ? <span className="text-[#F4623B]">₹{it.price}</span> : null}
                 </Link>
-              </div>
-              </div>
-              </div>
+              )}
+              {i === 4 && (
+                <span data-hero-chip aria-hidden className="absolute -right-[20%] bottom-[-8%] hidden rotate-[-8deg] rounded-full bg-[#241F1B] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white sm:inline-block">
+                  Vet formulated
+                </span>
+              )}
             </div>
           ))}
         </div>
