@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { CartProvider } from './CartContext';
 import SmoothScroll from '@/components/motion/SmoothScroll';
 import ScrollProgress from '@/components/motion/ScrollProgress';
+import PageAnimator from '@/components/motion/PageAnimator';
 
 const Navbar = dynamic(() => import('./Navbar'));
 const Footer = dynamic(() => import('./Footer'));
@@ -55,6 +56,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {showLoader ? <InitialLoader /> : null}
       <SmoothScroll />
       <ScrollProgress />
+      <PageAnimator />
       <Navbar isDark={isDark} toggleTheme={toggleTheme} />
       <main className="flex-grow">{children}</main>
       <Footer />

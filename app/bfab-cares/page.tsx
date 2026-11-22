@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import ParallaxHero from '@/components/motion/ParallaxHero';
 import { Heart, Users, DollarSign, Mail, Phone, ExternalLink, CheckCircle, TrendingUp, Handshake, ArrowRight } from 'lucide-react';
 
 const BFABCaresPage = () => {
@@ -126,7 +127,18 @@ const BFABCaresPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 font-sans">
-      {/* Hero Section Removed */}
+      <ParallaxHero
+        eyebrow="BFAB Cares"
+        title="Every bite"
+        highlight="gives back."
+        subtitle="Partnerships, rescues and community initiatives that help more pets live healthier, happier lives."
+        accent="#2bbf85"
+        images={[
+          { src: '/review/Golden-Retriever.webp', alt: 'Golden retriever' },
+          { src: '/products/2/3.png' },
+          { src: '/products/6/1.png' },
+        ]}
+      />
 
       {/* Mission Statement */}
       <section className="py-16 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">

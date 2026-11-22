@@ -65,7 +65,7 @@ export default function Home() {
   };
 
   return (
-    <div ref={pageRef} className="bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100 transition-colors">
+    <div ref={pageRef} data-page-animate="off" className="bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100 transition-colors">
       
       {/* Partner Promo Strip (If Coupon is Active or Shared) */}
       {appliedCoupon && (

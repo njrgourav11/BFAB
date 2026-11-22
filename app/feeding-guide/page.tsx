@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import ParallaxHero from '@/components/motion/ParallaxHero';
 import { Dog, Cat, Heart, AlertCircle, Droplet, Zap, Activity, Apple, Scale, ChevronRight } from 'lucide-react';
 
 const FeedingGuidePage = () => {
@@ -56,10 +57,21 @@ const FeedingGuidePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 font-sans">
-      {/* Hero Section Removed */}
+      <ParallaxHero
+        eyebrow="Feeding guide"
+        title="Portions,"
+        highlight="perfected."
+        subtitle="Work out how much your dog or cat needs each day, with tips from our vets on doing it right."
+        accent="#E3A438"
+        images={[
+          { src: '/products/3/9.png' },
+          { src: '/products/1/21.png' },
+          { src: '/products/2/4.png' },
+        ]}
+      />
 
       {/* Tab Navigation */}
-      <section className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-800">
+      <section className="sticky top-16 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-800">
         <div className="container mx-auto px-4">
           <div className="flex justify-center">
             <div className="flex p-1 bg-gray-100 dark:bg-slate-800 rounded-xl my-4">

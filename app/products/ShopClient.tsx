@@ -239,6 +239,7 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
   return (
     <div
       ref={rootRef}
+      data-page-animate="off"
       className={`${serif.variable} ${sans.variable} min-h-screen overflow-x-clip bg-white font-[family-name:var(--f-sans)] text-[#0B1F3A] antialiased dark:bg-[#0A1220] dark:text-[#EEF1F6]`}
     >
       {/* Page header */}

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import ParallaxHero from '@/components/motion/ParallaxHero';
 import { ShoppingCart, Star, ChevronLeft, ChevronRight, CheckCircle, Package, ArrowRight } from 'lucide-react';
 
 const saverPacks = [
@@ -94,7 +95,18 @@ const UltimateSaverPacksPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 font-sans">
-      {/* Hero Section Removed */}
+      <ParallaxHero
+        eyebrow="Ultimate saver packs"
+        title="Stock up."
+        highlight="Save more."
+        subtitle="Bundled favourites at better prices — so the good stuff never runs out."
+        accent="#F4623B"
+        images={[
+          { src: '/products/1/20.png' },
+          { src: '/products/4/12.png' },
+          { src: '/products/3/12.png' },
+        ]}
+      />
 
       {/* Featured Slider Section */}
       <section className="py-20 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
