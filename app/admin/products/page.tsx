@@ -5,8 +5,9 @@ import { getAllProducts, deleteProduct, seedProducts, seedK9Product } from '@/li
 import { Product } from '@/lib/types';
 import { products as staticProducts } from '@/app/data/products';
 import Link from 'next/link';
-import { Plus, Edit, Trash2, Database, Loader2 } from 'lucide-react';
-import Image from 'next/image';
+import { Plus, Edit, Trash2, Database, Loader2, Search } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { AdminButton, AdminHeader, Empty, Panel, Row, SkeletonBlock, th } from '@/components/admin/ui';
 
 export default function AdminProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -63,103 +64,118 @@ export default function AdminProductsPage() {
         }
     };
 
-    if (loading) return <div className="p-8 text-center text-slate-500"><Loader2 className="animate-spin inline mr-2" /> Loading products...</div>;
+    const [query, setQuery] = useState('');
+    const visible = products.filter((p) => p.name.toLowerCase().includes(query.trim().toLowerCase()));
+    const lowStock = products.filter((p) => (p.stock ?? 0) > 0 && (p.stock ?? 0) < 10).length;
+    const outOfStock = products.filter((p) => (p.stock ?? 0) <= 0).length;
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Products</h1>
-                <div className="flex gap-3">
+            <AdminHeader
+                eyebrow="Catalogue"
+                title="Products"
+                description="Everything listed in the store. Edit details, stock and pricing, or add something new."
+                actions={
+                    <>
+                        <AdminButton variant="ghost" icon={seeding ? Loader2 : Database} onClick={handleSeed} disabled={seeding}>Seed standard</AdminButton>
+                        <AdminButton
+                            variant="ghost"
+                            icon={seeding ? Loader2 : Database}
+                            disabled={seeding}
+                            onClick={async () => {
+                                if (confirm('Seed K9 Demo Product to DB?')) {
+                                    setSeeding(true);
+                                    await seedK9Product();
+                                    setSeeding(false);
+                                    fetchProducts();
+                                }
+                            }}
+                        >
+                            Seed K9 demo
+                        </AdminButton>
+                        <AdminButton href="/admin/products/new" icon={Plus}>Add product</AdminButton>
+                    </>
+                }
+            />
 
-                    <button
-                        onClick={handleSeed}
-                        disabled={seeding}
-                        className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 font-medium transition-colors disabled:opacity-70"
-                    >
-                        {seeding ? <Loader2 className="animate-spin" size={20} /> : <Database size={20} />}
-                        Seed Standard
-                    </button>
-
-                    <button
-                        onClick={async () => {
-                            if (confirm('Seed K9 Demo Product to DB?')) {
-                                setSeeding(true);
-                                await seedK9Product();
-                                setSeeding(false);
-                                fetchProducts();
-                            }
-                        }}
-                        disabled={seeding}
-                        className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 font-medium transition-colors disabled:opacity-70"
-                    >
-                        {seeding ? <Loader2 className="animate-spin" size={20} /> : <Database size={20} />}
-                        Seed K9 Demo
-                    </button>
-
-
-                    <Link
-                        href="/admin/products/new"
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 font-medium transition-colors"
-                    >
-                        <Plus size={20} />
-                        Add Product
-                    </Link>
-                </div>
+            <div className="mb-5 grid grid-cols-3 gap-3 sm:max-w-xl">
+                {[
+                    { label: 'Listed', value: products.length, tone: 'text-[#241F1B] dark:text-white' },
+                    { label: 'Low stock', value: lowStock, tone: 'text-[#D9502C]' },
+                    { label: 'Sold out', value: outOfStock, tone: 'text-red-600' },
+                ].map((c, i) => (
+                    <motion.div key={c.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.06 }} className="rounded-2xl border border-[#241F1B]/[0.08] bg-white px-4 py-3 dark:border-white/10 dark:bg-[#1A1511]">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#241F1B]/45 dark:text-white/40">{c.label}</p>
+                        <p className={`font-fredoka text-2xl font-bold ${c.tone}`}>{c.value}</p>
+                    </motion.div>
+                ))}
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
-                                <th className="p-4 font-semibold text-slate-600 dark:text-slate-300">Product</th>
-                                <th className="p-4 font-semibold text-slate-600 dark:text-slate-300">Category</th>
-                                <th className="p-4 font-semibold text-slate-600 dark:text-slate-300">Price</th>
-                                <th className="p-4 font-semibold text-slate-600 dark:text-slate-300">Stock</th>
-                                <th className="p-4 font-semibold text-slate-600 dark:text-slate-300 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products.length === 0 ? (
+            <Panel delay={0.15}>
+                <div className="flex items-center gap-3 border-b border-[#241F1B]/[0.07] px-5 py-4 dark:border-white/10">
+                    <Search size={17} className="text-[#241F1B]/40 dark:text-white/40" />
+                    <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search products…" aria-label="Search products" className="w-full bg-transparent text-sm outline-none placeholder:text-[#241F1B]/35 dark:placeholder:text-white/35" />
+                </div>
+                {loading ? (
+                    <div className="space-y-3 p-5">{[0, 1, 2, 3].map((i) => <SkeletonBlock key={i} className="h-14" />)}</div>
+                ) : visible.length === 0 ? (
+                    <Empty title={products.length ? 'No matches' : 'No products yet'} hint={products.length ? 'Try a different search.' : 'Seed the catalogue or add your first product.'} action={!products.length && <AdminButton href="/admin/products/new" icon={Plus}>Add product</AdminButton>} />
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full min-w-[720px] text-left text-sm">
+                            <thead>
                                 <tr>
-                                    <td colSpan={5} className="p-8 text-center text-slate-500">
-                                        No products found. Seed data or add a new one.
-                                    </td>
+                                    <th className={th}>Product</th>
+                                    <th className={th}>Category</th>
+                                    <th className={th}>Price</th>
+                                    <th className={th}>Stock</th>
+                                    <th className={`${th} text-right`}>Actions</th>
                                 </tr>
-                            ) : (
-                                products.map((product) => (
-                                    <tr key={product.id} className="border-b border-slate-200 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                                        <td className="p-4 font-medium text-slate-900 dark:text-white flex items-center gap-3">
-                                            <div className="w-10 h-10 relative rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                                                {product.images && product.images[0] ? (
-                                                    <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
-                                                ) : null}
-                                            </div>
-                                            {product.name}
-                                        </td>
-                                        <td className="p-4 text-slate-600 dark:text-slate-400 capitalize">{product.productCategory}</td>
-                                        <td className="p-4 text-slate-900 dark:text-white font-bold">₹{product.price}</td>
-                                        <td className="p-4 text-slate-600 dark:text-slate-400">{product.stock}</td>
-                                        <td className="p-4 text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <Link href={`/admin/products/${product.id}`} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
-                                                    <Edit size={18} />
-                                                </Link>
-                                                <button
-                                                    onClick={() => handleDelete(product.id)}
-                                                    className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                                                >
-                                                    <Trash2 size={18} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                            </thead>
+                            <tbody>
+                                {visible.map((product, i) => {
+                                    const stock = product.stock ?? 0;
+                                    return (
+                                        <Row key={product.id} i={i} className="group">
+                                            <td className="px-6 py-3.5">
+                                                <div className="flex items-center gap-3.5">
+                                                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-[#F6F2EB] dark:bg-white/5">
+                                                        {product.images?.[0] && (
+                                                            // eslint-disable-next-line @next/next/no-img-element
+                                                            <img src={product.images[0]} alt="" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                                        )}
+                                                    </div>
+                                                    <Link href={`/admin/products/${product.id}`} className="font-semibold hover:text-[#F4623B]">{product.name}</Link>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-3.5">
+                                                <span className="rounded-full bg-[#241F1B]/[0.05] px-2.5 py-1 text-xs font-semibold capitalize dark:bg-white/10">{product.productCategory || '—'}</span>
+                                            </td>
+                                            <td className="px-6 py-3.5 font-fredoka text-base font-semibold">₹{Number(product.price).toLocaleString('en-IN')}</td>
+                                            <td className="px-6 py-3.5">
+                                                <span className={`inline-flex items-center gap-1.5 text-xs font-bold ${stock <= 0 ? 'text-red-600' : stock < 10 ? 'text-[#D9502C]' : 'text-[#1d8a5f] dark:text-[#5fe0ad]'}`}>
+                                                    <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                                                    {stock <= 0 ? 'Sold out' : `${stock} in stock`}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-3.5">
+                                                <div className="flex items-center justify-end gap-1.5">
+                                                    <Link href={`/admin/products/${product.id}`} aria-label={`Edit ${product.name}`} className="grid h-9 w-9 place-items-center rounded-full transition-colors hover:bg-[#F4623B] hover:text-white">
+                                                        <Edit size={16} />
+                                                    </Link>
+                                                    <button type="button" onClick={() => handleDelete(product.id)} aria-label={`Delete ${product.name}`} className="grid h-9 w-9 place-items-center rounded-full text-red-600 transition-colors hover:bg-red-600 hover:text-white">
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </Row>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </Panel>
         </div>
     );
 }

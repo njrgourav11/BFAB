@@ -2,6 +2,7 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 import { CartProvider } from './CartContext';
 import SmoothScroll from '@/components/motion/SmoothScroll';
 import ScrollProgress from '@/components/motion/ScrollProgress';
@@ -28,6 +29,7 @@ function InitialLoader() {
 }
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
+  const isAdmin = (usePathname() || '').startsWith('/admin');
   const [isDark, setIsDark] = React.useState(false);
   const [showLoader, setShowLoader] = React.useState(true);
 
@@ -57,9 +59,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <SmoothScroll />
       <ScrollProgress />
       <PageAnimator />
-      <Navbar isDark={isDark} toggleTheme={toggleTheme} />
+      {!isAdmin && <Navbar isDark={isDark} toggleTheme={toggleTheme} />}
       <main className="flex-grow">{children}</main>
-      <Footer />
+      {!isAdmin && <Footer />}
     </CartProvider>
   );
 }

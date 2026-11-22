@@ -14,31 +14,11 @@ import {
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
-    BarChart,
-    Bar
 } from 'recharts';
-import {
-    ShoppingBag,
-    Package,
-    FileText,
-    IndianRupee,
-    ArrowUpRight,
-    Calendar,
-    Ticket,
-    Users,
-    TrendingUp,
-    Award
-} from 'lucide-react';
+import { ShoppingBag, Package, IndianRupee, Ticket, Award, Plus, PenLine, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-
-// Helper to format currency
-const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-        style: 'currency',
-        currency: 'INR',
-        maximumFractionDigits: 0
-    }).format(amount);
-};
+import FloatingProducts from '@/components/motion/FloatingProducts';
+import { AdminButton, Panel, PanelHead, Row, SkeletonBlock, StatCard, StatusPill, Empty, th, adminEase } from '@/components/admin/ui';
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState({
@@ -128,279 +108,203 @@ export default function AdminDashboard() {
         fetchData();
     }, []);
 
-    const statCards = [
-        {
-            label: 'Total Revenue',
-            value: formatCurrency(stats.totalRevenue),
-            icon: IndianRupee,
-            color: 'emerald',
-            href: '/admin/orders'
-        },
-        {
-            label: 'Team Coupon Sales',
-            value: formatCurrency(stats.groupSalesRevenue),
-            icon: Ticket,
-            color: 'blue',
-            badge: `${stats.groupUnitsSold} units sold`,
-            href: '/admin/coupons'
-        },
-        {
-            label: 'Total Orders',
-            value: stats.totalOrders.toString(),
-            icon: ShoppingBag,
-            color: 'indigo',
-            href: '/admin/orders'
-        },
-        {
-            label: 'Catalog Products',
-            value: stats.totalProducts.toString(),
-            icon: Package,
-            color: 'purple',
-            href: '/admin/products'
-        },
-    ];
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    const orderAmount = (o: Order) => o.totalAmount || (o.amount ? o.amount / 100 : 0);
 
     if (loading) {
         return (
-            <div className="space-y-6 animate-pulse">
-                <div className="h-8 bg-slate-200 dark:bg-slate-800 rounded w-1/4"></div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="h-32 bg-slate-200 dark:bg-slate-800 rounded-2xl"></div>
-                    ))}
+            <div className="space-y-6">
+                <SkeletonBlock className="h-44" />
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+                    {[0, 1, 2, 3].map((i) => <SkeletonBlock key={i} className="h-44" />)}
+                </div>
+                <div className="grid gap-5 lg:grid-cols-12">
+                    <SkeletonBlock className="h-80 lg:col-span-8" />
+                    <SkeletonBlock className="h-80 lg:col-span-4" />
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                        Executive Overview
-                    </h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                        Live monitoring of sales, team coupon conversions, and store health.
-                    </p>
-                </div>
-                <div className="flex items-center gap-3">
-                    <Link
-                        href="/admin/coupons"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md shadow-blue-600/20 transition-all"
-                    >
-                        <Ticket size={16} />
-                        Group Sales Dashboard
+        <div className="space-y-6">
+            {/* Greeting banner */}
+            <motion.section
+                initial={{ opacity: 0, y: 20, clipPath: 'inset(0% 0% 100% 0% round 28px)' }}
+                animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0% round 28px)' }}
+                transition={{ duration: 0.9, ease: adminEase }}
+                className="relative isolate overflow-hidden rounded-[28px] bg-[#14100D] px-7 py-9 text-white sm:px-10"
+            >
+                <div aria-hidden className="absolute -left-20 -top-24 -z-10 h-72 w-72 rounded-full bg-[#F4623B]/40 blur-3xl" />
+                <div aria-hidden className="absolute -right-24 -bottom-32 -z-10 h-80 w-80 rounded-full border-[50px] border-[#F4623B]/15" />
+                <FloatingProducts
+                    className="-z-[1] hidden md:block"
+                    items={[
+                        { name: 'peanut', className: 'right-[6%] top-[12%] w-24', rotate: 10, depth: 0.1 },
+                        { name: 'jerky', className: 'right-[18%] bottom-[-10%] w-24', rotate: -8, depth: 0.15 },
+                        { name: 'hemp', className: 'right-[28%] top-[14%] w-10', rotate: 14, depth: 0.2 },
+                    ]}
+                />
+                <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#E3A438]">{greeting}</p>
+                <h1 className="mt-2 max-w-xl font-fredoka text-[clamp(2rem,3.6vw,3rem)] font-bold leading-[1] tracking-[-0.02em]">
+                    Here&apos;s how the pack is doing today.
+                </h1>
+                <p className="mt-3 max-w-lg text-sm text-white/60">Live sales, team coupon conversions and store health — all in one place.</p>
+                <div className="mt-6 flex flex-wrap gap-2.5">
+                    <AdminButton href="/admin/products/new" icon={Plus}>Add product</AdminButton>
+                    <Link href="/admin/blogs/new" className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/20">
+                        <PenLine size={16} /> Write a post
+                    </Link>
+                    <Link href="/admin/coupons" className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/20">
+                        <Ticket size={16} /> Coupons
                     </Link>
                 </div>
+            </motion.section>
+
+            {/* Stats */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+                <StatCard index={0} label="Total revenue" value={Math.round(stats.totalRevenue)} prefix="₹" icon={IndianRupee} tone="orange" href="/admin/orders" />
+                <StatCard index={1} label="Team coupon sales" value={Math.round(stats.groupSalesRevenue)} prefix="₹" icon={Ticket} tone="marigold" href="/admin/coupons" note={`${stats.groupUnitsSold} units via coupons`} />
+                <StatCard index={2} label="Orders" value={stats.totalOrders} icon={ShoppingBag} tone="ink" href="/admin/orders" />
+                <StatCard index={3} label="Products" value={stats.totalProducts} icon={Package} tone="mint" href="/admin/products" note={`${stats.totalBlogs} blog posts live`} />
             </div>
 
-            {/* Stat Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                {statCards.map((card, index) => {
-                    const Icon = card.icon;
-                    return (
-                        <Link href={card.href} key={index}>
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.08 }}
-                                className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 transition-all cursor-pointer h-full flex flex-col justify-between"
-                            >
-                                <div>
-                                    <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
-                                        <span className="text-xs font-semibold uppercase tracking-wider">{card.label}</span>
-                                        <span className="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
-                                            <Icon size={18} />
-                                        </span>
-                                    </div>
-                                    <div className="text-2xl font-black text-slate-900 dark:text-white">
-                                        {card.value}
-                                    </div>
-                                </div>
-                                {card.badge ? (
-                                    <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                                        <TrendingUp size={12} /> {card.badge}
-                                    </span>
-                                ) : (
-                                    <span className="mt-3 text-xs text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1">
-                                        View details <ArrowUpRight size={12} />
-                                    </span>
-                                )}
-                            </motion.div>
-                        </Link>
-                    );
-                })}
-            </div>
-
-            {/* Sales Chart & Top Selling Groups Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-                {/* Sales Chart */}
-                <div className="lg:col-span-8 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <div className="flex items-center justify-between mb-6">
-                        <div>
-                            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Revenue Timeline</h2>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">Daily gross orders trajectory</p>
-                        </div>
+            {/* Chart + teams */}
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+                <Panel className="lg:col-span-8" delay={0.25}>
+                    <PanelHead title="Revenue timeline" subtitle="Daily gross sales, last 14 days with orders" />
+                    <div className="h-72 px-3 pb-4 pt-5">
+                        {salesData.length === 0 ? (
+                            <Empty title="No sales yet" hint="Revenue will chart here as orders come in." />
+                        ) : (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={salesData} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
+                                    <defs>
+                                        <linearGradient id="bfabSales" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stopColor="#F4623B" stopOpacity={0.35} />
+                                            <stop offset="100%" stopColor="#F4623B" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#241F1B" opacity={0.08} vertical={false} />
+                                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#857A6D' }} axisLine={false} tickLine={false} />
+                                    <YAxis tick={{ fontSize: 11, fill: '#857A6D' }} axisLine={false} tickLine={false} tickFormatter={(v) => `₹${v}`} width={60} />
+                                    <Tooltip
+                                        cursor={{ stroke: '#F4623B', strokeWidth: 1, strokeDasharray: '4 4' }}
+                                        formatter={(value: any) => [`₹${Number(value).toLocaleString('en-IN')}`, 'Sales']}
+                                        contentStyle={{ backgroundColor: '#14100D', border: 'none', color: '#fff', borderRadius: 14, fontSize: 12 }}
+                                    />
+                                    <Area type="monotone" dataKey="sales" stroke="#F4623B" strokeWidth={3} fill="url(#bfabSales)" animationDuration={1400} dot={{ r: 3, fill: '#F4623B', strokeWidth: 0 }} activeDot={{ r: 6, fill: '#F4623B', stroke: '#fff', strokeWidth: 2 }} />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        )}
                     </div>
-                    <div className="h-72 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={salesData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                                <defs>
-                                    <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#2563EB" stopOpacity={0.25} />
-                                        <stop offset="95%" stopColor="#2563EB" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                                <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-                                <YAxis tick={{ fontSize: 11 }} tickFormatter={(val) => `₹${val}`} />
-                                <Tooltip
-                                    formatter={(value: any) => [`₹${Number(value).toLocaleString('en-IN')}`, 'Sales']}
-                                    contentStyle={{ backgroundColor: '#1E293B', borderColor: '#334155', color: '#fff', borderRadius: '12px' }}
-                                />
-                                <Area type="monotone" dataKey="sales" stroke="#2563EB" strokeWidth={2.5} fillOpacity={1} fill="url(#colorSales)" />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
+                </Panel>
 
-                {/* Top Performing Teams Widget */}
-                <div className="lg:col-span-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                    <div>
-                        <div className="flex items-center justify-between mb-4">
-                            <div>
-                                <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                                    <Award className="text-amber-500" size={18} />
-                                    Top Sales Teams
-                                </h2>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">Ranked by products sold</p>
-                            </div>
-                            <Link href="/admin/coupons" className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                                View All
-                            </Link>
-                        </div>
-
-                        <div className="space-y-3">
-                            {topGroups.length === 0 ? (
-                                <div className="py-8 text-center text-slate-400 text-xs">
-                                    No sales groups or coupon sales recorded yet.
-                                </div>
-                            ) : (
-                                topGroups.map((group, idx) => (
-                                    <div
+                <Panel className="flex flex-col lg:col-span-4" delay={0.32}>
+                    <PanelHead
+                        title="Top sales teams"
+                        subtitle="Ranked by units sold"
+                        action={<Link href="/admin/coupons" className="text-xs font-semibold text-[#F4623B] hover:underline">View all</Link>}
+                    />
+                    <div className="flex-1 space-y-2.5 p-4">
+                        {topGroups.length === 0 ? (
+                            <Empty title="No team sales yet" hint="Coupon-driven sales show up here." />
+                        ) : (
+                            topGroups.map((group, idx) => {
+                                const max = topGroups[0]?.totalUnitsSold || 1;
+                                return (
+                                    <motion.div
                                         key={group.groupName}
-                                        className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center justify-between"
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.4 + idx * 0.08, duration: 0.5, ease: adminEase }}
+                                        className="rounded-2xl bg-[#F6F2EB] p-3.5 dark:bg-white/[0.04]"
                                     >
-                                        <div className="flex items-center gap-2.5 min-w-0">
-                                            <span className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-extrabold text-xs flex items-center justify-center shrink-0">
-                                                {idx + 1}
+                                        <div className="flex items-center gap-3">
+                                            <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full font-fredoka text-sm font-bold ${idx === 0 ? 'bg-[#E3A438] text-[#241F1B]' : 'bg-[#241F1B] text-white dark:bg-white/15'}`}>
+                                                {idx === 0 ? <Award size={15} /> : idx + 1}
                                             </span>
-                                            <div className="min-w-0">
-                                                <p className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
-                                                    {group.groupName}
-                                                </p>
-                                                <span className="font-mono text-[10px] text-blue-600 dark:text-blue-400 font-semibold">
-                                                    Code: {group.coupons[0] || 'NONE'}
-                                                </span>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="truncate text-sm font-semibold">{group.groupName}</p>
+                                                <p className="font-mono text-[10px] text-[#F4623B]">{group.coupons[0] || 'NO CODE'}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-sm font-bold">{group.totalUnitsSold} units</p>
+                                                <p className="text-[11px] text-[#241F1B]/50 dark:text-white/45">₹{group.netSales.toLocaleString('en-IN')}</p>
                                             </div>
                                         </div>
-                                        <div className="text-right shrink-0">
-                                            <div className="text-xs font-black text-slate-900 dark:text-white">
-                                                {group.totalUnitsSold} units
-                                            </div>
-                                            <div className="text-[10px] text-slate-500 dark:text-slate-400">
-                                                ₹{group.netSales.toLocaleString('en-IN')}
-                                            </div>
+                                        <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-[#241F1B]/[0.07] dark:bg-white/10">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                animate={{ width: `${(group.totalUnitsSold / max) * 100}%` }}
+                                                transition={{ delay: 0.6 + idx * 0.08, duration: 1, ease: adminEase }}
+                                                className="h-full rounded-full bg-[#F4623B]"
+                                            />
                                         </div>
-                                    </div>
-                                ))
-                            )}
-                        </div>
+                                    </motion.div>
+                                );
+                            })
+                        )}
                     </div>
-
-                    <Link
-                        href="/admin/coupons"
-                        className="mt-4 block w-full text-center py-2.5 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-300 rounded-xl text-xs font-bold transition-colors"
-                    >
-                        Manage Teams & Coupons →
-                    </Link>
-                </div>
+                    <div className="p-4 pt-0">
+                        <Link href="/admin/coupons" className="group flex items-center justify-center gap-2 rounded-2xl bg-[#241F1B] py-3 text-sm font-semibold text-white hover:bg-black dark:bg-white dark:text-[#241F1B]">
+                            Manage teams & coupons <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+                        </Link>
+                    </div>
+                </Panel>
             </div>
 
-            {/* Recent Orders Table */}
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
-                    <div>
-                        <h2 className="text-lg font-bold text-slate-900 dark:text-white">Recent Orders</h2>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Latest customer transactions and attribution</p>
-                    </div>
-                    <Link href="/admin/orders" className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                        View All Orders →
-                    </Link>
-                </div>
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-slate-50 dark:bg-slate-800/60 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                            <tr>
-                                <th className="py-3.5 px-6">Order ID</th>
-                                <th className="py-3.5 px-6">Customer</th>
-                                <th className="py-3.5 px-6">Coupon / Team</th>
-                                <th className="py-3.5 px-6 text-right">Amount</th>
-                                <th className="py-3.5 px-6 text-center">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                            {recentOrders.map((order) => (
-                                <tr key={order.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                    <td className="py-4 px-6 font-mono font-medium text-slate-900 dark:text-white text-xs">
-                                        <Link href={`/admin/orders/${order.id}`} className="hover:text-blue-600">
-                                            #{order.id.slice(0, 8)}...
-                                        </Link>
-                                    </td>
-                                    <td className="py-4 px-6">
-                                        <div className="font-semibold text-slate-900 dark:text-white text-xs sm:text-sm">
-                                            {order.billingInfo?.firstName} {order.billingInfo?.lastName}
-                                        </div>
-                                        <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                                            {order.billingInfo?.city || order.userEmail}
-                                        </div>
-                                    </td>
-                                    <td className="py-4 px-6">
-                                        {order.couponCode ? (
-                                            <div>
-                                                <span className="font-mono text-xs font-extrabold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded">
-                                                    {order.couponCode}
-                                                </span>
-                                                <span className="text-[11px] text-slate-500 block mt-0.5">
-                                                    {order.groupName || 'Partner'}
-                                                </span>
-                                            </div>
-                                        ) : (
-                                            <span className="text-xs text-slate-400 italic">Direct / Organic</span>
-                                        )}
-                                    </td>
-                                    <td className="py-4 px-6 text-right font-bold text-slate-900 dark:text-white">
-                                        ₹{(order.totalAmount || (order.amount ? order.amount / 100 : 0)).toFixed(2)}
-                                    </td>
-                                    <td className="py-4 px-6 text-center">
-                                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                                            order.status === 'Paid'
-                                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300'
-                                                : order.status === 'Cancelled'
-                                                ? 'bg-red-100 text-red-800 dark:bg-red-950/50 dark:text-red-300'
-                                                : 'bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300'
-                                        }`}>
-                                            {order.status || 'Pending'}
-                                        </span>
-                                    </td>
+            {/* Recent orders */}
+            <Panel delay={0.4}>
+                <PanelHead
+                    title="Recent orders"
+                    subtitle="Latest transactions and their attribution"
+                    action={<Link href="/admin/orders" className="text-xs font-semibold text-[#F4623B] hover:underline">All orders →</Link>}
+                />
+                {recentOrders.length === 0 ? (
+                    <Empty title="No orders yet" hint="New orders will appear here the moment they're placed." />
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full min-w-[640px] text-left text-sm">
+                            <thead>
+                                <tr>
+                                    <th className={th}>Order</th>
+                                    <th className={th}>Customer</th>
+                                    <th className={th}>Coupon / team</th>
+                                    <th className={`${th} text-right`}>Amount</th>
+                                    <th className={`${th} text-center`}>Status</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                            </thead>
+                            <tbody>
+                                {recentOrders.map((order, i) => (
+                                    <Row key={order.id} i={i}>
+                                        <td className="px-6 py-4">
+                                            <Link href={`/admin/orders/${order.id}`} className="font-mono text-xs font-semibold hover:text-[#F4623B]">#{order.id.slice(0, 8)}</Link>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <p className="font-semibold">{order.billingInfo?.firstName} {order.billingInfo?.lastName}</p>
+                                            <p className="text-[11px] text-[#241F1B]/50 dark:text-white/45">{order.billingInfo?.city || order.userEmail}</p>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {order.couponCode ? (
+                                                <>
+                                                    <span className="rounded-md bg-[#F4623B]/10 px-2 py-0.5 font-mono text-xs font-bold text-[#D9502C]">{order.couponCode}</span>
+                                                    <span className="mt-0.5 block text-[11px] text-[#241F1B]/50 dark:text-white/45">{order.groupName || 'Partner'}</span>
+                                                </>
+                                            ) : (
+                                                <span className="text-xs italic text-[#241F1B]/40 dark:text-white/35">Direct</span>
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 text-right font-fredoka text-base font-semibold">₹{orderAmount(order).toLocaleString('en-IN', { maximumFractionDigits: 2 })}</td>
+                                        <td className="px-6 py-4 text-center"><StatusPill status={order.status} /></td>
+                                    </Row>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </Panel>
         </div>
     );
 }
