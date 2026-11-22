@@ -63,7 +63,6 @@ export default function PageAnimator() {
 
       ctx = gsap.context(() => {
         const vh = window.innerHeight;
-        const firstSection = main.querySelector<HTMLElement>(':scope section, :scope > div > section');
 
         // Headings: masked word-rise
         main.querySelectorAll<HTMLElement>('h1, h2').forEach((h) => {
@@ -145,24 +144,6 @@ export default function PageAnimator() {
             scrollTrigger: { trigger: g, start: 'top 88%', once: true },
           });
         });
-
-        // First section: content drifts up & fades as it scrolls away (parallax hero)
-        if (
-          firstSection &&
-          free(firstSection) &&
-          getComputedStyle(firstSection).position !== 'sticky' &&
-          firstSection.offsetHeight > vh * 0.45
-        ) {
-          const inner = firstSection.firstElementChild as HTMLElement | null;
-          if (inner) {
-            gsap.to(inner, {
-              yPercent: 18,
-              opacity: 0.3,
-              ease: 'none',
-              scrollTrigger: { trigger: firstSection, start: 'top top', end: 'bottom top', scrub: true },
-            });
-          }
-        }
 
         // Explicit parallax hooks anywhere: data-speed="0.3"
         main.querySelectorAll<HTMLElement>('[data-speed]').forEach((el) => {

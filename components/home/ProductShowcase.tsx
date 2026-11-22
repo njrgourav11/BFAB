@@ -58,6 +58,7 @@ function ProductPanel({ p, i, total }: { p: ShowcaseProduct; i: number; total: n
         <div data-panel-img className="absolute inset-0 will-change-transform">
           <Image
             src={p.image}
+            unoptimized={!p.image.startsWith('/')}
             alt={p.name}
             fill
             sizes="(max-width: 1024px) 92vw, 480px"

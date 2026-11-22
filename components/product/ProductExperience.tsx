@@ -1,7 +1,7 @@
 'use client';
 /* eslint-disable @next/next/no-img-element -- product images can live on any CMS host */
 
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -25,7 +25,6 @@ import {
 } from 'lucide-react';
 import type { Product } from '@/lib/types';
 import SplitText from '@/components/reactbits/SplitText';
-import ScrollVelocity from '@/components/reactbits/ScrollVelocity';
 import ScrollReveal from '@/components/reactbits/ScrollReveal';
 import Magnet from '@/components/reactbits/Magnet';
 import { accentFor, useShowcaseProducts } from '@/components/home/useShowcaseProducts';
@@ -119,15 +118,6 @@ export default function ProductExperience({ product, onAddToCart }: ProductExper
   ).slice(0, 6);
 
   const related = useShowcaseProducts().filter((p) => p.id !== String(product.id)).slice(0, 8);
-
-  const marquee = useMemo(() => {
-    const words = highlights.length ? highlights : ['Vet formulated', 'All natural', 'Made in India', 'No nasties'];
-    const half = Math.ceil(words.length / 2);
-    return [
-      words.slice(0, half).join(' ✦ ') + ' ✦ ',
-      (words.slice(half).length ? words.slice(half) : ['Vet formulated', 'All natural', 'Made in India']).join(' ✦ ') + ' ✦ ',
-    ];
-  }, [highlights]);
 
   const add = () => {
     onAddToCart(qty, activePack ? { label: activePack.label, price: basePrice } : undefined, unitPrice);
@@ -499,19 +489,6 @@ export default function ProductExperience({ product, onAddToCart }: ProductExper
             </div>
           </div>
         </div>
-      </section>
-
-      {/* ═════════ MARQUEE ═════════ */}
-      <section className="overflow-hidden py-6 text-white sm:py-8" style={{ backgroundColor: accent }}>
-        <ScrollVelocity
-          texts={marquee}
-          velocity={40}
-          numCopies={4}
-          outlineAlternate
-          fadeEdges
-          skewWithVelocity={5}
-          className="font-fredoka !text-[clamp(2rem,5vw,4.2rem)] !leading-[1.15] px-4"
-        />
       </section>
 
       {/* ═════════ ZOOM STORY (pinned) ═════════ */}

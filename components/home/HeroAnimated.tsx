@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { gsap } from 'gsap';
@@ -22,8 +22,13 @@ const FAN = [
 
 export default function HeroAnimated({ products }: { products: ShowcaseProduct[] }) {
   const root = useRef<HTMLElement>(null);
-  const local = products.filter((p) => p.image.startsWith('/'));
-  const picks = [local[0], local[1], local[2]].filter(Boolean) as ShowcaseProduct[];
+  // Lock the three cards in on first render (static catalogue, local packshots) so a later
+  // Firestore refresh — whose images may all be remote — can't empty or re-deal the hand.
+  const [picks] = useState<ShowcaseProduct[]>(() => {
+    const withImage = products.filter((p) => p.image && !p.image.endsWith('bfab icon.png'));
+    const local = withImage.filter((p) => p.image.startsWith('/'));
+    return [...local, ...withImage.filter((p) => !p.image.startsWith('/'))].slice(0, 3);
+  });
 
   useGSAP(
     () => {
@@ -68,7 +73,7 @@ export default function HeroAnimated({ products }: { products: ShowcaseProduct[]
         .to(q('[data-hero-scroll="2"]'), { xPercent: 40, rotate: 26, ease: 'none' }, 0)
         .to(q('[data-hero-blob]'), { yPercent: -60, ease: 'none' }, 0);
     },
-    { scope: root, dependencies: [picks.map((p) => p.id).join()] }
+    { scope: root }
   );
 
   return (
@@ -197,6 +202,7 @@ export default function HeroAnimated({ products }: { products: ShowcaseProduct[]
                   <div className="relative aspect-[4/5] overflow-hidden rounded-[22px]" style={{ backgroundColor: p.accent }}>
                     <Image
                       src={p.image}
+                      unoptimized={!p.image.startsWith('/')}
                       alt={p.name}
                       fill
                       priority={i === 1}

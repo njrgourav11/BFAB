@@ -61,11 +61,6 @@ const Footer = () => {
     () => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const q = gsap.utils.selector(root);
-      gsap.fromTo(
-        q('[data-ft-word]'),
-        { xPercent: 8 },
-        { xPercent: -18, ease: 'none', scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'bottom bottom', scrub: true } }
-      );
       gsap.from(q('[data-ft-col]'), {
         y: 40,
         opacity: 0,
@@ -181,14 +176,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Oversized wordmark that slides with scroll */}
-        <div aria-hidden className="select-none overflow-hidden whitespace-nowrap border-y border-white/10 py-4">
-          <p data-ft-word className="font-fredoka text-[clamp(4rem,14vw,13rem)] font-bold leading-none tracking-[-0.04em] text-transparent [-webkit-text-stroke:1.5px_rgba(244,98,59,0.55)]">
-            Beggin For A Bite ✦ Beggin For A Bite
-          </p>
-        </div>
-
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-[13px] text-white/50 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
+        <div className="mx-auto flex border-t border-white/10 max-w-7xl flex-col gap-4 px-5 py-8 text-[13px] text-white/50 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
           <p>© {new Date().getFullYear()} Beggin For A Bite (BFAB). All rights reserved.</p>
           <ul className="flex flex-wrap gap-x-5 gap-y-2">
             {LEGAL.map((l) => (

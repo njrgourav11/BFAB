@@ -27,7 +27,6 @@ import ProductShowcase from '@/components/home/ProductShowcase';
 import StatsBand from '@/components/home/StatsBand';
 import { useShowcaseProducts } from '@/components/home/useShowcaseProducts';
 import { useAutoReveal } from '@/components/motion/Reveal';
-import ScrollVelocity from '@/components/reactbits/ScrollVelocity';
 import ScrollReveal from '@/components/reactbits/ScrollReveal';
 import FloatingProducts from '@/components/motion/FloatingProducts';
 
@@ -78,21 +77,6 @@ export default function Home() {
       {/* 1. HERO — GSAP intro + scroll-out, react-bits SplitText / ShinyText / Magnet */}
       <HeroAnimated products={showcase} />
 
-      {/* Velocity marquee (react-bits ScrollVelocity) */}
-      <section className="overflow-hidden border-y border-[#241F1B]/10 bg-[#241F1B] py-6 text-[#FAF7F2] sm:py-8 dark:border-white/10">
-        <ScrollVelocity
-          texts={[
-            'Vet Formulated ✦ All Natural ✦ Made in India ✦ ',
-            'No Nasties ✦ Human-Grade ✦ 90-Day Guarantee ✦ ',
-          ]}
-          velocity={45}
-          numCopies={4}
-          outlineAlternate
-          fadeEdges
-          skewWithVelocity={6}
-          className="font-fredoka !text-[clamp(2.2rem,6vw,4.8rem)] !leading-[1.15] px-4"
-        />
-      </section>
 
       {/* 2. SHOP BY CONCERN SECTION */}
       <section className="py-8 sm:py-10 md:py-12 bg-white dark:bg-slate-950 transition-colors">
