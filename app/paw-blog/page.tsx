@@ -1,4 +1,5 @@
 "use client";
+import ParallaxHero from '@/components/motion/ParallaxHero';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -116,10 +117,18 @@ const PawBlogPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 font-sans">
+      <ParallaxHero
+        eyebrow="Paw blog"
+        title="Tips, tales"
+        highlight="& tail wags."
+        subtitle="Care guides and stories from our community of pet parents and vets."
+        products={['treat', 'food', 'peanut']}
+        size="compact"
+      />
       {/* Hero Section Removed */}
 
       {/* Search Section */}
-      <section className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-800 py-6">
+      <section className="sticky top-16 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-slate-800 py-6">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
             {/* Category Filters */}

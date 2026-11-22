@@ -133,11 +133,7 @@ const BFABCaresPage = () => {
         highlight="gives back."
         subtitle="Partnerships, rescues and community initiatives that help more pets live healthier, happier lives."
         accent="#2bbf85"
-        images={[
-          { src: '/review/Golden-Retriever.webp', alt: 'Golden retriever' },
-          { src: '/products/2/3.png' },
-          { src: '/products/6/1.png' },
-        ]}
+        products={['food', 'peanut', 'treat', 'hemp']}
       />
 
       {/* Mission Statement */}

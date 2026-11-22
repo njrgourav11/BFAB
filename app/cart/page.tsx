@@ -1,4 +1,5 @@
 "use client";
+import ParallaxHero from '@/components/motion/ParallaxHero';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -51,10 +52,19 @@ const CartPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-black transition-colors duration-300 font-sans selection:bg-blue-100 dark:selection:bg-blue-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-black transition-colors duration-300 font-sans ">
+
+      <ParallaxHero
+        eyebrow="Your cart"
+        title="Almost"
+        highlight="theirs."
+        subtitle="Review your picks, apply a coupon and head to checkout."
+        products={['peanut', 'jerky', 'pre']}
+        size="compact"
+      />
 
       {/* Progress Header */}
-      <div className="bg-white dark:bg-black border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40 supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-black/80 backdrop-blur-md">
+      <div className="bg-white dark:bg-black border-b border-slate-200 dark:border-slate-800">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-center max-w-xl mx-auto">
             <div className="flex items-center gap-2">
@@ -78,9 +88,9 @@ const CartPage = () => {
       <div className="container mx-auto px-4 py-8 lg:py-12">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
               Shopping Cart <span className="text-slate-400 dark:text-slate-600 font-normal text-xl sm:text-2xl ml-2">({cartItems.length} items)</span>
-            </h1>
+            </h2>
             {appliedCoupon && (
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-full text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm font-medium">
                 <Sparkles size={14} className="text-emerald-500" />

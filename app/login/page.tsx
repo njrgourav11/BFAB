@@ -1,4 +1,5 @@
 "use client";
+import AuthVisual from '@/components/motion/AuthVisual';
 import { useState } from 'react';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase';
@@ -48,7 +49,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex bg-white dark:bg-slate-950 font-sans">
+    <div className="min-h-[calc(100vh-4rem)] flex bg-[#FAF7F2] dark:bg-[#0F0C0A] font-sans">
       {/* Toast Notification */}
       {showToast && (
         <motion.div
@@ -189,34 +190,11 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Right Side - Image/Background */}
-      <div className="hidden lg:block w-1/2 bg-slate-900 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 z-10"></div>
-        <div className="absolute inset-0 flex items-center justify-center z-20 p-12 text-white">
-          <div className="max-w-lg">
-            <h2 className="text-4xl font-bold mb-6">Join the BFAB Community</h2>
-            <p className="text-lg text-gray-300 mb-8">
-              Discover premium pet products, exclusive deals, and a community of pet lovers just like you.
-            </p>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/10">
-                <h3 className="font-bold text-xl mb-2">Premium Quality</h3>
-                <p className="text-sm text-gray-300">Curated products for your furry friends.</p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/10">
-                <h3 className="font-bold text-xl mb-2">Fast Delivery</h3>
-                <p className="text-sm text-gray-300">Get your pet essentials delivered in no time.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* You can add a background image here if available, or keep the solid color/gradient */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-          <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        </div>
-      </div>
+      <AuthVisual
+        title="Welcome back to the pack."
+        subtitle="Sign in to reorder favourites, track deliveries and unlock member-only offers."
+        points={['Vet-formulated, all natural', 'Order tracking & quick reorder', 'Member-only discounts']}
+      />
     </div>
   );
 }

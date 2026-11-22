@@ -63,11 +63,7 @@ const FeedingGuidePage = () => {
         highlight="perfected."
         subtitle="Work out how much your dog or cat needs each day, with tips from our vets on doing it right."
         accent="#E3A438"
-        images={[
-          { src: '/products/3/9.png' },
-          { src: '/products/1/21.png' },
-          { src: '/products/2/4.png' },
-        ]}
+        products={['food', 'meat', 'treat', 'vegmeals']}
       />
 
       {/* Tab Navigation */}

@@ -1,5 +1,6 @@
 'use client';
 
+import ParallaxHero from '@/components/motion/ParallaxHero';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth, db } from '@/lib/firebase';
@@ -164,9 +165,18 @@ const ProfilePage = () => {
     if (!user) return null;
 
     return (
+        <>
+        <ParallaxHero
+            eyebrow="My account"
+            title="Hello,"
+            highlight="pet parent."
+            subtitle="Your details, addresses and orders — all in one place."
+            products={['peanut', 'hemp', 'treat']}
+            size="compact"
+        />
         <div className="min-h-screen bg-gray-50 dark:bg-slate-950 py-12 px-4 transition-colors duration-300">
             <div className="container mx-auto max-w-5xl">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">My Account</h1>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">My Account</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* Sidebar */}
@@ -344,6 +354,7 @@ const ProfilePage = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

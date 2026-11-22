@@ -7,16 +7,16 @@ import { useGSAP } from '@gsap/react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Instrument_Serif, Hanken_Grotesk } from 'next/font/google';
+import { Hanken_Grotesk } from 'next/font/google';
 import { Search, SlidersHorizontal, X, ChevronDown, Grid2x2, Rows3, Star, Plus } from 'lucide-react';
 import { useCart } from '../components/CartContext';
+import ParallaxHero from '@/components/motion/ParallaxHero';
 import { Product } from '@/lib/types';
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
-const serif = Instrument_Serif({ subsets: ['latin'], weight: '400', style: ['normal', 'italic'], variable: '--f-serif', display: 'swap' });
 const sans = Hanken_Grotesk({ subsets: ['latin'], variable: '--f-sans', display: 'swap' });
-const S = 'font-[family-name:var(--f-serif)] font-normal';
+const S = 'font-fredoka font-bold';
 
 const categories = [
   { id: 'all', name: 'All products' },
@@ -67,12 +67,12 @@ function FilterGroup<T extends { id: string; name: string }>({
               onClick={() => onChange(it.id)}
               className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-[15px] transition-colors ${
                 active
-                  ? 'bg-[#0B1F3A] font-semibold text-white dark:bg-white dark:text-[#0B1F3A]'
-                  : 'text-[#0B1F3A]/75 hover:bg-[#F4F6F9] dark:text-white/75 dark:hover:bg-white/5'
+                  ? 'bg-[#241F1B] font-semibold text-white dark:bg-white dark:text-[#241F1B]'
+                  : 'text-[#241F1B]/75 hover:bg-[#F3EEE6] dark:text-white/75 dark:hover:bg-white/5'
               }`}
             >
               {it.name}
-              {active && <span className="h-1.5 w-1.5 rounded-full bg-[#B8893B]" />}
+              {active && <span className="h-1.5 w-1.5 rounded-full bg-[#E3A438]" />}
             </button>
           );
         })}
@@ -115,6 +115,15 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
     setProducts(initialProducts);
   }, [initialProducts]);
 
+  // Deep links from the navbar search and home "shop by concern" tiles
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q') || params.get('category');
+    const type = params.get('type');
+    if (q) setSearchQuery(q);
+    if (type && categories.some((c) => c.id === type)) setSelectedCategory(type);
+  }, []);
+
   useEffect(() => {
     document.body.style.overflow = isMobileFilterOpen ? 'hidden' : '';
     return () => {
@@ -128,7 +137,10 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
-        (p) => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query)
+        (p) =>
+          [p.name, p.description, p.category, p.productCategory, p.longDescription]
+            .filter(Boolean)
+            .some((field) => String(field).toLowerCase().includes(query))
       );
     }
     if (selectedCategory !== 'all') {
@@ -197,14 +209,14 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
   const searchBox = (
     <div className="relative">
       <label htmlFor="shop-search" className="sr-only">Search products</label>
-      <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#0B1F3A]/45 dark:text-white/45" size={18} />
+      <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#241F1B]/45 dark:text-white/45" size={18} />
       <input
         id="shop-search"
         type="search"
         placeholder="Search products"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full rounded-full border border-[#0B1F3A]/20 bg-white py-3 pl-11 pr-4 text-[15px] outline-none transition-colors placeholder:text-[#0B1F3A]/45 focus:border-[#0B1F3A] dark:border-white/20 dark:bg-[#0D1626] dark:placeholder:text-white/45 dark:focus:border-white"
+        className="w-full rounded-full border border-[#241F1B]/20 bg-white py-3 pl-11 pr-4 text-[15px] outline-none transition-colors placeholder:text-[#241F1B]/45 focus:border-[#241F1B] dark:border-white/20 dark:bg-[#14100D] dark:placeholder:text-white/45 dark:focus:border-white"
       />
     </div>
   );
@@ -216,13 +228,13 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
         id="shop-sort"
         value={sortBy}
         onChange={(e) => setSortBy(e.target.value)}
-        className="w-full cursor-pointer appearance-none rounded-full border border-[#0B1F3A]/20 bg-white py-3 pl-5 pr-11 text-[15px] font-medium outline-none focus:border-[#0B1F3A] dark:border-white/20 dark:bg-[#0D1626] dark:focus:border-white"
+        className="w-full cursor-pointer appearance-none rounded-full border border-[#241F1B]/20 bg-white py-3 pl-5 pr-11 text-[15px] font-medium outline-none focus:border-[#241F1B] dark:border-white/20 dark:bg-[#14100D] dark:focus:border-white"
       >
         {sortOptions.map((o) => (
           <option key={o.id} value={o.id}>{o.name}</option>
         ))}
       </select>
-      <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#0B1F3A]/50 dark:text-white/50" size={16} />
+      <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#241F1B]/50 dark:text-white/50" size={16} />
     </div>
   );
 
@@ -240,19 +252,16 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
     <div
       ref={rootRef}
       data-page-animate="off"
-      className={`${serif.variable} ${sans.variable} min-h-screen overflow-x-clip bg-white font-[family-name:var(--f-sans)] text-[#0B1F3A] antialiased dark:bg-[#0A1220] dark:text-[#EEF1F6]`}
+      className={`${sans.variable} min-h-screen overflow-x-clip bg-[#FAF7F2] font-[family-name:var(--f-sans)] text-[#241F1B] antialiased dark:bg-[#0F0C0A] dark:text-[#FAF7F2]`}
     >
-      {/* Page header */}
-      <header className="border-b border-[#0B1F3A]/10 bg-[#F4F6F9] dark:border-white/10 dark:bg-[#0D1626]">
-        <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16 lg:px-10">
-          <h1 data-shop-title className={`${S} text-[clamp(2.8rem,7vw,5rem)] leading-[1] tracking-[-0.02em]`}>
-            The <em className="italic">full</em> range
-          </h1>
-          <p data-shop-sub className="mt-4 max-w-xl text-[17px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">
-            Vet-formulated nutrition and supplements for dogs and cats.
-          </p>
-        </div>
-      </header>
+      <ParallaxHero
+        eyebrow="Shop all"
+        title="The full"
+        highlight="range."
+        subtitle="Vet-formulated treats, meals and supplements for dogs and cats. No nasties, ever."
+        products={['peanut', 'pre', 'hip', 'jerky']}
+        size="compact"
+      />
 
       <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12 lg:px-10">
         <div className="flex flex-col gap-10 lg:flex-row lg:gap-14">
@@ -274,12 +283,12 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
           <div className="grid grid-cols-2 gap-3 lg:hidden">
             <button
               onClick={() => setIsMobileFilterOpen(true)}
-              className="flex items-center justify-center gap-2 rounded-full border border-[#0B1F3A]/20 py-3 text-[15px] font-medium dark:border-white/20"
+              className="flex items-center justify-center gap-2 rounded-full border border-[#241F1B]/20 py-3 text-[15px] font-medium dark:border-white/20"
             >
               <SlidersHorizontal size={17} />
               Filters
               {activeFilterCount > 0 && (
-                <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#0B1F3A] px-1 text-[11px] font-bold text-white dark:bg-white dark:text-[#0B1F3A]">
+                <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#241F1B] px-1 text-[11px] font-bold text-white dark:bg-white dark:text-[#241F1B]">
                   {activeFilterCount}
                 </span>
               )}
@@ -290,19 +299,19 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
           {/* Results */}
           <div className="min-w-0 flex-1">
             <div className="mb-8 flex items-center justify-between gap-4">
-              <p className="text-[15px] text-[#0B1F3A]/70 dark:text-white/70">
-                <span className="font-semibold text-[#0B1F3A] dark:text-white">{filteredProducts.length}</span>{' '}
+              <p className="text-[15px] text-[#241F1B]/70 dark:text-white/70">
+                <span className="font-semibold text-[#241F1B] dark:text-white">{filteredProducts.length}</span>{' '}
                 {filteredProducts.length === 1 ? 'product' : 'products'}
               </p>
 
               <div className="flex items-center gap-3">
                 <div className="hidden w-52 lg:block">{sortSelect}</div>
-                <div className="flex rounded-full border border-[#0B1F3A]/20 p-1 dark:border-white/20" role="group" aria-label="View">
+                <div className="flex rounded-full border border-[#241F1B]/20 p-1 dark:border-white/20" role="group" aria-label="View">
                   <button
                     onClick={() => setViewMode('grid')}
                     aria-pressed={viewMode === 'grid'}
                     aria-label="Grid view"
-                    className={`rounded-full p-2 transition-colors ${viewMode === 'grid' ? 'bg-[#0B1F3A] text-white dark:bg-white dark:text-[#0B1F3A]' : 'text-[#0B1F3A]/55 dark:text-white/55'}`}
+                    className={`rounded-full p-2 transition-colors ${viewMode === 'grid' ? 'bg-[#241F1B] text-white dark:bg-white dark:text-[#241F1B]' : 'text-[#241F1B]/55 dark:text-white/55'}`}
                   >
                     <Grid2x2 size={18} />
                   </button>
@@ -310,7 +319,7 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                     onClick={() => setViewMode('list')}
                     aria-pressed={viewMode === 'list'}
                     aria-label="List view"
-                    className={`rounded-full p-2 transition-colors ${viewMode === 'list' ? 'bg-[#0B1F3A] text-white dark:bg-white dark:text-[#0B1F3A]' : 'text-[#0B1F3A]/55 dark:text-white/55'}`}
+                    className={`rounded-full p-2 transition-colors ${viewMode === 'list' ? 'bg-[#241F1B] text-white dark:bg-white dark:text-[#241F1B]' : 'text-[#241F1B]/55 dark:text-white/55'}`}
                   >
                     <Rows3 size={18} />
                   </button>
@@ -323,7 +332,7 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                 className={
                   viewMode === 'grid'
                     ? 'grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 xl:grid-cols-3'
-                    : 'divide-y divide-[#0B1F3A]/10 border-y border-[#0B1F3A]/10 dark:divide-white/10 dark:border-white/10'
+                    : 'divide-y divide-[#241F1B]/10 border-y border-[#241F1B]/10 dark:divide-white/10 dark:border-white/10'
                 }
               >
                 <AnimatePresence mode="popLayout">
@@ -349,14 +358,14 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                           <Link
                             data-shop-media
                             href={`/products/${product.id}`}
-                            className="relative block aspect-square w-full shrink-0 overflow-hidden rounded-2xl bg-[#F4F6F9] sm:w-44 dark:bg-[#15213A]"
+                            className="relative block aspect-square w-full shrink-0 overflow-hidden rounded-2xl bg-[#F3EEE6] sm:w-44 dark:bg-[#1E1813]"
                           >
                             <Image src={img} alt={product.name} fill sizes="(max-width: 640px) 90vw, 176px" className="object-contain p-5" />
                           </Link>
 
                           <div className="flex min-w-0 flex-1 flex-col gap-3">
                             <div>
-                              <p className="text-[13px] capitalize text-[#0B1F3A]/60 dark:text-white/60">
+                              <p className="text-[13px] capitalize text-[#241F1B]/60 dark:text-white/60">
                                 {product.productCategory}
                                 {product.petType === 'both' ? ' · all pets' : ''}
                               </p>
@@ -364,9 +373,9 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                                 <h3 className="mt-0.5 text-xl font-semibold leading-snug hover:underline">{product.name}</h3>
                               </Link>
                             </div>
-                            <p className="line-clamp-2 text-[15px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">{product.description}</p>
-                            <div className="flex items-center gap-1.5 text-[13px] text-[#0B1F3A]/65 dark:text-white/65">
-                              <Star size={13} className="fill-[#B8893B] text-[#B8893B]" />
+                            <p className="line-clamp-2 text-[15px] leading-relaxed text-[#241F1B]/70 dark:text-white/70">{product.description}</p>
+                            <div className="flex items-center gap-1.5 text-[13px] text-[#241F1B]/65 dark:text-white/65">
+                              <Star size={13} className="fill-[#E3A438] text-[#E3A438]" />
                               {(product.rating || 0).toFixed(1)} · {product.reviews || 0} reviews
                             </div>
                           </div>
@@ -374,11 +383,11 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                           <div className="flex items-center justify-between gap-4 sm:flex-col sm:items-end sm:gap-3">
                             <div className="sm:text-right">
                               <div className="text-xl font-semibold">{inr(priceNum)}</div>
-                              {hasDiscount && <div className="text-[13px] text-[#0B1F3A]/45 line-through dark:text-white/45">{inr(origNum)}</div>}
+                              {hasDiscount && <div className="text-[13px] text-[#241F1B]/45 line-through dark:text-white/45">{inr(origNum)}</div>}
                             </div>
                             <button
                               onClick={() => handleAdd(product, priceNum, img)}
-                              className="inline-flex items-center gap-2 rounded-full bg-[#0B1F3A] px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-[#16345F] active:scale-[0.98] dark:bg-white dark:text-[#0B1F3A]"
+                              className="inline-flex items-center gap-2 rounded-full bg-[#241F1B] px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-[#F4623B] active:scale-[0.98] dark:bg-white dark:text-[#241F1B]"
                             >
                               <Plus size={17} /> Add to cart
                             </button>
@@ -400,14 +409,14 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                         <Link
                           data-shop-media
                           href={`/products/${product.id}`}
-                          className="relative block aspect-[4/5] overflow-hidden rounded-2xl bg-[#F4F6F9] dark:bg-[#15213A]"
+                          className="relative block aspect-[4/5] overflow-hidden rounded-2xl bg-[#F3EEE6] dark:bg-[#1E1813]"
                         >
                           <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-2">
                             {hasDiscount && (
-                              <span className="rounded-full bg-[#0B1F3A] px-3 py-1 text-xs font-semibold text-white">{discountPercent}% off</span>
+                              <span className="rounded-full bg-[#241F1B] px-3 py-1 text-xs font-semibold text-white">{discountPercent}% off</span>
                             )}
                             {bestseller && (
-                              <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#0B1F3A] shadow-sm">Bestseller</span>
+                              <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#241F1B] shadow-sm">Bestseller</span>
                             )}
                           </div>
                           <Image
@@ -421,7 +430,7 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
 
                         <div data-shop-body className="mt-5 flex items-start justify-between gap-4">
                           <div className="min-w-0">
-                            <p className="text-[13px] capitalize text-[#0B1F3A]/60 dark:text-white/60">
+                            <p className="text-[13px] capitalize text-[#241F1B]/60 dark:text-white/60">
                               {product.productCategory}
                               {product.petType === 'both' ? ' · all pets' : ''}
                             </p>
@@ -431,21 +440,21 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                           </div>
                           <div className="shrink-0 text-right">
                             <div className="text-lg font-semibold">{inr(priceNum)}</div>
-                            {hasDiscount && <div className="text-[13px] text-[#0B1F3A]/45 line-through dark:text-white/45">{inr(origNum)}</div>}
+                            {hasDiscount && <div className="text-[13px] text-[#241F1B]/45 line-through dark:text-white/45">{inr(origNum)}</div>}
                           </div>
                         </div>
 
-                        <div data-shop-body className="mt-2 flex items-center gap-1.5 text-[13px] text-[#0B1F3A]/65 dark:text-white/65">
-                          <Star size={13} className="fill-[#B8893B] text-[#B8893B]" />
+                        <div data-shop-body className="mt-2 flex items-center gap-1.5 text-[13px] text-[#241F1B]/65 dark:text-white/65">
+                          <Star size={13} className="fill-[#E3A438] text-[#E3A438]" />
                           {(product.rating || 0).toFixed(1)} · {product.reviews || 0} reviews
                         </div>
 
-                        <p data-shop-body className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">{product.description}</p>
+                        <p data-shop-body className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-[#241F1B]/70 dark:text-white/70">{product.description}</p>
 
                         <button
                           onClick={() => handleAdd(product, priceNum, img)}
                           data-shop-body
-                          className="mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-[#0B1F3A] py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#16345F] active:scale-[0.98] dark:bg-white dark:text-[#0B1F3A]"
+                          className="mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-[#241F1B] py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#F4623B] active:scale-[0.98] dark:bg-white dark:text-[#241F1B]"
                         >
                           <Plus size={17} /> Add to cart
                         </button>
@@ -457,12 +466,12 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
             ) : (
               <div className="py-20 text-center">
                 <h3 className={`${S} text-4xl`}>Nothing matches yet</h3>
-                <p className="mx-auto mt-3 max-w-sm text-[17px] leading-relaxed text-[#0B1F3A]/70 dark:text-white/70">
+                <p className="mx-auto mt-3 max-w-sm text-[17px] leading-relaxed text-[#241F1B]/70 dark:text-white/70">
                   Try a different search or remove a filter to see more products.
                 </p>
                 <button
                   onClick={clearAll}
-                  className="mt-7 rounded-full border border-[#0B1F3A] px-7 py-3 text-[15px] font-semibold transition-colors hover:bg-[#0B1F3A] hover:text-white dark:border-white dark:hover:bg-white dark:hover:text-[#0B1F3A]"
+                  className="mt-7 rounded-full border border-[#241F1B] px-7 py-3 text-[15px] font-semibold transition-colors hover:bg-[#241F1B] hover:text-white dark:border-white dark:hover:bg-white dark:hover:text-[#241F1B]"
                 >
                   Clear all filters
                 </button>
@@ -481,7 +490,7 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileFilterOpen(false)}
-              className="fixed inset-0 z-40 bg-[#0B1F3A]/50 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-40 bg-[#241F1B]/50 backdrop-blur-sm lg:hidden"
             />
             <motion.div
               role="dialog"
@@ -491,11 +500,11 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 32, stiffness: 320 }}
-              className="fixed inset-x-0 bottom-0 z-50 flex max-h-[88vh] flex-col rounded-t-3xl bg-white lg:hidden dark:bg-[#0A1220]"
+              className="fixed inset-x-0 bottom-0 z-50 flex max-h-[88vh] flex-col rounded-t-3xl bg-white lg:hidden dark:bg-[#0F0C0A]"
             >
               <div className="flex items-center justify-between px-5 pb-3 pt-5">
                 <h2 className={`${S} text-3xl`}>Filters</h2>
-                <button onClick={() => setIsMobileFilterOpen(false)} aria-label="Close filters" className="rounded-full p-2 hover:bg-[#F4F6F9] dark:hover:bg-white/10">
+                <button onClick={() => setIsMobileFilterOpen(false)} aria-label="Close filters" className="rounded-full p-2 hover:bg-[#F3EEE6] dark:hover:bg-white/10">
                   <X size={22} />
                 </button>
               </div>
@@ -506,13 +515,13 @@ const ShopClient = ({ initialProducts }: { initialProducts: Product[] }) => {
                 <FilterGroup title="Pet" items={petTypes} value={selectedPetType} onChange={setSelectedPetType} />
               </div>
 
-              <div className="flex gap-3 border-t border-[#0B1F3A]/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] dark:border-white/10">
-                <button onClick={clearAll} className="rounded-full border border-[#0B1F3A]/25 px-6 py-3.5 text-[15px] font-semibold dark:border-white/30">
+              <div className="flex gap-3 border-t border-[#241F1B]/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] dark:border-white/10">
+                <button onClick={clearAll} className="rounded-full border border-[#241F1B]/25 px-6 py-3.5 text-[15px] font-semibold dark:border-white/30">
                   Clear
                 </button>
                 <button
                   onClick={() => setIsMobileFilterOpen(false)}
-                  className="flex-1 rounded-full bg-[#0B1F3A] py-3.5 text-[15px] font-semibold text-white dark:bg-white dark:text-[#0B1F3A]"
+                  className="flex-1 rounded-full bg-[#241F1B] py-3.5 text-[15px] font-semibold text-white dark:bg-white dark:text-[#241F1B]"
                 >
                   Show {filteredProducts.length} {filteredProducts.length === 1 ? 'result' : 'results'}
                 </button>

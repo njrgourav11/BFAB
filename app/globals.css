@@ -549,3 +549,18 @@ html:not(.lenis) {
   0% { transform: translateY(-100%); }
   100% { transform: translateY(200%); }
 }
+
+/* ── Brand typography: every page heading uses the rounded Fredoka display face ── */
+main :is(h1, h2):not(.prose *):not([data-keep-font]) {
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+main h1:not(.prose *):not([data-keep-font]) { font-weight: 700; }
+
+::selection { background: #F4623B; color: #fff; }
+
+body { background: #FAF7F2; }
+.dark body { background: #0F0C0A; }
+
+/* masked line wrappers created by SplitText */
+.pa-line { padding-bottom: 0.06em; }

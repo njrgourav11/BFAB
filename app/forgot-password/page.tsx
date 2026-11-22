@@ -1,4 +1,5 @@
 "use client";
+import FloatingProducts from '@/components/motion/FloatingProducts';
 import { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -31,7 +32,15 @@ export default function ForgotPassword() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950 px-4">
+        <div className="relative isolate flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden bg-[#FAF7F2] px-4 dark:bg-[#0F0C0A]">
+            <FloatingProducts
+                className="-z-10"
+                items={[
+                    { name: 'peanut', className: 'left-[6%] top-[14%] w-24 sm:w-36', rotate: -10 },
+                    { name: 'jerky', className: 'right-[6%] bottom-[10%] w-24 sm:w-36', rotate: 8 },
+                    { name: 'hemp', className: 'right-[12%] top-[10%] w-12 sm:w-20 hidden sm:block', rotate: 14 },
+                ]}
+            />
             <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-slate-800">
                 <div className="mb-6">
                     <Link href="/login" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors mb-6">

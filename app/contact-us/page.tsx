@@ -1,4 +1,5 @@
 "use client";
+import ParallaxHero from '@/components/motion/ParallaxHero';
 import React, { useMemo, useState } from 'react';
 import Image from 'next/image';
 import {
@@ -202,46 +203,27 @@ const ContactUsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white font-sans text-gray-900">
-      {/* Hero */}
-      <section className="px-4 pt-6 md:pt-8">
-        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl">
-          <Image
-            src={HERO_IMAGE}
-            alt="A happy golden retriever"
-            fill
-            priority
-            sizes="(min-width: 1152px) 1152px, 100vw"
-            className="origin-bottom-left scale-[1.22] md:scale-100 object-cover object-[25%_35%]"
+    <div className="min-h-screen bg-white font-sans text-gray-900 dark:bg-slate-950 dark:text-white">
+      <ParallaxHero
+        eyebrow="Help centre"
+        title="Hi! How can"
+        highlight="we help?"
+        subtitle="Our pet-loving team is here to support you every step of the way."
+        products={['treat', 'peanut', 'hemp', 'meat']}
+        size="compact"
+      >
+        <div className="relative w-full max-w-xl">
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search your question"
+            aria-label="Search FAQs"
+            className="w-full rounded-full border border-[#241F1B]/15 bg-white py-4 pl-11 pr-4 text-[15px] text-gray-900 shadow-[0_20px_40px_-25px_rgba(36,31,27,0.5)] outline-none focus:border-[#F4623B] focus:ring-4 focus:ring-[#F4623B]/20"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/60" aria-hidden />
-
-          <div className="relative flex min-h-[340px] md:min-h-[440px] flex-col items-center justify-center px-6 py-14 text-center text-white">
-            <h1 className="font-fredoka text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight drop-shadow-sm">
-              Hi! How can we help you today?
-            </h1>
-            <div className="mt-5 flex w-full max-w-xl items-center gap-3" aria-hidden>
-              <span className="h-px flex-1 bg-white/70" />
-              <Heart size={22} className="fill-white text-white" />
-              <span className="h-px flex-1 bg-white/70" />
-            </div>
-            <p className="mt-5 max-w-xl text-base md:text-xl leading-relaxed text-white/90">
-              Our pet-loving team is here to support you every step of the way.
-            </p>
-            <div className="relative mt-8 w-full max-w-xl">
-              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden />
-              <input
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search your question"
-                aria-label="Search FAQs"
-                className="w-full rounded-full border border-white/40 bg-white py-3.5 pl-11 pr-4 text-sm text-gray-900 shadow-lg outline-none focus:ring-4 focus:ring-[#F4623B]/40"
-              />
-            </div>
-          </div>
         </div>
-      </section>
+      </ParallaxHero>
 
       {/* Browse topics */}
       <section className="container mx-auto px-4 pt-12 md:pt-16">

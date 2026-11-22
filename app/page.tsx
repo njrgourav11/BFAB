@@ -25,11 +25,11 @@ import { Coupon } from '@/lib/types';
 import HeroAnimated from '@/components/home/HeroAnimated';
 import ProductShowcase from '@/components/home/ProductShowcase';
 import StatsBand from '@/components/home/StatsBand';
-import ClosingCTA from '@/components/home/ClosingCTA';
 import { useShowcaseProducts } from '@/components/home/useShowcaseProducts';
 import { useAutoReveal } from '@/components/motion/Reveal';
 import ScrollVelocity from '@/components/reactbits/ScrollVelocity';
 import ScrollReveal from '@/components/reactbits/ScrollReveal';
+import FloatingProducts from '@/components/motion/FloatingProducts';
 
 const TestimonialSlider = dynamic(() => import('@/components/ui/testimonial-slider'), {
   ssr: false,
@@ -138,7 +138,15 @@ export default function Home() {
       </section>
 
       {/* Manifesto — react-bits ScrollReveal (scrubbed word reveal) */}
-      <section className="bg-[#FAF7F2] py-24 sm:py-32 dark:bg-[#0F0C0A]">
+      <section className="relative isolate overflow-hidden bg-[#FAF7F2] py-24 sm:py-32 dark:bg-[#0F0C0A]">
+        <FloatingProducts
+          className="-z-10"
+          items={[
+            { name: 'hemp', className: 'right-[4%] top-[8%] w-16 sm:w-24', rotate: 12, depth: 0.6 },
+            { name: 'peanut', className: 'left-[3%] bottom-[6%] w-20 sm:w-28 hidden md:block', rotate: -10, depth: 0.9 },
+            { name: 'treat', className: 'right-[8%] bottom-[4%] w-32 sm:w-44 hidden md:block', rotate: -4, depth: 0.4 },
+          ]}
+        />
         <div className="mx-auto max-w-5xl px-5 sm:px-8">
           <p className="mb-6 text-xs font-bold uppercase tracking-[0.25em] text-[#F4623B]">Our promise</p>
           <ScrollReveal
@@ -798,7 +806,6 @@ export default function Home() {
         </div>
       </section>
 
-      <ClosingCTA />
     </div>
   );
 }

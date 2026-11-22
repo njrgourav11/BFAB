@@ -1,5 +1,6 @@
 'use client';
 
+import ParallaxHero from '@/components/motion/ParallaxHero';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Search, X } from 'lucide-react';
@@ -167,19 +168,15 @@ export default function BlogsPage() {
 
     return (
         <div className="bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100">
-            {/* ---------- Hero ---------- */}
-            <header className="bg-[#fef6eb] dark:bg-stone-900/60">
-                <div className="mx-auto max-w-6xl px-4 sm:px-6 py-14 sm:py-20">
-                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#c2410c] dark:text-[#fb8a5f]">The BFAB Journal</p>
-                    <h1 className="mt-4 max-w-3xl font-display text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.08] tracking-tight text-stone-900 dark:text-white text-balance">
-                        Better food, happier pets.
-                    </h1>
-                    <p className="mt-5 max-w-xl text-lg leading-relaxed text-stone-600 dark:text-stone-300">
-                        Honest guides on nutrition, ingredients, portions and everyday care, written to help you make
-                        informed choices for your dog or cat.
-                    </p>
-
-                    <div className="relative mt-8 max-w-md">
+            <ParallaxHero
+                eyebrow="The BFAB Journal"
+                title="Better food,"
+                highlight="happier pets."
+                subtitle="Honest guides on nutrition, ingredients, portions and everyday care, written to help you make informed choices for your dog or cat."
+                products={['food', 'peanut', 'treat', 'pre']}
+                size="compact"
+            >
+                    <div className="relative max-w-md">
                         <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={18} aria-hidden />
                         <input
                             type="search"
@@ -200,8 +197,7 @@ export default function BlogsPage() {
                             </button>
                         )}
                     </div>
-                </div>
-            </header>
+            </ParallaxHero>
 
             {/* ---------- Category bar ---------- */}
             {categories.length > 2 && (

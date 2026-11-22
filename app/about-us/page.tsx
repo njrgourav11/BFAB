@@ -1,4 +1,5 @@
 "use client";
+import ParallaxHero from '@/components/motion/ParallaxHero';
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -31,6 +32,13 @@ const teamMembers = [
 const AboutUsPage = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300 font-sans overflow-x-hidden">
+      <ParallaxHero
+        eyebrow="About us"
+        title="Made by pet people,"
+        highlight="for pet people."
+        subtitle="The story behind Beggin For A Bite — and why we sweat every ingredient so your pet never has to."
+        products={['peanut', 'hip', 'jerky', 'pre']}
+      />
 
 
 
@@ -45,7 +53,7 @@ const AboutUsPage = () => {
               viewport={{ once: true }}
             >
               <span className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm mb-3 block">About Us</span>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">The BFAB Journey</h1>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">The BFAB Journey</h2>
               <div className="space-y-6 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 <p>
                   BFAB Pet Food Store was founded in 2023 with a simple yet powerful mission: to provide pet owners with the highest quality, most nutritious pet food on the market.

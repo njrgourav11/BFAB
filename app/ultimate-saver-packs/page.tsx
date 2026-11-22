@@ -101,11 +101,7 @@ const UltimateSaverPacksPage = () => {
         highlight="Save more."
         subtitle="Bundled favourites at better prices — so the good stuff never runs out."
         accent="#F4623B"
-        images={[
-          { src: '/products/1/20.png' },
-          { src: '/products/4/12.png' },
-          { src: '/products/3/12.png' },
-        ]}
+        products={['meat', 'vegmeals', 'peanut', 'pre']}
       />
 
       {/* Featured Slider Section */}

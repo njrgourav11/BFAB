@@ -1,4 +1,5 @@
 "use client";
+import AuthVisual from '@/components/motion/AuthVisual';
 import { useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase';
@@ -51,7 +52,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex bg-white dark:bg-slate-950 font-sans">
+    <div className="min-h-[calc(100vh-4rem)] flex bg-[#FAF7F2] dark:bg-[#0F0C0A] font-sans">
       {/* Toast Notification */}
       {showToast && (
         <motion.div
@@ -67,43 +68,13 @@ export default function Signup() {
         </motion.div>
       )}
 
-      {/* Left Side - Image/Background */}
-      <div className="hidden lg:block w-1/2 bg-slate-900 relative overflow-hidden order-2 lg:order-1">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-blue-600/20 z-10"></div>
-        <div className="absolute inset-0 flex items-center justify-center z-20 p-12 text-white">
-          <div className="max-w-lg">
-            <h2 className="text-4xl font-bold mb-6">Start Your Journey</h2>
-            <p className="text-lg text-gray-300 mb-8">
-              Create an account to unlock exclusive member benefits, track your orders, and more.
-            </p>
-            <ul className="space-y-4">
-              <li className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
-                  <CheckCircle size={16} />
-                </div>
-                <span className="text-gray-200">Exclusive member-only discounts</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
-                  <CheckCircle size={16} />
-                </div>
-                <span className="text-gray-200">Early access to new products</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
-                  <CheckCircle size={16} />
-                </div>
-                <span className="text-gray-200">Track your orders easily</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 -left-4 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-          <div className="absolute top-0 -right-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        </div>
-      </div>
+      <AuthVisual
+        className="order-2 lg:order-1"
+        title="Start your pet's healthiest chapter."
+        subtitle="Create an account to unlock member benefits, track your orders and more."
+        products={['meat', 'peanut', 'hip', 'treat']}
+        points={['Exclusive member-only discounts', 'Early access to new products', 'Track your orders easily']}
+      />
 
       {/* Right Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-16 order-1 lg:order-2">

@@ -3,13 +3,23 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import FloatingProducts from '@/components/motion/FloatingProducts';
 
 export default function FreshMealPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100 overflow-hidden">
       
       {/* 1. HERO SECTION (Dark Green Background) */}
-      <section className="bg-[#112420] text-white pt-16 sm:pt-20 md:pt-24 pb-28 sm:pb-36 lg:pb-40 relative overflow-hidden">
+      <section className="bg-[#14100D] text-white pt-16 sm:pt-20 md:pt-24 pb-28 sm:pb-36 lg:pb-40 relative isolate overflow-hidden">
+        <div aria-hidden className="absolute -right-40 -top-40 -z-10 h-[560px] w-[560px] rounded-full border-[70px] border-[#F4623B]/15" />
+        <div aria-hidden className="absolute -bottom-40 left-1/3 -z-10 h-[420px] w-[420px] rounded-full bg-[#F4623B]/20 blur-3xl" />
+        <FloatingProducts
+          className="-z-[1] opacity-30 lg:opacity-100"
+          items={[
+            { name: 'meat', className: 'right-[3%] bottom-[6%] w-[11vw] max-w-[170px] min-w-[90px]', rotate: 10, depth: 0.4 },
+            { name: 'vegmeals', className: 'left-[44%] bottom-[-4%] w-[9vw] max-w-[140px] min-w-[80px] hidden md:block', rotate: -9, depth: 0.7 },
+          ]}
+        />
         <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             

@@ -1,6 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 /* eslint-disable @typescript-eslint/no-require-imports */
 const defaultColors = require("tailwindcss/colors");
+
+// Brand palette. Legacy pages used Tailwind blues/indigos and cool greys; remapping
+// them here pulls every page (including ones not yet hand-restyled) onto the
+// Beggin For A Bite colours: orange #F4623B, ink #241F1B, cream #FAF7F2.
+const brandOrange = {
+  50: "#FFF4EF", 100: "#FFE4D9", 200: "#FFC7B1", 300: "#FCA384", 400: "#F8825C",
+  500: "#F4623B", 600: "#E14E27", 700: "#BB3D1D", 800: "#95321B", 900: "#792C1A", 950: "#41130A",
+};
+const warmNeutral = {
+  50: "#FAF7F2", 100: "#F3EEE6", 200: "#E7E0D5", 300: "#D5CBBD", 400: "#ADA294",
+  500: "#857A6D", 600: "#675D52", 700: "#4F4740", 800: "#2E2722", 900: "#1E1813", 950: "#0F0C0A",
+};
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -58,15 +70,23 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        'k9-blue': '#0b1e47',
-        'k9-orange': '#ff5500',
+        blue: brandOrange,
+        indigo: brandOrange,
+        sky: brandOrange,
+        gray: warmNeutral,
+        slate: warmNeutral,
+        brand: { DEFAULT: "#F4623B", ...brandOrange },
+        cream: "#FAF7F2",
+        marigold: "#E3A438",
+        mint: "#2bbf85",
+        'k9-blue': '#241F1B',
+        'k9-orange': '#F4623B',
         'k9-green': '#2bbf85',
         ink: "#241F1B",
         pine: {
           DEFAULT: "#1F3D2B",
           tint: "#EAF0EA",
         },
-        marigold: "#E3A438",
         paprika: "#B3552B",
         paper: "#F7F3EA",
         // Keep the brand `text-stone` token AND the full stone scale (stone-50 … stone-950)
